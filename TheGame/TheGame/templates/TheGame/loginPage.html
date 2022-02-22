@@ -10,6 +10,21 @@
     }
 
 </style>
+
+<script>
+    function validateForm(){
+        let f = document.forms["mainForm"];
+        let emailString = f["email"].value;
+        const emailRegEx = /^\w+@\w+\.\w+$/
+        if (emailRegEx.exec(emailString) != null){
+            return true;
+        }
+        alert("email address formatted incorrectly");
+        return false;
+    }
+</script>
+
+
 {% endblock %}
 
 
@@ -18,15 +33,15 @@
 
 <main class="form-signin">
 
-    <form class ="signForm" action="" method="post">
+    <form name="mainForm" class="signForm" action="logInEndPoint" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
         <h1 class="h2 mb-3">Sign in here</h1>
         <div class="form-floating">
-            <input type="text" class="form-control" placeholder="email" name="email" id="emailInput">
+            <input type="text" class="form-control" placeholder="email" name="email" id="emailInput" required>
             <label for="emailInput">email address</label>
         </div>
         <div class="form-floating">
-            <input type="text" class="form-control" placeholder="password" name="password" id="passwordInput">
+            <input type="text" class="form-control" placeholder="password" name="password" id="passwordInput" required>
             <label for="passwordInput">password</label>
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">
