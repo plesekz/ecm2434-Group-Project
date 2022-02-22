@@ -1,0 +1,41 @@
+{% extends 'TheGame/bootstrapBoilerPlate.html' %}
+
+{% block headBlock %}
+<style>
+
+    form.signForm{
+        margin-top: 20%;
+        margin-left: 35%;
+        margin-right: 35%;
+    }
+
+</style>
+{% endblock %}
+
+
+{% block bodyBlock %}
+<body class="text-center">
+
+<main class="form-signin">
+
+    <form class ="signForm" action="" method="post">
+        {% csrf_token %}
+        <h1 class="h2 mb-3">Sign in here</h1>
+        <div class="form-floating">
+            <input type="text" class="form-control" placeholder="email" name="email" id="emailInput">
+            <label for="emailInput">email address</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" placeholder="password" name="password" id="passwordInput">
+            <label for="passwordInput">password</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">
+            Sign in
+        </button>
+    </form>
+
+</main>
+
+</body>
+
+{% endblock %}
