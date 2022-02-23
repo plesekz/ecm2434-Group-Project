@@ -24,22 +24,16 @@ pub fn main() -> Result<(), JsValue> {
     Ok(())
 }
 
-#[wasm_bindgen]
-pub fn add(a: u32, b: u32) -> u32 {
-    a + b
-}
-
 async fn load_image(file: web_sys::File) -> Result<image::GrayImage, Box<dyn std::error::Error>> {
     let buffer = wasm_bindgen_futures::JsFuture::from(file.array_buffer())
         .await
         .map_err(|e| format!("{:?}", e))?;
     let buffer = js_sys::Uint8Array::new(&buffer);
     let buffer: Vec<u8> = buffer.to_vec();
-    let img = image::io::Reader::new(std::io::Cursor::new(buffer))
-        .with_guessed_format()
-        .expect("Cursor io never fails");
-    let img = img.decode()?;
-    //let img = image::load_from_memory(&buffer)?;
+    let mut img = image::load_from_memory(&buffer)?;
+    if img.height() > 1000 {
+        img = img.thumbnail(1000, 1000);
+    }
     //Ok(img)
     Ok(img.into_luma8())
 }
@@ -73,8 +67,7 @@ pub async fn load_qr(file: web_sys::File) {
             .alert_with_message(&format!("Data: {:?}", data))
             .unwrap();
     }
-    
-    
+
     web_sys::console::log_1(&wasm_bindgen::JsValue::from_str("Parsed Image"));
 
     web_sys::window()
