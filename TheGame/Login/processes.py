@@ -34,7 +34,8 @@ def validateLogIn(request):
 def validateRegister(request):
     if not request.method == "POST":
         messages.success(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
+        #return "failed to process, please use POST method"
+        return redirect("register")
     form = PlayerForm(request.POST or None)
 
     email = request.POST['email']
@@ -48,9 +49,11 @@ def validateRegister(request):
         messages.success(request, ('The Username you chose is taken'))
         return redirect("register")
 
-    if form.is_valid():
-        form.save()
-
+    if not form.is_valid():
+        messages.success(request, ('Something went wrong please try again'))
+        return redirect("register")
+    
+    form.save()
 
     #proccess registration
     messages.success(request, ('Successfully registered'))
