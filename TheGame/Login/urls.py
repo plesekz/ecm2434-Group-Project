@@ -19,7 +19,6 @@ from . import views
 from . import processes
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', views.indexPage),
     path('login/', views.loginPage, name="login"),
     path('register/', views.registerPage, name="register"),
