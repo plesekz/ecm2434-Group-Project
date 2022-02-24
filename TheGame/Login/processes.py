@@ -8,7 +8,7 @@ from django.contrib.auth import authenticate
 
 def validateLogIn(request):
     if not request.method == "POST":
-        messages.success(request, ('Something went wrong, please try again later'))
+        messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
 
     _email = request.POST['email']
@@ -23,9 +23,9 @@ def validateLogIn(request):
             response = redirect("login")
             response.set_cookie('TheGameSessionID', 'cookie_value')
         else:
-            messages.success(request, ('Incorrect password, try again'))
+            messages.warning(request, ('Incorrect password, try again'))
     else:
-        messages.success(request, ('Username entered doesn\'t exist'))
+        messages.warning(request, ('Username entered doesn\'t exist'))
 
     #proccess log in
 
@@ -33,7 +33,7 @@ def validateLogIn(request):
 
 def validateRegister(request):
     if not request.method == "POST":
-        messages.success(request, ('Something went wrong, please try again later'))
+        messages.error(request, ('Something went wrong, please try again later'))
         #return "failed to process, please use POST method"
         return redirect("register")
     form = PlayerForm(request.POST or None)
@@ -43,14 +43,14 @@ def validateRegister(request):
     username = request.POST['username']
 
     if Player.objects.filter(email=email).exists():
-        messages.success(request, ('The Email you chose is taken'))
+        messages.warning(request, ('The Email you chose is taken'))
         return redirect("register")
     if Player.objects.filter(username=username).exists():
-        messages.success(request, ('The Username you chose is taken'))
+        messages.warning(request, ('The Username you chose is taken'))
         return redirect("register")
 
     if not form.is_valid():
-        messages.success(request, ('Something went wrong please try again'))
+        messages.error(request, ('Something went wrong please try again'))
         return redirect("register")
     
     form.save()
