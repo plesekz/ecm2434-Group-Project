@@ -14,7 +14,11 @@
 
 
 {% block bodyBlock %}
-
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
 <main class="form-signin text-center">
 
     <form name="mainForm" class="signForm" action="{% url 'validateLogin' %}" method="post" onsubmit="return validateForm()">
@@ -39,13 +43,6 @@
     <a href="{% url 'register' %}">Don't have an account, register here!</a>
 
 </main>
-
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
-    {% endfor %}
-{% endif %}
-
 
 <script>
     function validateForm(){
