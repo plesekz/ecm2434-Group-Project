@@ -10,6 +10,38 @@
 
 </style>
 
+{% endblock %}
+
+
+{% block bodyBlock %}
+
+<main class="form-signin text-center">
+
+    <form name="mainForm" class="signForm" action="{% url 'validateLogin' %}" method="post" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <h1 class="h2 mb-3">Sign in here</h1>
+        <div class="form-floating">
+            <input type="text" class="form-control" placeholder="email" name="email" id="emailInput" required>
+            <label for="emailInput">email address/username</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" placeholder="password" name="password" id="passwordInput" required>
+            <label for="passwordInput">password</label>
+        </div>
+        <div style="padding-top: 2px;padding-bottom: 2px;">
+            <input type="checkbox" onclick="togglePassword()"> show password
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">
+            Sign in
+        </button>
+    </form>
+
+    <a href="{% url 'register' %}">Don't have an account, register here!</a>
+
+</main>
+
+
+
 <script>
     function validateForm(){
         let f = document.forms["mainForm"];
@@ -21,44 +53,16 @@
         }
         return true;
     }
+
+    function togglePassword(){
+        var passInput = document.getElementById("passwordInput");
+        if (passInput.type == "password"){
+            passInput.type = "text";
+        }
+        else {
+            passInput.type = "password";
+        }
+    }
 </script>
-
-
-{% endblock %}
-
-
-{% block bodyBlock %}
-
-<nav class="navbar mb-4 navbar-expand-md navbar-dark bg-dark">
-    <div class="" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}" >Log in/register</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
-<main class="form-signin text-center">
-
-    <form name="mainForm" class="signForm" action="logInEndPoint" method="post" onsubmit="return validateForm()">
-        {% csrf_token %}
-        <h1 class="h2 mb-3">Sign in here</h1>
-        <div class="form-floating">
-            <input type="text" class="form-control" placeholder="email" name="email" id="emailInput" required>
-            <label for="emailInput">email address</label>
-        </div>
-        <div class="form-floating">
-            <input type="text" class="form-control" placeholder="password" name="password" id="passwordInput" required>
-            <label for="passwordInput">password</label>
-        </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">
-            Sign in
-        </button>
-    </form>
-
-    <a href="{% url 'register' %}">Don't have an account, register here!</a>
-
-</main>
 
 {% endblock %}

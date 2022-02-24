@@ -35,19 +35,9 @@
 
 {% block bodyBlock %}
 
-<nav class="navbar mb-4 navbar-expand-md navbar-dark bg-dark">
-    <div class="" id="navbarCollapse">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="{% url 'login' %}" >Log in/register</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
 <main class="form-signin" class="text-center">
 
-    <form name="mainForm" class="signForm" action="registerEndPoint" method="post" onsubmit="return validateForm()">
+    <form name="mainForm" class="signForm" action="{% url 'validateRegister' %}" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
         <h1 class="h2 mb-3">Register here</h1>
         <div class="form-floating">
@@ -55,11 +45,15 @@
             <label for="emailInput">email address</label>
         </div>
         <div class="form-floating">
-            <input type="text" class="form-control" placeholder="password" name="password" id="passwordInput" required>
+            <input type="text" class="form-control" placeholder="username" name="username" id="usernameInput" required>
+            <label for="usernameInput">username</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" placeholder="password" name="password" id="passwordInput" required>
             <label for="passwordInput">password</label>
         </div>
         <div class="form-floating">
-            <input type="text" class="form-control" placeholder="confirmPassword" name="confirmPassword" id="confirmPasswordInput" required>
+            <input type="password" class="form-control" placeholder="confirmPassword" name="confirmPassword" id="confirmPasswordInput" required>
             <label for="passwordInput">confim password</label>
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">
