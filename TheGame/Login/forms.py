@@ -1,6 +1,6 @@
 from socket import fromshare
 from django import forms
-from .models import Player
+from Login.models import Player
 
 class PlayerForm(forms.ModelForm):
     class Meta:

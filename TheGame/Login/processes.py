@@ -1,7 +1,8 @@
 from email.message import EmailMessage
+from http.client import HTTPResponse
 from django.shortcuts import redirect
-from .forms import PlayerForm
-from .models import Player
+from Login.forms import PlayerForm
+from Login.models import Player
 from django.contrib import messages
 from django.contrib.auth import authenticate
 
@@ -11,8 +12,10 @@ def validateLogIn(request):
         return "failed to process, please use POST method"
 
     _email = request.POST['email']
-    _username = request.POST['username']
+    _username = request.POST['email']
     _password = request.POST['password']
+
+    response = redirect("login")
 
     if Player.objects.filter(email=_email).exists():
         user = authenticate(request, username=_username, password=_password)
