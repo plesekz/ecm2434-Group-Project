@@ -14,9 +14,15 @@
     function validateForm(){
         let f = document.forms["mainForm"];
         let emailString = f["email"].value;
-        const emailRegEx = /^\w+@\w+\.\w+$/
+        let pword = f["password"].value;
+        let cpword = f["confirmPassword"].value;
+        const emailRegEx = /^\w+@\w+\.\w+$/;
         if (!(emailRegEx.exec(emailString) != null)){
             alert("email address formatted incorrectly");
+            return false;
+        }
+        if (!(pword === cpword)){
+            alert("passwords do not match");
             return false;
         }
         return true;
@@ -39,11 +45,11 @@
     </div>
 </nav>
 
-<main class="form-signin text-center">
+<main class="form-signin" class="text-center">
 
-    <form name="mainForm" class="signForm" action="logInEndPoint" method="post" onsubmit="return validateForm()">
+    <form name="mainForm" class="signForm" action="registerEndPoint" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
-        <h1 class="h2 mb-3">Sign in here</h1>
+        <h1 class="h2 mb-3">Register here</h1>
         <div class="form-floating">
             <input type="text" class="form-control" placeholder="email" name="email" id="emailInput" required>
             <label for="emailInput">email address</label>
@@ -52,13 +58,16 @@
             <input type="text" class="form-control" placeholder="password" name="password" id="passwordInput" required>
             <label for="passwordInput">password</label>
         </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" placeholder="confirmPassword" name="confirmPassword" id="confirmPasswordInput" required>
+            <label for="passwordInput">confim password</label>
+        </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">
-            Sign in
+            Register
         </button>
     </form>
 
-    <a href="{% url 'register' %}">Don't have an account, register here!</a>
-
 </main>
+
 
 {% endblock %}

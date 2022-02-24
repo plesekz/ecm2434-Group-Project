@@ -19,5 +19,9 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('login/', views.loginPage),
+    path('', views.indexPage),
+    path('login/', views.loginPage, name="login"),
+    path('register/', views.registerPage, name="register"),
+
+    path('getNavbar/', views.getNavbar, name="getNavbar"),
 ]
