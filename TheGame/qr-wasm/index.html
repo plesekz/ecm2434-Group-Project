@@ -11,11 +11,7 @@
         
         var loadQRinput = document.getElementById("loadQR");
         loadQRinput.onchange = () => {
-          console.log("Loading " + loadQRinput.files.length + " files");
           load_qr_list(loadQRinput.files);
-          /*for (let i = 0; i < loadQRinput.files.length; i++) {
-            load_qr(loadQRinput.files[i], i+1, loadQRinput.files.length);
-          }*/
         }
       }
 

@@ -1,5 +1,4 @@
 use wasm_bindgen::prelude::*;
-use wasm_bindgen::JsCast;
 
 // Called when the wasm module is instantiated
 #[wasm_bindgen(start)]
@@ -102,6 +101,7 @@ async fn load_qr(file: web_sys::File, index: u32, total: u32) {
 #[wasm_bindgen]
 pub async fn load_qr_list(files: web_sys::FileList) {
     let len = files.length();
+    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!("Loading {} files", len)));
     for i in 0..len {
         if let Some(file) = files.get(i) {
             load_qr(file, i, len).await;
