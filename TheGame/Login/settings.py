@@ -38,8 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'TheGame',
-    'Login'
+    'TheGame'
 ]
 
 MIDDLEWARE = [
@@ -58,7 +57,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            "TheGame/templates"
+            "Login/templates"
         ],
         'APP_DIRS': True,
         'OPTIONS': {
