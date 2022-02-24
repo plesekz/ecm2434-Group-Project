@@ -1,4 +1,5 @@
 use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
 
 // Called when the wasm module is instantiated
 #[wasm_bindgen(start)]
@@ -28,52 +29,45 @@ async fn load_image(file: web_sys::File) -> Result<image::GrayImage, Box<dyn std
     let buffer = wasm_bindgen_futures::JsFuture::from(file.array_buffer())
         .await
         .map_err(|e| format!("{:?}", e))?;
-    let buffer = js_sys::Uint8Array::new(&buffer);
+    let buffer: js_sys::Uint8Array = js_sys::Uint8Array::new(&buffer);
     let buffer: Vec<u8> = buffer.to_vec();
     let mut img = image::load_from_memory(&buffer)?;
     if img.height() > 1000 {
         img = img.thumbnail(1000, 1000);
     }
+
     //Ok(img)
     Ok(img.into_luma8())
 }
 
-#[wasm_bindgen]
-pub async fn load_qr(file: web_sys::File) {
+async fn load_qr(file: web_sys::File, index: u32, total: u32) {
     let img = match load_image(file).await {
         Ok(img) => img,
         Err(err) => {
             let err = format!("Encountered Error: {:?}", err);
-
-            web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&err));
             web_sys::window().unwrap().alert_with_message(&err).unwrap();
             return;
         }
     };
 
-    eprintln!("Hey");
-
     let mut decoder = quircs::Quirc::default();
     let codes = decoder.identify(img.width() as usize, img.height() as usize, &img);
 
     for code in codes {
-        let code = code.expect("failed to extract qr code");
-        let decoded = code.decode().expect("failed to decode qr code");
-        let data = std::str::from_utf8(&decoded.payload).unwrap();
-
-        web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!("Data {}", data)));
-        web_sys::window()
-            .unwrap()
-            .alert_with_message(&format!("Data: {:?}", data))
-            .unwrap();
+        if let Ok(code) = code {
+            if let Ok(decoded) = code.decode() {
+                if let Ok(data) = std::str::from_utf8(&decoded.payload) {
+                    let msg = format!("Data {}", data);
+                    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
+                    web_sys::window().unwrap().alert_with_message(&msg).unwrap();
+                }
+            }
+        }
     }
-
-    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str("Parsed Image"));
-
-    web_sys::window()
-        .unwrap()
-        .alert_with_message("Parsed Image")
-        .unwrap();
+    let msg = format!("Parsed Image {}/{}", index, total);
+    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
+    return;
+    web_sys::window().unwrap().alert_with_message(&msg).unwrap();
 
     /* let decoder = bardecoder::default_decoder();
 
@@ -103,4 +97,14 @@ pub async fn load_qr(file: web_sys::File) {
             web_sys::window().unwrap().alert_with_message(&format!("Data: {:?}", data)).unwrap();
         }
     }*/
+}
+
+#[wasm_bindgen]
+pub async fn load_qr_list(files: web_sys::FileList) {
+    let len = files.length();
+    for i in 0..len {
+        if let Some(file) = files.get(i) {
+            load_qr(file, i, len).await;
+        }
+    }
 }

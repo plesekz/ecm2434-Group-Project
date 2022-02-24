@@ -4,7 +4,7 @@
   </head>
   <body>
     <script type="module">
-      import init, { load_qr } from './pkg/qr_wasm.js';
+      import init, { load_qr_list } from './pkg/qr_wasm.js';
 
       async function run() {
         await init();
@@ -12,16 +12,17 @@
         var loadQRinput = document.getElementById("loadQR");
         loadQRinput.onchange = () => {
           console.log("Loading " + loadQRinput.files.length + " files");
-          for (let i = 0; i < loadQRinput.files.length; i++) {
-            load_qr(loadQRinput.files[i]);
-          }
+          load_qr_list(loadQRinput.files);
+          /*for (let i = 0; i < loadQRinput.files.length; i++) {
+            load_qr(loadQRinput.files[i], i+1, loadQRinput.files.length);
+          }*/
         }
       }
 
       run();
     </script>
     <form>
-      <input type="file" id='loadQR' name="file" accept="image/*" capture="camera" />
+      <input type="file" id='loadQR' name="file" accept="image/*" capture="camera" multiple />
     </form>
     
   </body>
