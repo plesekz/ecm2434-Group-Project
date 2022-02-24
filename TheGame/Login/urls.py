@@ -24,6 +24,4 @@ urlpatterns = [
     path('register/', views.registerPage, name="register"),
     path('ValidateLogin/', processes.validateLogIn, name="validateLogin"),
     path('ValidateRegister/', processes.validateRegister, name="validateRegister"),
-
-    path('getNavbar/', views.getNavbar, name="getNavbar"),
 ]

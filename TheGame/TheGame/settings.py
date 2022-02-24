@@ -58,7 +58,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            "TheGame/templates"
+            "TheGame/templates",
+            "Login/templates"
         ],
         'APP_DIRS': True,
         'OPTIONS': {

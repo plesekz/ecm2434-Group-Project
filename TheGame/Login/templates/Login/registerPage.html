@@ -37,7 +37,7 @@
 
 <main class="form-signin" class="text-center">
 
-    <form name="mainForm" class="signForm" action="{% url 'Login/validateRegister' %}" method="post" onsubmit="return validateForm()">
+    <form name="mainForm" class="signForm" action="{% url 'validateRegister' %}" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
         <h1 class="h2 mb-3">Register here</h1>
         <div class="form-floating">

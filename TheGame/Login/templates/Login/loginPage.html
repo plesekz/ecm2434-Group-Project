@@ -17,7 +17,7 @@
 
 <main class="form-signin text-center">
 
-    <form name="mainForm" class="signForm" action="{% url 'Login/validateLogin' %}" method="post" onsubmit="return validateForm()">
+    <form name="mainForm" class="signForm" action="{% url 'validateLogin' %}" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
         <h1 class="h2 mb-3">Sign in here</h1>
         <div class="form-floating">
