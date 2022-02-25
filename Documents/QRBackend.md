@@ -28,7 +28,8 @@ The JSON object will hold a similar structure to the one below:
   "amount": "3",
   "latitude": "50.736",
   "longitude": "-3.532"
-}```
+}
+```
 
 ## `/deleteRes`
 This is a game master and admin-level only command. We can delete a resource based off its UID.
