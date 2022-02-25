@@ -11,7 +11,7 @@ This is a game master and admin-level only command. As all resource-types will h
 
 Let us assume we have a resource 'Wood' with the ID 001, and we which to add 3 of these in the location (50.736, -3.532) (Outside the Amory Parker building) This may be passed in as `thegame.com/gm/createRes?res=001&amount=3&lat=50.736&long=-3.532/`.
 
-The `createRes` view will be mapped to the `/createRes` URL path and will take in the arguments:
+The `createRes` view will be mapped to the `/createRes` URL path and will take in the arguments:\
 -- `res` (A 3-Digit ID that refers to the resource to be created)\
 -- `amount` (An integer that denotes how much of the resource is to be created)\
 -- `lat` (A decimal that denotes the lattitude of where the resource QR code will be placed)\
@@ -36,7 +36,7 @@ This is a game master and admin-level only command. We can delete a resource bas
 
 Let us assume we wish to delete a resource with the UID '12345'. This may be passed in as `thegame.com/gm/deleteRes?UID=12345/`.
 
-The `deleteRes` view will be mapped to the `/deleteRes` URL path and will take in the argument:
+The `deleteRes` view will be mapped to the `/deleteRes` URL path and will take in the argument:\
 -- `UID` (a set of integers that denotes the unique identity of the resource to be deleted).
 
 The view should iterate the database of JSONs by UIDs and upon finding it, remove it from the database.
@@ -46,7 +46,7 @@ This is a player-level command. **I am unsure how to prevent a player simply typ
 
 Let us assume we wish to retrieve the JSON object associated with the resource with UID '12345'. This may be passed in as `thegame.com/p/retrieveRes?UID=12345/`.
 
-The `retrieveRes` view will be mapped to the `/retrieveRes` URL path and will take in the argument:
+The `retrieveRes` view will be mapped to the `/retrieveRes` URL path and will take in the argument:\
 -- `UID` (a set of integers that denotes the unique identity of the resource to be deleted).
 
 Similar to `deleteRes`, this view should iterate the database of JSONs by UIDs and upon finding it, should return it. It should not delete the object from the database.
