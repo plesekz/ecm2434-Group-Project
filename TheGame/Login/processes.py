@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from Login.forms import PlayerForm
 from Login.models import Player
 from django.contrib import messages
-from django.contrib.auth import authenticate
+from django.db.models import Q
 
 def validateLogIn(request):
     if not request.method == "POST":
@@ -17,15 +17,20 @@ def validateLogIn(request):
 
     response = redirect("login")
 
-    if Player.objects.filter(email=_email).exists():
-        user = authenticate(request, username=_username, password=_password)
+    if Player.objects.filter(email=_email).exists() or Player.objects.filter(username=_username).exists():
+        #user = authenticate(username=_username, password=_password)
+        query = ((Q(username=_username) | Q(email=_email)) & Q(password=_password))
+        user = Player.objects.get(query)
+        
         if user is not None:
+            messages.success(request, ('Logged in'))
             response = redirect("login")
             response.set_cookie('TheGameSessionID', 'cookie_value')
         else:
             messages.warning(request, ('Incorrect password, try again'))
     else:
         messages.warning(request, ('Username entered doesn\'t exist'))
+        response = redirect("login")
 
     #proccess log in
 
