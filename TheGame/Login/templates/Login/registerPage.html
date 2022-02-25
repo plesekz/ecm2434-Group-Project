@@ -16,7 +16,7 @@
         let emailString = f["email"].value;
         let pword = f["password"].value;
         let cpword = f["confirmPassword"].value;
-        const emailRegEx = /^\w+@\w+\.\w+$/;
+        const emailRegEx = /^\w+@\w+(\.\w+)+$/
         if (!(emailRegEx.exec(emailString) != null)){
             alert("email address formatted incorrectly");
             return false;
@@ -34,6 +34,12 @@
 
 
 {% block bodyBlock %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
 
 <main class="form-signin" class="text-center">
 

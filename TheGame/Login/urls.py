@@ -19,8 +19,7 @@ from . import views
 from . import processes
 
 urlpatterns = [
-    path('', views.indexPage),
-    path('login/', views.loginPage, name="login"),
+    path('', views.loginPage, name="login"),
     path('register/', views.registerPage, name="register"),
     path('ValidateLogin/', processes.validateLogIn, name="validateLogin"),
     path('ValidateRegister/', processes.validateRegister, name="validateRegister"),
