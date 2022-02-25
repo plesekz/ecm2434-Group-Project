@@ -1,10 +1,10 @@
 # QR Backend Specification Document
 ----
 ## The QR backend is based on top of **four** endpoints.
-`/createRes`-- Whenever this is requested, the server will create a new resource.
-`/deleteRes` -- Whenever this is requested, the server will delete a certain resource.
-`/retrieveRes` -- Whenever this is requested, the server will retrieve a certain resource.
-`/listRes` -- Whenever this is requested, the server will list all resources.
+`/createRes`-- Whenever this is requested, the server will create a new resource.\
+`/deleteRes` -- Whenever this is requested, the server will delete a certain resource.\
+`/retrieveRes` -- Whenever this is requested, the server will retrieve a certain resource.\
+`/listRes` -- Whenever this is requested, the server will list all resources.\
 
 ## `/createRes`
 This is a game master and admin-level only command. As all resource-types will have an ID (in the form XXX) associated with them, when creating a resource, we may refer to it by its ID during the creation process.
