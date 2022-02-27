@@ -10,9 +10,10 @@ def homePageView(request):
 
     uid = getUserPkFromCookie(request)
 
+    print (uid)
 
     template = loader.get_template('TheGame/HomePage.html')
-    context = {uid : uid}
+    context = {"userID" : uid}
     output = template.render(context)
 
     return HttpResponse(output)
