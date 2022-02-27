@@ -13,3 +13,7 @@ the passwords are hashed using sha256 in the back end and stored that way. Furth
 ## ease of access
 
 Some measures are simply to make it easier for the user to use the website. The login field accepts both username or email and is secure for both.
+
+## auto log in
+
+Cookies are made when new users are registered or log in. this cookie is then saved in the database and linked to each user. The cookie stays active for the duration of the session and will update every time they log in again to make sure there can only be 1 active user using the account at a time.
