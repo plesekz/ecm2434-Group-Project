@@ -1,10 +1,9 @@
-from email.message import EmailMessage
-from http.client import HTTPResponse
 from django.shortcuts import redirect
 from Login.forms import PlayerForm
 from Login.models import Player
 from django.contrib import messages
 from django.db.models import Q
+import hashlib
 
 def validateLogIn(request):
     if not request.method == "POST":
@@ -13,7 +12,7 @@ def validateLogIn(request):
 
     _email = request.POST['email']
     _username = request.POST['email']
-    _password = request.POST['password']
+    _password = hashlib.sha256(request.POST['password'].encode()).hexdigest()
 
     response = redirect("login")
 
@@ -39,22 +38,23 @@ def validateRegister(request):
         messages.error(request, ('Something went wrong, please try again later'))
         #return "failed to process, please use POST method"
         return redirect("register")
-    form = PlayerForm(request.POST or None)
 
-    email = request.POST['email']
-    #password = request.POST['password']
-    username = request.POST['username']
+    _email = request.POST['email']
+    #request.POST['password'] = hashlib.sha256(request.POST['password'].encode()).hexdigest()
+    _username = request.POST['username']
+    form = Player(email=request.POST['email'], username=request.POST['username'], password=hashlib.sha256(request.POST['password'].encode()).hexdigest())
+    
 
-    if Player.objects.filter(email=email).exists():
+    if Player.objects.filter(email=_email).exists():
         messages.warning(request, ('The Email you chose is taken'))
         return redirect("register")
-    if Player.objects.filter(username=username).exists():
+    if Player.objects.filter(username=_username).exists():
         messages.warning(request, ('The Username you chose is taken'))
         return redirect("register")
 
-    if not form.is_valid():
-        messages.error(request, ('Something went wrong please try again'))
-        return redirect("register")
+    #if not form.is_valid():
+    #    messages.error(request, ('Something went wrong please try again'))
+    #    return redirect("register")
     
     form.save()
 
