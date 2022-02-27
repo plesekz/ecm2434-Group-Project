@@ -63,10 +63,9 @@ async fn load_qr(file: web_sys::File, index: u32, total: u32) {
             }
         }
     }
-    let msg = format!("Parsed Image {}/{}", index, total);
+    let msg = format!("Parsed Image {}/{}", index + 1, total);
     web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
     return;
-    web_sys::window().unwrap().alert_with_message(&msg).unwrap();
 
     /* let decoder = bardecoder::default_decoder();
 
@@ -101,10 +100,17 @@ async fn load_qr(file: web_sys::File, index: u32, total: u32) {
 #[wasm_bindgen]
 pub async fn load_qr_list(files: web_sys::FileList) {
     let len = files.length();
-    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!("Loading {} files", len)));
+    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!(
+        "Loading {} files",
+        len
+    )));
     for i in 0..len {
         if let Some(file) = files.get(i) {
             load_qr(file, i, len).await;
         }
     }
+    web_sys::window()
+        .unwrap()
+        .alert_with_message(&format!("Loaded {} files", len))
+        .unwrap();
 }
