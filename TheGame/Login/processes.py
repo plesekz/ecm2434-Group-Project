@@ -21,7 +21,7 @@ def validateLogIn(request):
             user = Player.objects.get(query)
             if user is not None:
                 messages.success(request, ('Logged in'))
-                response = redirect("login")
+                response = redirect("homePage")
                 cookie = bake_cookie(_username)
                 response.set_cookie('TheGameSessionID', cookie)
                 user.userID = cookie
