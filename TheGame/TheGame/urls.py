@@ -15,10 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from . import views
-from . import processes
+from TheGame.views import homePageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', homePageView, name="homePage"),
     path('login/', include("Login.urls")),
 ]
