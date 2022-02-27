@@ -63,3 +63,12 @@ def validateRegister(request):
 def bake_cookie(usrname):
     cookie = hashlib.sha256((usrname +''+ str(time.time())).encode()).hexdigest()
     return cookie
+
+def is_game_master(cookie):
+    try:
+        query = (Q(userID=cookie) & Q(role='GM'))
+        user = Player.objects.get(query)
+        if user is not None:
+            return True
+    except Exception as e:
+        return False
