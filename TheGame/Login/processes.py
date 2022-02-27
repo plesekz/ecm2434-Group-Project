@@ -1,3 +1,4 @@
+import time
 from django.shortcuts import redirect
 from Login.forms import PlayerForm
 from Login.models import Player
@@ -9,11 +10,9 @@ def validateLogIn(request):
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
-
     _email = request.POST['email']
     _username = request.POST['email']
     _password = hashlib.sha256(request.POST['password'].encode()).hexdigest()
-
     response = redirect("login")
 
     if Player.objects.filter(email=_email).exists() or Player.objects.filter(username=_username).exists():
@@ -23,41 +22,44 @@ def validateLogIn(request):
             if user is not None:
                 messages.success(request, ('Logged in'))
                 response = redirect("login")
-                response.set_cookie('TheGameSessionID', 'cookie_value')
+                cookie = bake_cookie(_username)
+                response.set_cookie('TheGameSessionID', cookie)
+                user.userID = cookie
+                user.save()
         except Exception as e:
             messages.warning(request, ('Incorrect password, try again'))
-            response = redirect("login")
     else:
-        messages.warning(request, ('Username entered doesn\'t exist'))
-        response = redirect("login")
+        messages.warning(request, ('Username or email entered doesn\'t exist'))
 
     return response
 
 def validateRegister(request):
+    response = redirect("register")
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         #return "failed to process, please use POST method"
-        return redirect("register")
+        return response
 
     _email = request.POST['email']
-    #request.POST['password'] = hashlib.sha256(request.POST['password'].encode()).hexdigest()
+    _password = hashlib.sha256(request.POST['password'].encode()).hexdigest()
     _username = request.POST['username']
-    form = Player(email=request.POST['email'], username=request.POST['username'], password=hashlib.sha256(request.POST['password'].encode()).hexdigest())
-    
-
     if Player.objects.filter(email=_email).exists():
         messages.warning(request, ('The Email you chose is taken'))
-        return redirect("register")
+        return response
     if Player.objects.filter(username=_username).exists():
         messages.warning(request, ('The Username you chose is taken'))
-        return redirect("register")
+        return response
 
-    #if not form.is_valid():
-    #    messages.error(request, ('Something went wrong please try again'))
-    #    return redirect("register")
-    
+    cookie = bake_cookie(_username)
+    form = Player(email=_email, username=_username, password=_password, userID=cookie)
+
+    response.set_cookie('TheGameSessionID', cookie)
+
     form.save()
-
-    #proccess registration
+    response = redirect("login")
     messages.success(request, ('Successfully registered'))
-    return redirect("login")
+    return response
+
+def bake_cookie(usrname):
+    cookie = hashlib.sha256((usrname +''+ str(time.time())).encode()).hexdigest()
+    return cookie

@@ -4,4 +4,4 @@ from Login.models import Player
 class PlayerForm(forms.ModelForm):
     class Meta:
         model = Player
-        fields = ['email', 'username', 'password']
+        fields = ['userID', 'email', 'username', 'password']
