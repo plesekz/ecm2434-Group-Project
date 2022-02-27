@@ -17,3 +17,7 @@ Some measures are simply to make it easier for the user to use the website. The 
 ## auto log in
 
 Cookies are made when new users are registered or log in. this cookie is then saved in the database and linked to each user. The cookie stays active for the duration of the session and will update every time they log in again to make sure there can only be 1 active user using the account at a time.
+
+## admin privilages
+
+Make a way to differentiate admins from users in the database. This data can be retrieved using only the unique cookie that each user has. Make it easy to only allow access to pages if the user has the admin role. All will be checked with cookies to make sure only 1 admin is using each admin account.
