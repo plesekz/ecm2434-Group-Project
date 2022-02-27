@@ -12,27 +12,53 @@
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <div>
-        <div> <!-- button container -->
-            <button>Add QR code</button>
+    <header>
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <img /> <!-- Logo -->
+                <button class="btn btn-danger">Log-out</button>
+            </div>
         </div>
-    </div>
-    <div> <!-- active QR codes -->
-        {% if active_QR_codes_list %}
-            {% for code in active_QR_codes_list %}
-                <div>
-                    <div> <!-- upper half of the picture -->
-                        <div>
-                        <!-- create the png -->
+    </header>
+    <main><!-- class="bg-dark text-white"-->
+        <div class="py-5 pb-3 text-left">
+            <div class="container">
+                <!-- button container -->
+                <button class="btn btn-success">Add a QR code</button>
+            </div>
+        </div>
+        <div class="py-5">
+            <div class="container">
+                <!-- active QR codes -->
+                {% if active_QR_codes_list %}
+                {% for code in active_QR_codes_list %}
+                <div class="col w-25">
+                    <h4 class="text-center"> {{ code.name }} </h4>
+                    <div class="row mb-3">
+                        <!-- QR code and cancel button -->
+                        <div class="col-md-9">
+
+                            <img />
+                            <!-- create the png -->
                         </div>
-                    <button>X</button> <!-- cancel button -->
+                        <div class="col-md-3">
+                            <button class="btn btn-danger">X</button> <!-- cancel button -->
+                        </div>
                     </div>
-                    Latittude: {{ code.lat }}
-                    Longtitude: {{ code. lon }}
-                    <!-- resources -->
+                    <ul class="list-unstyled">
+                        <li>
+                            Latittude: {{ code.lat }}
+                        </li>
+                        <li>
+                            Longtitude: {{ code.lon }}
+                        </li>
+                        <!-- resources -->
+                    </ul>
                 </div>
-            {% endfor %}
-        {% endif %}
-    </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </main>
 </body>
 </html>
