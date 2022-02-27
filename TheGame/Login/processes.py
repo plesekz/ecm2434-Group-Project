@@ -72,3 +72,9 @@ def is_game_master(cookie):
             return True
     except Exception as e:
         return False
+
+def getUserPkFromCookie(request):
+    cookie = request.COOKIES.get('TheGameSessionID')
+    query = Q(userID=cookie)
+    user = Player.objects.get(query)
+    return user.pk
