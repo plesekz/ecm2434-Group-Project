@@ -84,3 +84,10 @@ def getUserPkFromCookie(request):
     query = Q(userID=cookie)
     user = Player.objects.get(query)
     return user.pk
+
+def getUserFromCookie(request):
+    cookie = request.COOKIES.get('TheGameSessionID')
+    if not (users := Player.objects.filter(userID=cookie)).exists():
+        raise Exception('player does not exist')
+
+    return users[0]
