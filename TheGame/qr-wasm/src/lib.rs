@@ -118,6 +118,12 @@ impl QRManager {
     }
 }
 
+impl Default for QRManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[wasm_bindgen]
 impl QRManager {
     #[wasm_bindgen(constructor)]
@@ -130,8 +136,8 @@ impl QRManager {
             running: Default::default(),
             age: Default::default(),
             callback: Default::default(),
-            window: window,
-            document: document,
+            window,
+            document,
         }
     }
 
