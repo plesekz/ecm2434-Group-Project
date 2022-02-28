@@ -13,18 +13,77 @@
 <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script>
+        //func to handle logging out
         function logout() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // successful execution
+                    reload();
+                }
+            }
+            xhttp.open("GET", "/login/logout", true);
+            xhttp.send();
             //needs to call the logout endpoint in the login module and destroy the session cookie
         }
+
+        //func to handle cancelling a specific QR code
         function cancel(intID) {
             //needs to call the /deleteRes endoint passing the argument as Int(5)
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // successful execution
+                    reload();
+                }
+                if (this.readyState == 4 && this.status == 400) {
+                    // unsuccessful execution
+                    alert("Something has gone wrong!\n400 Error");
+                }
+            }
+
+            xhttp.open("POST", "/deleteRes", true);
+            xhttp.setRequestHeader("Content-type", "text/plain");
+            
+            xhttp.send(intID);
         }
+
+        //funct to handle submitting
         function addQR(){
             //needs to pass the content of the modal's form to the /addRes endpoint, while editing the css to communicate with the user
             //after staring needs to hide #submit and display #processing
             //after getting (async) reply, needs to hide #processing, display #success, and refresh the page in a few seconds
             //if it cannot comply hide #processing and display #submitError
+
+            const form = document.getElementById('submit_form');
+            const data = new FormData(form);
+            const values = Object.fromEntries(data.entries());
+
+            var xhttp = new XMLHttpRequest();
+            document.getElementById("submit").style.display = "none";
+            document.getElementById("processing").style.display = "inline-block";
+
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // successful execution
+                    document.getElementById("processing").style.display = "none";
+                    document.getElementById("success").style.display = "inline-block";
+                }
+                if (this.readyState == 4 && this.status == 400) {
+                    // unsuccessful execution
+                    document.getElementById("processing").style.display = "none";
+                    document.getElementById("submitError").contentEditable = this.responseText;
+                    document.getElementById("submitError").style.display = "inline-block";
+                }
+            }
+
+            xhttp.open("POST", "/createRes", true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            
+            xhttp.send(values); // <- form data goes here
         }
+
+        //event bindings
     </script>
     <header>
         <div class="navbar navbar-dark bg-dark shadow-sm">
@@ -56,7 +115,7 @@
                             <!-- create the png -->
                         </div>
                         <div class="col-md-3">
-                            <button class="btn btn-danger" onclick="cancel( {{ code.ID }} )">X</button> <!-- cancel button -->
+                            <button class="btn btn-danger" onclick="cancel('{{ code.ID }}')">X</button> <!-- cancel button -->
                         </div>
                     </div>
                     <ul class="list-unstyled">
@@ -84,37 +143,38 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div>
-                        <label for="codeID" class="form-label">
-                            ID
-                        </label>
-                        <input type="text" class="form-control" id="codeID" placeholder="Code's ID">
-                    </div>
-                    <div>
+                    <form id="submit_form">
                         <div>
-                            <label for="resource1Type" class="form-label">
-                                Resource 1 type
+                            <label for="codeID" class="form-label">
+                                ID
                             </label>
-                            <fieldset>
-                                <div class="form-check">
-                                    <input type="radio" name="res1Type" class="form-check-input" id="resource1TypeRock" placeholder="Resource Type">
-                                    <label class="form-check-label" for="resource1Type">Rock</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="res1Type" class="form-check-input" id="resource1TypeWood" placeholder="Resource Type">
-                                    <label class="form-check-label" for="resource1Type">Wood</label>
-                                </div>
-                            </fieldset>
+                            <input type="text" class="form-control" id="codeID" name="codeID" placeholder="Code's ID">
                         </div>
                         <div>
-                            <label for="resource1Type" class="form-label">
-                                Resource 1 amount
-                            </label>
-                            <input type="text" class="form-control" id="resource1Amount" placeholder="Resource Amount">
+                            <!-- structure which adds one set of buttons -->
+                            <div>
+                                <label for="resource1Type" class="form-label">
+                                    Resource 1 type
+                                </label>
+                                <fieldset>
+                                    {% for resource in list_of_resources %}
+                                    <div class="form-check">
+                                        <input type="radio" name="res1Type" class="form-check-input" id="resource1Type{{resource.type}}" placeholder="Resource Type" value="{{resource.ID}}">
+                                        <label class="form-check-label" for="resource1Type">{{resource.type}}</label>
+                                    </div>
+                                    {% endfor %}
+                                </fieldset>
+                            </div>
+                            <div>
+                                <label for="resource1Type" class="form-label">
+                                    Resource 1 amount
+                                </label>
+                                <input type="text" class="form-control" id="resource1Amount" name="resource1Amount" placeholder="Resource Amount">
+                            </div>
                         </div>
-                    </div>
-                    <!-- repeat above structure for the number of resources in game -->
-                    <!-- add buttons that add and remove resource fields as needed -->
+                        <!-- repeat above structure for the number of resources in game -->
+                        <!-- add buttons that add and remove resource fields as needed -->
+                    </form >
                 </div>
                 <div class="modal-footer" style="justify-content:space-between; align-items:start;">
                     <button id="closeModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Dismiss</button>
