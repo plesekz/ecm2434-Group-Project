@@ -12,11 +12,25 @@
 </head>
 <body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script>
+        function logout() {
+            //needs to call the logout endpoint in the login module and destroy the session cookie
+        }
+        function cancel(intID) {
+            //needs to call the /deleteRes endoint passing the argument as Int(5)
+        }
+        function addQR(){
+            //needs to pass the content of the modal's form to the /addRes endpoint, while editing the css to communicate with the user
+            //after staring needs to hide #submit and display #processing
+            //after getting (async) reply, needs to hide #processing, display #success, and refresh the page in a few seconds
+            //if it cannot comply hide #processing and display #submitError
+        }
+    </script>
     <header>
         <div class="navbar navbar-dark bg-dark shadow-sm">
             <div class="container">
                 <img /> <!-- Logo -->
-                <button class="btn btn-danger">Log-out</button>
+                <button class="btn btn-danger" onlick="logout()">Log-out</button>
             </div>
         </div>
     </header>
@@ -24,7 +38,7 @@
         <div class="py-5 pb-3 text-left">
             <div class="container">
                 <!-- button container -->
-                <button class="btn btn-success">Add a QR code</button>
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#addQRCodeModal">Add a QR code</button>
             </div>
         </div>
         <div class="py-5">
@@ -42,7 +56,7 @@
                             <!-- create the png -->
                         </div>
                         <div class="col-md-3">
-                            <button class="btn btn-danger">X</button> <!-- cancel button -->
+                            <button class="btn btn-danger" onclick="cancel( {{ code.ID }} )">X</button> <!-- cancel button -->
                         </div>
                     </div>
                     <ul class="list-unstyled">
@@ -60,5 +74,51 @@
             </div>
         </div>
     </main>
+    <div class="modal fade" id="addQRCodeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addQRCodeModal" style="display:none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Add a QR code
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <label for="codeID" class="form-label">
+                            ID
+                        </label>
+                        <input type="text" class="form-control" id="codeID" placeholder="Code's ID">
+                    </div>
+                    <div>
+                        <label for="resource1Type" class="form-label">
+                            Resource 1 type
+                        </label>
+                        <input type="text" class="form-control" id="resource1Type" placeholder="Resource Type"><!-- change to radial later on -->
+                    </div>
+                    <div>
+                        <label for="resource1Type" class="form-label">
+                            Resource 1 amount
+                        </label>
+                        <input type="text" class="form-control" id="resource1Amount" placeholder="Resource Amount">
+                    </div>
+                    <!-- Figure out how to have multiple resources -->
+                </div>
+                <div class="modal-footer" style="justify-content:space-between; align-items:start;">
+                    <button id="closeModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Dismiss</button>
+                    <div class="w-75">
+                        <button id="submit" type="button" class="btn btn-success" onclick="addQR()">Submit</button>
+                        <div id="processing" class="spinner-border text-success" role="status" style="display:none;"></div>
+                        <div id="success" class="alert alert-success fade show" style="display:none;">
+                            Success!
+                        </div>
+                        <div id="submitError" class="alert alert-danger fade show" style="display:none;">
+                            This text should be replaced by an error message. If you are seeing this, something is wrong.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
