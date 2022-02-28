@@ -18,7 +18,7 @@ impl Default for Callback {
     }
 }
 
-#[derive(Default, Clone)]
+#[derive(Clone)]
 #[wasm_bindgen]
 pub struct QRManager {
     files: Rc<Cell<Vec<web_sys::File>>>,
@@ -26,6 +26,8 @@ pub struct QRManager {
     running: Rc<Cell<bool>>,
     age: Rc<Cell<usize>>,
     callback: Rc<Cell<Callback>>,
+    window: web_sys::Window,
+    document: web_sys::Document,
 }
 
 #[derive(Debug)]
@@ -53,7 +55,25 @@ impl QRManager {
             self.files.set(files);
             self.running.set(true);
             if let Some(file) = file {
-                load_qr(&mut decoder, file).await;
+                match load_qr(&mut decoder, file).await {
+                    Ok(codes) => {
+                        for code in codes {
+                            match code {
+                                Ok(code) => {
+                                    let result = self.retrieve_res(&code).await;
+                                    log::info!("result: {:?}", result);
+                                }
+                                Err(err) => {
+                                    log::error!("Error: {:?}", err);
+                                }
+                            }
+                        }
+                    }
+                    Err(err) => {
+                        log::error!("Error: {:?}", err)
+                    }
+                }
+
                 self.scan_count.set(self.scan_count.get() + 1);
             } else {
                 break;
@@ -68,6 +88,23 @@ impl QRManager {
         }
         self.call_callback();
     }
+
+    async fn retrieve_res(&self, data: &str) -> Result<String, String> {
+        let promise = self
+            .window
+            .fetch_with_str(&format!("/retrieveRes?data={:?}", data));
+        let result = wasm_bindgen_futures::JsFuture::from(promise).await;
+        let result = result.map_err(|err| format!("Error: {:?}", err))?;
+        let response: web_sys::Response = result.into();
+        log::info!("{}", response.ok());
+        log::info!("{}", response.status());
+        log::info!("{}", response.status_text());
+        let text_promise = response.text().map_err(|err| format!("Error: {:?}", err))?;
+        let result = wasm_bindgen_futures::JsFuture::from(text_promise).await;
+        let result = result.map_err(|err| format!("Error: {:?}", err))?;
+
+        Ok(format!("{:?}", result))
+    }
     fn spawn_task(&mut self) {
         self.age.set(self.age.get().wrapping_add(1));
         let manager = self.clone();
@@ -79,7 +116,17 @@ impl QRManager {
 impl QRManager {
     #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
-        Self::default()
+        let window = web_sys::window().expect("no global `window` exists");
+        let document = window.document().expect("should have a document on window");
+        Self {
+            files: Default::default(),
+            scan_count: Default::default(),
+            running: Default::default(),
+            age: Default::default(),
+            callback: Default::default(),
+            window: window,
+            document: document,
+        }
     }
 
     #[wasm_bindgen]
@@ -89,14 +136,13 @@ impl QRManager {
         tasks_left_id: String,
         scanned_count_id: String,
     ) {
-        let window = web_sys::window().expect("no global `window` exists");
-        let document = window.document().expect("should have a document on window");
+        let manager = self.clone();
         self.set_callback(Callback(Box::new(move |status| {
-            if let Some(elem) = document.get_element_by_id(&running_id) {
+            if let Some(elem) = manager.document.get_element_by_id(&running_id) {
                 let new = status.running.to_string();
                 elem.set_inner_html(&new);
             }
-            if let Some(elem) = document.get_element_by_id(&tasks_left_id) {
+            if let Some(elem) = manager.document.get_element_by_id(&tasks_left_id) {
                 let new = status.tasks.to_string();
                 let width = status.tasks as f32 / (status.scanned + status.tasks).max(1) as f32;
                 let width = 100.0 - width * 100.0;
@@ -107,7 +153,7 @@ impl QRManager {
                 }
                 elem.set_inner_html(&new);
             }
-            if let Some(elem) = document.get_element_by_id(&scanned_count_id) {
+            if let Some(elem) = manager.document.get_element_by_id(&scanned_count_id) {
                 let new = status.scanned.to_string();
                 elem.set_inner_html(&new);
             }
@@ -145,6 +191,7 @@ impl QRManager {
         let files = self.files.take();
         let tasks = files.len();
         self.files.set(files);
+
         Status {
             running: self.running.get(),
             scanned: self.scan_count.get(),
@@ -176,34 +223,26 @@ async fn load_image(file: web_sys::File) -> Result<image::GrayImage, Box<dyn std
     Ok(img.into_luma8())
 }
 
-async fn load_qr(decoder: &mut quircs::Quirc, file: web_sys::File) {
-    let img = match load_image(file).await {
-        Ok(img) => img,
-        Err(err) => {
-            let err = format!("Encountered Error: {:?}", err);
-            web_sys::window().unwrap().alert_with_message(&err).unwrap();
-            return;
-        }
-    };
+async fn load_qr(
+    decoder: &mut quircs::Quirc,
+    file: web_sys::File,
+) -> Result<
+    impl std::iter::Iterator<Item = Result<String, Box<dyn std::error::Error>>> + '_,
+    Box<dyn std::error::Error>,
+> {
+    let img = load_image(file).await?;
     log::info!("Loaded image");
 
     let codes = decoder.identify(img.width() as usize, img.height() as usize, &img);
 
-    for code in codes {
-        let code: Result<quircs::Code, String> = code.map_err(|err| err.to_string());
-        let data: Result<quircs::Data, String> =
-            code.and_then(|code| code.decode().map_err(|err| err.to_string()));
-        let decoded: Result<Vec<u8>, String> = data.map(|decoded| decoded.payload);
-        let msg: String = decoded
-            .and_then(|decoded| {
-                std::str::from_utf8(&decoded)
-                    .map_err(|err| err.to_string())
-                    .map(|data| format!("Data {}", data))
-            })
-            .unwrap_or_else(|err| format!("Error {}", err));
+    Ok(codes.map(|code| {
+        let code = code?;
+        let decoded = code.decode()?;
+        let payload = decoded.payload;
+        let msg = std::str::from_utf8(&payload)?;
         log::info!("{}", &msg);
-        web_sys::window().unwrap().alert_with_message(&msg).unwrap();
-    }
+        Ok(msg.to_owned())
+    }))
 
     /* let decoder = bardecoder::default_decoder();
 
