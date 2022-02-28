@@ -19,4 +19,5 @@ from . import processes
 
 urlpatterns = [
     path('qr-landing', views.qr_landing, name="qr-landing"),
+    path('manage', views.QR_management, name="manage"),
 ]
