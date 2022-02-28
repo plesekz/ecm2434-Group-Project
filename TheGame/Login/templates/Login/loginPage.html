@@ -1,0 +1,70 @@
+{% extends 'Login/navbarTemplate.html' %}
+
+{% block headBlock %}
+<style>
+
+    form.signForm{
+        margin-left: 35%;
+        margin-right: 35%;
+    }
+
+</style>
+
+{% endblock %}
+
+
+{% block bodyBlock %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+<main class="form-signin text-center">
+
+    <form name="mainForm" class="signForm" action="{% url 'validateLogin' %}" method="post" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <h1 class="h2 mb-3">Sign in here</h1>
+        <div class="form-floating">
+            <input type="text" class="form-control" placeholder="email" name="email" id="emailInput" required>
+            <label for="emailInput">email address/username</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" placeholder="password" name="password" id="passwordInput" required>
+            <label for="passwordInput">password</label>
+        </div>
+        <div style="padding-top: 2px;padding-bottom: 2px;">
+            <input type="checkbox" onclick="togglePassword()"> show password
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">
+            Sign in
+        </button>
+    </form>
+
+    <a href="{% url 'register' %}">Don't have an account, register here!</a>
+
+</main>
+
+<script>
+    function validateForm(){
+        //let f = document.forms["mainForm"];
+        //let emailString = f["email"].value;
+        //const emailRegEx = /^\w+@\w+\.\w+$/
+        //if (!(emailRegEx.exec(emailString) != null)){
+        //    alert("email address formatted incorrectly");
+        //    return false;
+        //}
+        return true;
+    }
+
+    function togglePassword(){
+        var passInput = document.getElementById("passwordInput");
+        if (passInput.type == "password"){
+            passInput.type = "text";
+        }
+        else {
+            passInput.type = "password";
+        }
+    }
+</script>
+
+{% endblock %}
