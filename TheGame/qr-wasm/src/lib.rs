@@ -7,23 +7,6 @@ use wasm_bindgen::prelude::*;
 pub fn main() -> Result<(), JsValue> {
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));
     wasm_logger::init(wasm_logger::Config::default());
-
-    // Use `web_sys`'s global `window` function to get a handle on the global
-    // window object.
-    let window = web_sys::window().expect("no global `window` exists");
-    let document = window.document().expect("should have a document on window");
-    let body = document.body().expect("document should have a body");
-
-    // Manufacture the element we're gonna append
-    let val = document.create_element("p")?;
-    val.set_inner_html("Hello from Rust!");
-
-    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(
-        &document.document_uri().unwrap(),
-    ));
-
-    body.append_child(&val)?;
-
     Ok(())
 }
 
