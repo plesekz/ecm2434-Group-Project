@@ -1,7 +1,6 @@
 use std::cell::Cell;
 use std::rc::Rc;
 use wasm_bindgen::prelude::*;
-
 // Called when the wasm module is instantiated
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
@@ -62,6 +61,11 @@ impl QRManager {
                                 Ok(code) => {
                                     let result = self.retrieve_res(&code).await;
                                     log::info!("result: {:?}", result);
+                                    let msg = match result {
+                                        Ok(res) => format!("Result: {:?}", res),
+                                        Err(err) => format!("Error: {:?}", err),
+                                    };
+                                    self.window.alert_with_message(&msg).unwrap();
                                 }
                                 Err(err) => {
                                     log::error!("Error: {:?}", err);
@@ -102,8 +106,10 @@ impl QRManager {
         let text_promise = response.text().map_err(|err| format!("Error: {:?}", err))?;
         let result = wasm_bindgen_futures::JsFuture::from(text_promise).await;
         let result = result.map_err(|err| format!("Error: {:?}", err))?;
-
-        Ok(format!("{:?}", result))
+        let text: String = result
+            .as_string()
+            .ok_or_else(|| format!("Failed to convert to string: {:?}", result))?;
+        Ok(format!("{:?}", text))
     }
     fn spawn_task(&mut self) {
         self.age.set(self.age.get().wrapping_add(1));
