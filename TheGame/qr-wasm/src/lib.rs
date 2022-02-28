@@ -39,6 +39,7 @@ impl Default for Callback {
 #[wasm_bindgen]
 pub struct QRManager {
     files: Rc<Cell<Vec<web_sys::File>>>,
+    scan_count: Rc<Cell<usize>>,
     running: Rc<Cell<bool>>,
     age: Rc<Cell<usize>>,
     callback: Rc<Cell<Callback>>,
@@ -47,9 +48,9 @@ pub struct QRManager {
 #[derive(Debug)]
 #[wasm_bindgen]
 pub struct Status {
-    running: bool,
-    scanned: usize,
-    tasks: usize,
+    pub running: bool,
+    pub scanned: usize,
+    pub tasks: usize,
 }
 
 impl QRManager {
@@ -68,6 +69,7 @@ impl QRManager {
             self.running.set(true);
             if let Some(file) = file {
                 load_qr(&mut decoder, file).await;
+                self.scan_count.set(self.scan_count.get() + 1);
             } else {
                 break;
             }
@@ -112,6 +114,12 @@ impl QRManager {
             }
             if let Some(elem) = document.get_element_by_id(&tasks_left_id) {
                 let new = status.tasks.to_string();
+                let width = status.tasks as f32 / (status.scanned + status.tasks).max(1) as f32;
+                let width = 100.0 - width * 100.0;
+                log::info!("Width: {}", width);
+                if let Err(err) = elem.set_attribute("style", &format!("width: {}%", width as usize)) {
+                    log::error!("{:?}", err);
+                }
                 elem.set_inner_html(&new);
             }
             if let Some(elem) = document.get_element_by_id(&scanned_count_id) {
@@ -133,6 +141,9 @@ impl QRManager {
     pub fn load_file_list(&mut self, new_files: web_sys::FileList) {
         {
             let mut files = self.files.take();
+            if files.is_empty() {
+                self.scan_count.set(0);
+            }
             for i in 0..new_files.length() {
                 if let Some(file) = new_files.get(i) {
                     files.push(file);
@@ -151,7 +162,7 @@ impl QRManager {
         self.files.set(files);
         Status {
             running: self.running.get(),
-            scanned: 0,
+            scanned: self.scan_count.get(),
             tasks,
         }
     }
