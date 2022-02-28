@@ -91,18 +91,30 @@
                         <input type="text" class="form-control" id="codeID" placeholder="Code's ID">
                     </div>
                     <div>
-                        <label for="resource1Type" class="form-label">
-                            Resource 1 type
-                        </label>
-                        <input type="text" class="form-control" id="resource1Type" placeholder="Resource Type"><!-- change to radial later on -->
+                        <div>
+                            <label for="resource1Type" class="form-label">
+                                Resource 1 type
+                            </label>
+                            <fieldset>
+                                <div class="form-check">
+                                    <input type="radio" name="res1Type" class="form-check-input" id="resource1TypeRock" placeholder="Resource Type">
+                                    <label class="form-check-label" for="resource1Type">Rock</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" name="res1Type" class="form-check-input" id="resource1TypeWood" placeholder="Resource Type">
+                                    <label class="form-check-label" for="resource1Type">Wood</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div>
+                            <label for="resource1Type" class="form-label">
+                                Resource 1 amount
+                            </label>
+                            <input type="text" class="form-control" id="resource1Amount" placeholder="Resource Amount">
+                        </div>
                     </div>
-                    <div>
-                        <label for="resource1Type" class="form-label">
-                            Resource 1 amount
-                        </label>
-                        <input type="text" class="form-control" id="resource1Amount" placeholder="Resource Amount">
-                    </div>
-                    <!-- Figure out how to have multiple resources -->
+                    <!-- repeat above structure for the number of resources in game -->
+                    <!-- add buttons that add and remove resource fields as needed -->
                 </div>
                 <div class="modal-footer" style="justify-content:space-between; align-items:start;">
                     <button id="closeModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Dismiss</button>
