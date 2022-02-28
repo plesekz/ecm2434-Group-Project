@@ -6,10 +6,16 @@ from Login.models import Player
 class Resource(models.Model):
     name = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.name
+
 class PlayerResource(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
     amount = models.IntegerField()
+
+    def __str__(self):
+        return self.player + " has " + self.amount + " " + self.resource
 
 # class QRResources(model.Model):
 #     qr = models.ForeignKey(QRCode, on_delete=models.CASCADE)
