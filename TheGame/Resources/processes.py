@@ -39,7 +39,7 @@ def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> 
     '''
     ##code
     # check the player has this resource
-    if not (pr := PlayerResource.objects.filter(resource=resource, player=user, amount=amount)).exists():
+    if not (pr := PlayerResource.objects.filter(resource=resource, player=user)).exists():
         raise Exception('player does not have these resources')
     relation = pr[0]
     
