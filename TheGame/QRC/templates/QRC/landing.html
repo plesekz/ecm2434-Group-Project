@@ -14,24 +14,31 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<script type="module">
 		{% load static %}
-      import init, { load_qr_list, QRManager } from "{% static 'QRC/qr_wasm.js' %}";
+      import init, { QRManager } from "{% static 'QRC/qr_wasm.js' %}";
 
       async function run() {
         await init();
-		  
-		  
+
+
 		const manager = new QRManager();
-        
-        var loadQRinput = document.getElementById("loadQR");
-        loadQRinput.onchange = () => {
-			manager.load_file_list(loadQRinput.files);
-        }
-		
-		var cancelQRinput = document.getElementById("cancelQR");
-        cancelQRinput.onclick = () => {
-          manager.stop();
-        }
-		
+		manager.set_status_ids('runningStatus', 'taskCount', 'ScannedCount');
+		manager.call_callback();
+
+		var loadQRinputs = document.getElementsByClassName("loadQR");
+		for (let i = 0; i < loadQRinputs.length; i++) {
+			loadQRinputs[i].onchange = () => {
+				manager.load_file_list(loadQRinputs[i].files);
+			}
+		}
+
+
+		var cancelQRinput = document.getElementsByClassName("cancelQR");
+        for (let i = 0; i < cancelQRinput.length; i++) {
+			cancelQRinput[i].onclick = () => {
+				manager.stop();
+			}
+		}
+
       }
 
       run();
@@ -49,7 +56,7 @@
             <div class="container">
                 <!-- button container -->
 				Load QR code
-				<input type="file" id='loadQR' name="file" accept="image/*" capture="camera" multiple value=""    class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#addQRCodeModal"/>
+				<button class="loadQR btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#addQRCodeModal">Upload QR</button>
             </div>
         </div>
     </main>
@@ -63,11 +70,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+					<p> Running <span id='runningStatus'/></p>
                     <div>
                         <label for="codeID" class="form-label">
-                            ID
+							Loading <span id='taskCount'/>
                         </label>
-                        <input type="text" class="form-control" id="codeID" placeholder="Code's ID">
                     </div>
                     <div>
                         <div>
@@ -96,19 +103,13 @@
                     <!-- add buttons that add and remove resource fields as needed -->
                 </div>
                 <div class="modal-footer" style="justify-content:space-between; align-items:start;">
+
+					<div class="container">
+						<input type="file" name="file" accept="image/*" capture="camera" multiple value="" class="loadQR btn btn-success"/>
+					</div>
                     <button id="closeModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Dismiss</button>
-					
-                    <button id="cancelQR" type="button" class="btn btn-danger" data-bs-dismiss="modal" >Cancel</button>
-                    <div class="w-75">
-                        <button id="submit" type="button" class="btn btn-success" onclick="addQR()">Submit</button>
-                        <div id="processing" class="spinner-border text-success" role="status" style="display:none;"></div>
-                        <div id="success" class="alert alert-success fade show" style="display:none;">
-                            Success!
-                        </div>
-                        <div id="submitError" class="alert alert-danger fade show" style="display:none;">
-                            This text should be replaced by an error message. If you are seeing this, something is wrong.
-                        </div>
-                    </div>
+
+                    <button type="button" class="cancelQR btn btn-danger">Cancel</button>
                 </div>
             </div>
         </div>

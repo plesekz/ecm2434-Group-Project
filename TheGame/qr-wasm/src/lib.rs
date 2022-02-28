@@ -27,12 +27,21 @@ pub fn main() -> Result<(), JsValue> {
     Ok(())
 }
 
+pub struct Callback(Box<dyn Fn(Status)>);
+
+impl Default for Callback {
+    fn default() -> Self {
+        Self(Box::new(|_| {}))
+    }
+}
+
 #[derive(Default, Clone)]
 #[wasm_bindgen]
 pub struct QRManager {
     files: Rc<Cell<Vec<web_sys::File>>>,
     running: Rc<Cell<bool>>,
     age: Rc<Cell<usize>>,
+    callback: Rc<Cell<Callback>>,
 }
 
 #[derive(Debug)]
@@ -43,12 +52,11 @@ pub struct Status {
     tasks: usize,
 }
 
-#[wasm_bindgen]
 impl QRManager {
-    #[wasm_bindgen(constructor)]
-    pub fn new() -> Self {
-        Self::default()
+    pub fn set_callback(&mut self, callback: Callback) {
+        self.callback.set(callback);
     }
+
     async fn process(self) {
         log::info!("New task");
         let age = self.age.get();
@@ -57,24 +65,70 @@ impl QRManager {
             let mut files = self.files.take();
             let file = files.pop();
             self.files.set(files);
+            self.running.set(true);
             if let Some(file) = file {
                 load_qr(&mut decoder, file).await;
             } else {
                 break;
             }
+            self.call_callback();
             log::info!("Status: {:?}", self.get_status());
         }
         if age == self.age.get() {
             log::info!("Finished files");
+            self.running.set(false);
         } else {
             log::info!("Newer loader");
         }
+        self.call_callback();
     }
     fn spawn_task(&mut self) {
-        self.age.set(self.age.get() + 1);
+        self.age.set(self.age.get().wrapping_add(1));
         let manager = self.clone();
         wasm_bindgen_futures::spawn_local(manager.process());
     }
+}
+
+#[wasm_bindgen]
+impl QRManager {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> Self {
+        Self::default()
+    }
+
+    #[wasm_bindgen]
+    pub fn set_status_ids(
+        &mut self,
+        running_id: String,
+        tasks_left_id: String,
+        scanned_count_id: String,
+    ) {
+        let window = web_sys::window().expect("no global `window` exists");
+        let document = window.document().expect("should have a document on window");
+        self.set_callback(Callback(Box::new(move |status| {
+            if let Some(elem) = document.get_element_by_id(&running_id) {
+                let new = status.running.to_string();
+                elem.set_inner_html(&new);
+            }
+            if let Some(elem) = document.get_element_by_id(&tasks_left_id) {
+                let new = status.tasks.to_string();
+                elem.set_inner_html(&new);
+            }
+            if let Some(elem) = document.get_element_by_id(&scanned_count_id) {
+                let new = status.scanned.to_string();
+                elem.set_inner_html(&new);
+            }
+        })));
+    }
+
+    #[wasm_bindgen]
+    pub fn call_callback(&self) {
+        let status = self.get_status();
+        let callback = self.callback.take();
+        callback.0(status);
+        self.callback.set(callback);
+    }
+
     #[wasm_bindgen]
     pub fn load_file_list(&mut self, new_files: web_sys::FileList) {
         {
@@ -106,6 +160,7 @@ impl QRManager {
     pub fn stop(&mut self) {
         self.running.set(false);
         let _ = self.files.take();
+
         log::info!("Stopping")
     }
 }
@@ -187,23 +242,4 @@ async fn load_qr(decoder: &mut quircs::Quirc, file: web_sys::File) {
         web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
         web_sys::window().unwrap().alert_with_message(&msg).unwrap();
     }*/
-}
-
-#[wasm_bindgen]
-pub async fn load_qr_list(files: web_sys::FileList) {
-    let len = files.length();
-    log::info!("Loading {} files", len);
-
-    let mut decoder = quircs::Quirc::default();
-
-    for i in 0..len {
-        if let Some(file) = files.get(i) {
-            load_qr(&mut decoder, file).await;
-        }
-        log::info!("Loaded {}/{}", i + 1, len);
-    }
-    web_sys::window()
-        .unwrap()
-        .alert_with_message(&format!("Loaded {} files", len))
-        .unwrap();
 }
