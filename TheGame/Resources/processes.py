@@ -13,7 +13,7 @@ def addResourceToUser(user : Player, resource : Resource, amount : int) -> None:
     be sure to wrap this function in a try/catch block as it will throw Exceptions
     that should be dealt with
     '''
-    
+
     ##code
     ## if player already has this resource then increment
     if (pr := PlayerResource.objects.filter(resource=resource, player=user)).exists():
@@ -24,11 +24,6 @@ def addResourceToUser(user : Player, resource : Resource, amount : int) -> None:
         relation = PlayerResource.objects.create(
             player=user, resource=resource, amount=amount
         )
-        # relation.player = user
-        # relation.player_id = user.pk
-        # relation.resource = resource
-        # relation.resource_id = resource.pk
-        # relation.amount = amount
         relation.save()
 
 def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> None:
