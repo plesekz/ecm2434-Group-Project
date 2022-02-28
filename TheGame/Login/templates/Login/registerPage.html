@@ -3,11 +3,6 @@
 {% block headBlock %}
 <style>
 
-    form.signForm{
-        margin-left: 35%;
-        margin-right: 35%;
-    }
-
 </style>
 
 <script>
@@ -41,8 +36,8 @@
     {% endfor %}
 {% endif %}
 
-<main class="form-signin" class="text-center">
-
+<main class="form-signin text-center">
+<div class="container">
     <form name="mainForm" class="signForm" action="{% url 'validateRegister' %}" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
         <h1 class="h2 mb-3">Register here</h1>
@@ -66,7 +61,7 @@
             Register
         </button>
     </form>
-
+</div>
 </main>
 
 
