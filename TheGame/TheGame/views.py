@@ -15,3 +15,16 @@ def homePageView(request):
     output = template.render(context)
 
     return HttpResponse(output)
+
+def characterMenu(request):
+
+    if request.COOKIES.get('TheGameSessionID') == None:
+        return HttpResponseRedirect('login')
+
+    user = getUserFromCookie(request)
+
+    template = loader.get_template('TheGame/CharacterMenu.html')
+    context = {"username" : user.username}
+    output = template.render(context)
+
+    return HttpResponse(output)

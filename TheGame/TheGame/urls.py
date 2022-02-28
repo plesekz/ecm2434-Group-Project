@@ -15,10 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from TheGame.views import characterMenu
 from TheGame.views import homePageView
+from . import processes
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homePageView, name="homePage"),
+    path('characterMenu/', characterMenu, name="charactermenu"),
+    path('buyhealth/', processes.buyhealth, name="buyhealth"),
     path('login/', include("Login.urls")),
 ]
