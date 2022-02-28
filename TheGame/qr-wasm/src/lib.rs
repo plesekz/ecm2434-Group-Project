@@ -1,9 +1,12 @@
+use std::cell::Cell;
+use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 
 // Called when the wasm module is instantiated
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));
+    wasm_logger::init(wasm_logger::Config::default());
 
     // Use `web_sys`'s global `window` function to get a handle on the global
     // window object.
@@ -24,6 +27,89 @@ pub fn main() -> Result<(), JsValue> {
     Ok(())
 }
 
+#[derive(Default, Clone)]
+#[wasm_bindgen]
+pub struct QRManager {
+    files: Rc<Cell<Vec<web_sys::File>>>,
+    running: Rc<Cell<bool>>,
+    age: Rc<Cell<usize>>,
+}
+
+#[derive(Debug)]
+#[wasm_bindgen]
+pub struct Status {
+    running: bool,
+    scanned: usize,
+    tasks: usize,
+}
+
+#[wasm_bindgen]
+impl QRManager {
+    #[wasm_bindgen(constructor)]
+    pub fn new() -> Self {
+        Self::default()
+    }
+    async fn process(self) {
+        log::info!("New task");
+        let age = self.age.get();
+        let mut decoder = quircs::Quirc::default();
+        while age == self.age.get() {
+            let mut files = self.files.take();
+            let file = files.pop();
+            self.files.set(files);
+            if let Some(file) = file {
+                load_qr(&mut decoder, file).await;
+            } else {
+                break;
+            }
+            log::info!("Status: {:?}", self.get_status());
+        }
+        if age == self.age.get() {
+            log::info!("Finished files");
+        } else {
+            log::info!("Newer loader");
+        }
+    }
+    fn spawn_task(&mut self) {
+        self.age.set(self.age.get() + 1);
+        let manager = self.clone();
+        wasm_bindgen_futures::spawn_local(manager.process());
+    }
+    #[wasm_bindgen]
+    pub fn load_file_list(&mut self, new_files: web_sys::FileList) {
+        {
+            let mut files = self.files.take();
+            for i in 0..new_files.length() {
+                if let Some(file) = new_files.get(i) {
+                    files.push(file);
+                }
+            }
+            self.files.set(files);
+        }
+        self.spawn_task();
+        log::info!("{:?}", self.get_status());
+    }
+
+    #[wasm_bindgen]
+    pub fn get_status(&self) -> Status {
+        let files = self.files.take();
+        let tasks = files.len();
+        self.files.set(files);
+        Status {
+            running: self.running.get(),
+            scanned: 0,
+            tasks,
+        }
+    }
+
+    #[wasm_bindgen]
+    pub fn stop(&mut self) {
+        self.running.set(false);
+        let _ = self.files.take();
+        log::info!("Stopping")
+    }
+}
+
 async fn load_image(file: web_sys::File) -> Result<image::GrayImage, Box<dyn std::error::Error>> {
     let buffer = wasm_bindgen_futures::JsFuture::from(file.array_buffer())
         .await
@@ -39,7 +125,7 @@ async fn load_image(file: web_sys::File) -> Result<image::GrayImage, Box<dyn std
     Ok(img.into_luma8())
 }
 
-async fn load_qr(decoder: &mut quircs::Quirc, file: web_sys::File, index: u32, total: u32) {
+async fn load_qr(decoder: &mut quircs::Quirc, file: web_sys::File) {
     let img = match load_image(file).await {
         Ok(img) => img,
         Err(err) => {
@@ -48,6 +134,7 @@ async fn load_qr(decoder: &mut quircs::Quirc, file: web_sys::File, index: u32, t
             return;
         }
     };
+    log::info!("Loaded image");
 
     let codes = decoder.identify(img.width() as usize, img.height() as usize, &img);
 
@@ -63,7 +150,7 @@ async fn load_qr(decoder: &mut quircs::Quirc, file: web_sys::File, index: u32, t
                     .map(|data| format!("Data {}", data))
             })
             .unwrap_or_else(|err| format!("Error {}", err));
-        web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
+        log::info!("{}", &msg);
         web_sys::window().unwrap().alert_with_message(&msg).unwrap();
     }
 
@@ -100,27 +187,20 @@ async fn load_qr(decoder: &mut quircs::Quirc, file: web_sys::File, index: u32, t
         web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
         web_sys::window().unwrap().alert_with_message(&msg).unwrap();
     }*/
-    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!(
-        "Parsed Image {}/{}",
-        index + 1,
-        total
-    )));
 }
 
 #[wasm_bindgen]
 pub async fn load_qr_list(files: web_sys::FileList) {
     let len = files.length();
-    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!(
-        "Loading {} files",
-        len
-    )));
+    log::info!("Loading {} files", len);
 
     let mut decoder = quircs::Quirc::default();
 
     for i in 0..len {
         if let Some(file) = files.get(i) {
-            load_qr(&mut decoder, file, i, len).await;
+            load_qr(&mut decoder, file).await;
         }
+        log::info!("Loaded {}/{}", i + 1, len);
     }
     web_sys::window()
         .unwrap()
