@@ -17,7 +17,7 @@ js-sys = "0.3.56"
 
 quircs = "0.10.0"
 #bardecoder = "0.3"
-#rqrr = "0.5.1"
+#rqrr = {version = "0.5.1", default-features = false}
 
 [dependencies.image]
 version = "0.24"
@@ -43,3 +43,11 @@ features = [
 
 [profile.release]
 lto = true
+opt-level = 3
+
+[profile.release.package.quircs]
+opt-level = 3
+
+
+[profile.release.package.image]
+opt-level = 3

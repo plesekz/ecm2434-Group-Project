@@ -39,7 +39,7 @@ async fn load_image(file: web_sys::File) -> Result<image::GrayImage, Box<dyn std
     Ok(img.into_luma8())
 }
 
-async fn load_qr(file: web_sys::File, index: u32, total: u32) {
+async fn load_qr(decoder: &mut quircs::Quirc, file: web_sys::File, index: u32, total: u32) {
     let img = match load_image(file).await {
         Ok(img) => img,
         Err(err) => {
@@ -49,23 +49,23 @@ async fn load_qr(file: web_sys::File, index: u32, total: u32) {
         }
     };
 
-    let mut decoder = quircs::Quirc::default();
     let codes = decoder.identify(img.width() as usize, img.height() as usize, &img);
 
     for code in codes {
-        if let Ok(code) = code {
-            if let Ok(decoded) = code.decode() {
-                if let Ok(data) = std::str::from_utf8(&decoded.payload) {
-                    let msg = format!("Data {}", data);
-                    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
-                    web_sys::window().unwrap().alert_with_message(&msg).unwrap();
-                }
-            }
-        }
+        let code: Result<quircs::Code, String> = code.map_err(|err| err.to_string());
+        let data: Result<quircs::Data, String> =
+            code.and_then(|code| code.decode().map_err(|err| err.to_string()));
+        let decoded: Result<Vec<u8>, String> = data.map(|decoded| decoded.payload);
+        let msg: String = decoded
+            .and_then(|decoded| {
+                std::str::from_utf8(&decoded)
+                    .map_err(|err| err.to_string())
+                    .map(|data| format!("Data {}", data))
+            })
+            .unwrap_or_else(|err| format!("Error {}", err));
+        web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
+        web_sys::window().unwrap().alert_with_message(&msg).unwrap();
     }
-    let msg = format!("Parsed Image {}/{}", index + 1, total);
-    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
-    return;
 
     /* let decoder = bardecoder::default_decoder();
 
@@ -79,9 +79,12 @@ async fn load_qr(file: web_sys::File, index: u32, total: u32) {
             web_sys::window().unwrap().alert_with_message(&format!("Data: {:?}", data)).unwrap();
         }
     }*/
-    /*
 
-    let mut img = rqrr::PreparedImage::prepare(img);
+    /*let mut img = rqrr::PreparedImage::prepare_from_greyscale(
+        img.width() as usize,
+        img.height() as usize,
+        |x, y| img.get_pixel(x as u32, y as u32).0[0],
+    );
     let grids = img.detect_grids();
 
     web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!(
@@ -89,12 +92,19 @@ async fn load_qr(file: web_sys::File, index: u32, total: u32) {
         grids.len()
     )));
     for grid in grids.iter() {
-        if let Ok((_metadata, data)) = grid.decode() {
-            web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!("Data {}", data)));
+        let msg = match grid.decode() {
+            Ok((_metadata, data)) => format!("Data {}", data),
+            Err(err) => format!("Error {}", err),
+        };
 
-            web_sys::window().unwrap().alert_with_message(&format!("Data: {:?}", data)).unwrap();
-        }
+        web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
+        web_sys::window().unwrap().alert_with_message(&msg).unwrap();
     }*/
+    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!(
+        "Parsed Image {}/{}",
+        index + 1,
+        total
+    )));
 }
 
 #[wasm_bindgen]
@@ -104,9 +114,12 @@ pub async fn load_qr_list(files: web_sys::FileList) {
         "Loading {} files",
         len
     )));
+
+    let mut decoder = quircs::Quirc::default();
+
     for i in 0..len {
         if let Some(file) = files.get(i) {
-            load_qr(file, i, len).await;
+            load_qr(&mut decoder, file, i, len).await;
         }
     }
     web_sys::window()
