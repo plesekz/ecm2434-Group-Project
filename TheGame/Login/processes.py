@@ -1,4 +1,5 @@
 import time
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from Login.forms import PlayerForm
 from Login.models import Player
@@ -60,6 +61,11 @@ def validateRegister(request):
     messages.success(request, ('Successfully registered'))
     return response
 
+def logoutUser(request):
+    response = HttpResponseRedirect('login')
+    response.delete_cookie('TheGameSessionID')
+    return response
+
 def bake_cookie(usrname):
     cookie = hashlib.sha256((usrname +''+ str(time.time())).encode()).hexdigest()
     return cookie
@@ -78,3 +84,10 @@ def getUserPkFromCookie(request):
     query = Q(userID=cookie)
     user = Player.objects.get(query)
     return user.pk
+
+def getUserFromCookie(request):
+    cookie = request.COOKIES.get('TheGameSessionID')
+    if not (users := Player.objects.filter(userID=cookie)).exists():
+        raise Exception('player does not exist')
+
+    return users[0]
