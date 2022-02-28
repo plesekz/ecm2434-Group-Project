@@ -1,4 +1,5 @@
 import time
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from Login.forms import PlayerForm
 from Login.models import Player
@@ -58,6 +59,11 @@ def validateRegister(request):
     form.save()
     response = redirect("login")
     messages.success(request, ('Successfully registered'))
+    return response
+
+def logoutUser(request):
+    response = HttpResponseRedirect('login')
+    response.delete_cookie('TheGameSessionID')
     return response
 
 def bake_cookie(usrname):
