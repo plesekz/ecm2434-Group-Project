@@ -62,7 +62,9 @@ impl QRManager {
         log::info!("New task");
         let age = self.age.get();
         let mut decoder = quircs::Quirc::default();
+
         while age == self.age.get() {
+            self.call_callback();
             let mut files = self.files.take();
             let file = files.pop();
             self.files.set(files);
@@ -73,7 +75,6 @@ impl QRManager {
             } else {
                 break;
             }
-            self.call_callback();
             log::info!("Status: {:?}", self.get_status());
         }
         if age == self.age.get() {
@@ -116,8 +117,9 @@ impl QRManager {
                 let new = status.tasks.to_string();
                 let width = status.tasks as f32 / (status.scanned + status.tasks).max(1) as f32;
                 let width = 100.0 - width * 100.0;
-                log::info!("Width: {}", width);
-                if let Err(err) = elem.set_attribute("style", &format!("width: {}%", width as usize)) {
+                if let Err(err) =
+                    elem.set_attribute("style", &format!("width: {}%", width as usize))
+                {
                     log::error!("{:?}", err);
                 }
                 elem.set_inner_html(&new);
