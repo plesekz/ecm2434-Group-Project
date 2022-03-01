@@ -43,6 +43,12 @@
             <p class="text-dark">spend your resources on new updagrades!</p>
           </button>
         </div>
+        <div class="col-sm text-dark">
+          <button class="btn btn-secondary" style="background-color:antiquewhite !important;" onclick="onChallengeButtonClick()">
+            <h1 class="text-dark">Challenge an opponent</h1>
+            <p class="text-dark">take your champion to battle!</p>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -51,10 +57,13 @@
 
   <script>
     function onQRButtonClick(){
-      alert("clicked scan QR code")
+      window.location.herf = "/QRC/qr-landing"
     }
     function onManageButtonClick(){
-      alert("clicked manage resources")
+      window.location.href = "/characterMenu"
+    }
+    function onChallengeButtonClick(){
+      window.location.href = window.location.href
     }
   </script>
 
