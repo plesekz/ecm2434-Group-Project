@@ -11,6 +11,7 @@
     button.navigationBtn {
       margin-bottom: 6px !important;
       width: 100%;
+      font-size: medium;
     }
 
   </style>
@@ -24,26 +25,26 @@
     </div>
 
     <div class="row">
-      <div class="col-sm-3 order-2 order-sm-1">
+      <div class="col-sm-3 col-6 order-2 order-sm-1">
         <button class="btn btn-secondary navigationBtn"  style="background-color:lavender !important;" onclick="onQRButtonClick()">
-          <h1 class="text-dark">Scan a new QR code</h1>
+          <h3 class="text-dark">Scan a new QR code</h1>
           <p class="text-dark">scan a new qr code and get some new resources!</p>
         </button>
         <button class="btn btn-secondary navigationBtn" style="background-color:aquamarine !important;" onclick="onManageButtonClick()">
-          <h1 class="text-dark">Manage your champion</h1>
+          <h3 class="text-dark">Manage your champion</h1>
           <p class="text-dark">spend your resources on new upgrades!</p>
         </button>
         <button class="btn btn-secondary navigationBtn" style="background-color:antiquewhite !important;" onclick="onChallengeButtonClick()">
-          <h1 class="text-dark">Challenge an opponent</h1>
+          <h3 class="text-dark">Challenge an opponent</h1>
           <p class="text-dark">take your champion to battle!</p>
         </button>
       </div>
 
-      <div class="col-6 justify-content-start order-1 order-sm-2">
+      <div class="col-12 col-sm-6 justify-content-start order-1 order-sm-2">
         <p>second col</p>
       </div>
 
-      <div class="col-sm-3 order-3 order-sm-3 text-center">
+      <div class="col-sm-3 col-6 order-3 order-sm-3 text-center">
         {% if resources %}
         <h3 style="text-decoration: underline;">Your resources</h2>
         <ul class="list-group">
