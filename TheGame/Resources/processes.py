@@ -50,3 +50,21 @@ def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> 
     # remove the resources
     relation.amount -= amount
     relation.save()
+
+def getAllUserResources(user : Player):
+    """function to return a list of all resources and amounts associated with a user
+
+    Args:
+        user (Player): the user that you would like to get resources of
+    """
+
+    #check if the user has any resources
+    if not (playerResources := PlayerResource.objects.filter(player=user)).exists():
+        return []
+
+    ##iterate throught resources and add them to list
+    resourceList = []
+    for pr in playerResources:
+        resourceList.append((pr.resource, pr.amount))
+
+    return resourceList
