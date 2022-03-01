@@ -130,7 +130,7 @@ impl QRManager {
     async fn retrieve_res(&self, data: &str) -> Result<String, String> {
         let promise = self
             .window
-            .fetch_with_str(&format!("/retrieveRes?data={:?}", data));
+            .fetch_with_str(&format!("/retrieveRes?data={}", data));
         let result = wasm_bindgen_futures::JsFuture::from(promise).await;
         let result = result.map_err(|err| format!("Error: {:?}", err))?;
         let response: web_sys::Response = result.into();
