@@ -68,3 +68,10 @@ def getAllUserResources(user : Player) -> "list[tuple[Resource, int]]":
         resourceList.append((pr.resource, pr.amount))
 
     return resourceList
+
+def getAllResources() -> "list[Resource]":
+    """function that returns all avaliable resources in the database
+    """
+    resources = Resource.objects.all()
+
+    return resources
