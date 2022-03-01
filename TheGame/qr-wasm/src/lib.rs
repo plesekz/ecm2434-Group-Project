@@ -12,9 +12,9 @@ pub fn main() -> Result<(), JsValue> {
 
     let mut manager = QRManager::new();
     manager.set_status_ids(
-        "runningStatus".to_string(),
-        "taskCount".to_string(),
-        "ScannedCount".to_string(),
+        "runningStatus",
+        "taskCount",
+        "ScannedCount",
     );
     manager.call_callback();
 
@@ -181,17 +181,19 @@ impl QRManager {
 
     pub fn set_status_ids(
         &mut self,
-        running_id: String,
-        tasks_left_id: String,
-        scanned_count_id: String,
+        running_id: &str,
+        tasks_left_id: &str,
+        scanned_count_id: &str,
     ) {
-        let manager = self.clone();
+        let running_elem = self.document.get_element_by_id(&running_id);
+        let tasks_left_elem = self.document.get_element_by_id(&tasks_left_id);
+        let scanned_elem = self.document.get_element_by_id(&scanned_count_id);
         self.set_callback(Callback(Box::new(move |status| {
-            if let Some(elem) = manager.document.get_element_by_id(&running_id) {
+            if let Some(elem) = &running_elem {
                 let new = status.running.to_string();
                 elem.set_inner_html(&new);
             }
-            if let Some(elem) = manager.document.get_element_by_id(&tasks_left_id) {
+            if let Some(elem) = &tasks_left_elem {
                 let new = status.tasks.to_string();
                 let width = status.tasks as f32 / (status.scanned + status.tasks).max(1) as f32;
                 let width = 100.0 - width * 100.0;
@@ -202,7 +204,7 @@ impl QRManager {
                 }
                 elem.set_inner_html(&new);
             }
-            if let Some(elem) = manager.document.get_element_by_id(&scanned_count_id) {
+            if let Some(elem) = &scanned_elem {
                 let new = status.scanned.to_string();
                 elem.set_inner_html(&new);
             }
