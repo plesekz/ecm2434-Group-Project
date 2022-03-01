@@ -22,7 +22,7 @@ from . import processes
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homePageView, name="homePage"),
-    path('characterMenu/', characterMenu, name="charactermenu"),
+    path('characterMenu/', characterMenu, name="characterMenu"),
     path('buyhealth/', processes.buyhealth, name="buyhealth"),
     path('login/', include("Login.urls")),
 ]

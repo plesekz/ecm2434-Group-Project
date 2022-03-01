@@ -6,6 +6,6 @@ def buyhealth(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
 
-    response = redirect("CharacterMenu")
+    response = redirect("characterMenu")
 
     return response

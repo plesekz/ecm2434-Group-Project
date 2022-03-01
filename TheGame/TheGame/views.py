@@ -25,6 +25,6 @@ def characterMenu(request):
 
     template = loader.get_template('TheGame/CharacterMenu.html')
     context = {"username" : user.username}
-    output = template.render(context)
+    output = template.render(context, request)
 
     return HttpResponse(output)
