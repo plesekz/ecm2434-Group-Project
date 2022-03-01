@@ -9,10 +9,6 @@ def getUserFromName(request):
     cookie = request.COOKIES.get('TheGameSessionID')
     user = getUserFromCookie(request)
     userStats = pStat.objects.get(player=user)
-    # if not (users := Player.objects.filter(userID=cookie)).exists():
-    #     raise Exception('player does not exist')
-    # if not (userStats := pStat.objects.filter(username=users[0].username)).exists():
-    #     raise Exception('player does not exist')
     return userStats
 
 def buyPHealth(request):
