@@ -14,34 +14,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<script type="module">
 		{% load static %}
-      import init, { QRManager } from "{% static 'QRC/qr_wasm.js' %}";
+      import init from "{% static 'QRC/qr_wasm.js' %}";
 
-      async function run() {
-        await init();
-
-
-		const manager = new QRManager();
-		manager.set_status_ids('runningStatus', 'taskCount', 'ScannedCount');
-		manager.call_callback();
-
-		var loadQRinputs = document.getElementsByClassName("loadQR");
-		for (let i = 0; i < loadQRinputs.length; i++) {
-			loadQRinputs[i].onchange = () => {
-				manager.load_file_list(loadQRinputs[i].files);
-			}
-		}
-
-
-		var cancelQRinput = document.getElementsByClassName("cancelQR");
-        for (let i = 0; i < cancelQRinput.length; i++) {
-			cancelQRinput[i].onclick = () => {
-				manager.stop();
-			}
-		}
-
-      }
-
-      run();
+      init();
     </script>
     <header>
         <div class="navbar navbar-dark bg-dark shadow-sm">
@@ -87,7 +62,7 @@
 					</div>
                     <button id="closeModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Dismiss</button>
 
-                    <button type="button" class="cancelQR btn btn-danger">Cancel Loading</button>
+                    <input type="button" class="cancelQR btn btn-danger" value="Cancel Loading">
                 </div>
             </div>
         </div>

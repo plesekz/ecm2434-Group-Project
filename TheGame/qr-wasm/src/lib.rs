@@ -1,11 +1,52 @@
 use std::cell::Cell;
 use std::rc::Rc;
+use wasm_bindgen::closure::Closure;
 use wasm_bindgen::prelude::*;
+use wasm_bindgen::JsCast;
+
 // Called when the wasm module is instantiated
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
     std::panic::set_hook(Box::new(console_error_panic_hook::hook));
     wasm_logger::init(wasm_logger::Config::default());
+
+    let mut manager = QRManager::new();
+    manager.set_status_ids(
+        "runningStatus".to_string(),
+        "taskCount".to_string(),
+        "ScannedCount".to_string(),
+    );
+    manager.call_callback();
+
+    let elems = manager.document.get_elements_by_class_name("loadQR");
+    for elem in (0..elems.length())
+        .flat_map(|i| elems.item(i))
+        .flat_map(|elem| elem.dyn_into::<web_sys::HtmlInputElement>())
+    {
+        let manager = manager.clone();
+        let elem_clone = elem.clone();
+        let closure: Closure<dyn Fn()> = Closure::wrap(Box::new(move || {
+            if let Some(files) = elem_clone.files() {
+                manager.load_file_list(files);
+            }
+        }) as Box<dyn Fn()>);
+        let function: &js_sys::Function = closure.as_ref().unchecked_ref();
+        elem.set_onchange(Some(function));
+
+        closure.forget();
+    }
+
+    let elems = manager.document.get_elements_by_class_name("cancelQR");
+    let closure: Closure<dyn Fn()> =
+        Closure::wrap(Box::new(move || manager.stop()) as Box<dyn Fn()>);
+    let function: &js_sys::Function = closure.as_ref().unchecked_ref();
+    for elem in (0..elems.length())
+        .flat_map(|i| elems.item(i))
+        .flat_map(|elem| elem.dyn_into::<web_sys::HtmlInputElement>())
+    {
+        elem.set_onclick(Some(function));
+    }
+
     Ok(())
 }
 
@@ -18,7 +59,6 @@ impl Default for Callback {
 }
 
 #[derive(Clone)]
-#[wasm_bindgen]
 pub struct QRManager {
     files: Rc<Cell<Vec<web_sys::File>>>,
     scan_count: Rc<Cell<usize>>,
@@ -30,7 +70,6 @@ pub struct QRManager {
 }
 
 #[derive(Debug)]
-#[wasm_bindgen]
 pub struct Status {
     pub running: bool,
     pub scanned: usize,
@@ -111,7 +150,7 @@ impl QRManager {
             .ok_or_else(|| format!("Failed to convert to string: {:?}", result))?;
         Ok(format!("{:?}", text))
     }
-    fn spawn_task(&mut self) {
+    fn spawn_task(&self) {
         self.age.set(self.age.get().wrapping_add(1));
         let manager = self.clone();
         wasm_bindgen_futures::spawn_local(manager.process());
@@ -124,9 +163,7 @@ impl Default for QRManager {
     }
 }
 
-#[wasm_bindgen]
 impl QRManager {
-    #[wasm_bindgen(constructor)]
     pub fn new() -> Self {
         let window = web_sys::window().expect("no global `window` exists");
         let document = window.document().expect("should have a document on window");
@@ -141,7 +178,6 @@ impl QRManager {
         }
     }
 
-    #[wasm_bindgen]
     pub fn set_status_ids(
         &mut self,
         running_id: String,
@@ -172,7 +208,6 @@ impl QRManager {
         })));
     }
 
-    #[wasm_bindgen]
     pub fn call_callback(&self) {
         let status = self.get_status();
         let callback = self.callback.take();
@@ -180,8 +215,7 @@ impl QRManager {
         self.callback.set(callback);
     }
 
-    #[wasm_bindgen]
-    pub fn load_file_list(&mut self, new_files: web_sys::FileList) {
+    pub fn load_file_list(&self, new_files: web_sys::FileList) {
         {
             let mut files = self.files.take();
             if files.is_empty() {
@@ -198,7 +232,6 @@ impl QRManager {
         log::info!("{:?}", self.get_status());
     }
 
-    #[wasm_bindgen]
     pub fn get_status(&self) -> Status {
         let files = self.files.take();
         let tasks = files.len();
@@ -211,8 +244,7 @@ impl QRManager {
         }
     }
 
-    #[wasm_bindgen]
-    pub fn stop(&mut self) {
+    pub fn stop(&self) {
         self.running.set(false);
         let _ = self.files.take();
 
