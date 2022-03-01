@@ -13,21 +13,27 @@
   <body>
     <main>
     <div class="container text-center">
-      <div class="jumbotron">
-        <h1 class>{{user.username}}'s Homepage</h1>
+      <div class="jumbotron font-weight-bold">
+        <h1 style="font-weight: bold;">{{user.username}}'s Homepage</h1>
       </div>
     </div>
 
-    {% if resources %}
-    <ul class="list-group list-group-flush">
-      <h3>You have these resources availiable:</h2>
-      {% for res in resources %}
-      <li class="list-group-item">
-        {{res.1}}, {{res.0.name}}
-      </li>
-      {% endfor %}
-    </ul>
-    {% endif %}
+    <div class="container" style="padding-bottom:16px">
+      <div class="row justify-content-center">
+        {% if resources %}
+        <h3>Your resources:</h2>
+        <ul class="list-group list-group-horizontal">
+          {% for res in resources %}
+          <div class="col-sm text-center">
+            <li class="list-group-item">
+              {{res.0.name}}: {{res.1}}
+            </li>
+          </div>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </div>
+    </div>
 
     <div class="container-fluid text-center">
       <div class="row justify-content-around">
@@ -39,8 +45,8 @@
         </div>
         <div class="col-sm text-dark">
           <button class="btn btn-secondary" style="background-color:aquamarine !important;" onclick="onManageButtonClick()">
-            <h1 class="text-dark">Manage your resources</h1>
-            <p class="text-dark">spend your resources on new updagrades!</p>
+            <h1 class="text-dark">Manage your champion</h1>
+            <p class="text-dark">spend your resources on new upgrades!</p>
           </button>
         </div>
         <div class="col-sm text-dark">
