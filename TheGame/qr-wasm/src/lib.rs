@@ -11,11 +11,7 @@ pub fn main() -> Result<(), JsValue> {
     wasm_logger::init(wasm_logger::Config::default());
 
     let mut manager = QRManager::new();
-    manager.set_status_ids(
-        "runningStatus",
-        "taskCount",
-        "ScannedCount",
-    );
+    manager.set_status_ids("runningStatus", "taskCount", "ScannedCount");
     manager.call_callback();
 
     let elems = manager.document.get_elements_by_class_name("loadQR");
@@ -93,35 +89,33 @@ impl QRManager {
             let file = files.pop();
             self.files.set(files);
             self.running.set(true);
-            if let Some(file) = file {
-                match load_qr(&mut decoder, file).await {
-                    Ok(codes) => {
-                        for code in codes {
-                            match code {
-                                Ok(code) => {
-                                    let result = self.retrieve_res(&code).await;
-                                    log::info!("result: {:?}", result);
-                                    let msg = match result {
-                                        Ok(res) => format!("Result: {:?}", res),
-                                        Err(err) => format!("Error: {:?}", err),
-                                    };
-                                    self.window.alert_with_message(&msg).unwrap();
-                                }
-                                Err(err) => {
-                                    log::error!("Error: {:?}", err);
-                                }
+            let file = if let Some(file) = file { file } else { break };
+            match load_qr(&mut decoder, file).await {
+                Ok(codes) => {
+                    for code in codes {
+                        match code {
+                            Ok(code) => {
+                                let result = self.retrieve_res(&code).await;
+                                log::info!("result: {:?}", result);
+                                let msg = match result {
+                                    Ok(res) => format!("Result: {:?}", res),
+                                    Err(err) => format!("Error: {:?}", err),
+                                };
+                                self.window.alert_with_message(&msg).unwrap();
+                            }
+                            Err(err) => {
+                                log::error!("Error: {:?}", err);
                             }
                         }
                     }
-                    Err(err) => {
-                        log::error!("Error: {:?}", err)
-                    }
                 }
-
-                self.scan_count.set(self.scan_count.get() + 1);
-            } else {
-                break;
+                Err(err) => {
+                    log::error!("Error: {:?}", err)
+                }
             }
+
+            self.scan_count.set(self.scan_count.get() + 1);
+
             log::info!("Status: {:?}", self.get_status());
         }
         if age == self.age.get() {
