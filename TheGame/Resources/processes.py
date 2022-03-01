@@ -51,7 +51,7 @@ def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> 
     relation.amount -= amount
     relation.save()
 
-def getAllUserResources(user : Player):
+def getAllUserResources(user : Player) -> "list[tuple[Resource, int]]":
     """function to return a list of all resources and amounts associated with a user
 
     Args:
