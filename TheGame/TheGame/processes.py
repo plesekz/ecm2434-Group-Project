@@ -11,29 +11,35 @@ def getUserFromName(request):
         raise Exception('player does not exist')
     return userStats[0]
 
-def buyhealth(request):
+def buyPHealth(request):
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
-
-    response = redirect("login")
+    userStats = getUserFromName(request)
+    userStats.pHealth += 1
+    userStats.save()
+    response = redirect("characterMenu")
 
     return response
 
-def buyToughness(request):
+def buyPToughness(request):
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
-
-    response = redirect("login")
+    userStats = getUserFromName(request)
+    userStats.pToughness += 1
+    userStats.save()
+    response = redirect("characterMenu")
 
     return response
 
-def buyEvasion(request):
+def buyPEvasion(request):
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
-
-    response = redirect("login")
+    userStats = getUserFromName(request)
+    userStats.pEvasion += 1
+    userStats.save()
+    response = redirect("characterMenu")
 
     return response

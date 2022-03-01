@@ -23,6 +23,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homePageView, name="homePage"),
     path('characterMenu/', characterMenu, name="characterMenu"),
-    path('buyhealth/', processes.buyhealth, name="buyhealth"),
+    path('buyphealth/', processes.buyPHealth, name="buyphealth"),
+    path('buyptoughness/', processes.buyPToughness, name="buyptoughness"),
+    path('buypevasion/', processes.buyPEvasion, name="buypevasion"),
     path('login/', include("Login.urls")),
 ]
