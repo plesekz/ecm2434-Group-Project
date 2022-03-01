@@ -1,4 +1,5 @@
 from random import randint
+import TheGame.models
 import math
 
 def take_turn(player, target):
@@ -15,7 +16,11 @@ def check_if_dead(player):
         return True
     return False 
 
-def battle(p1, p2):
+def battle(player1, player2):
+    #to collapse the defensive stats once rather than every time its called
+    p1 = Player(player1)
+    p2 = Player(player2)
+    
     #decides who goes first randomly
     #50% chance p1 goes first, 50% chance p2 goes first
     if (randint(0,1) == 1):
@@ -37,13 +42,13 @@ def battle(p1, p2):
         take_turn(p1,p2)
 
 class Player:
-    def __init__(self, pHealth, pToughness, pEvasion, damage, accuracy, attackSpeed, aHealth, aToughness, aEvasion):
-        self.hp = pHealth + aHealth
-        self.tg = pToughness + aToughness
-        self.ev = pEvasion + aEvasion
-        self.dmg = damage
-        self.acc = accuracy 
-        self.num = attackSpeed
+    def __init__(self, pStat):
+        self.hp = pStat.pHealth + pStat.aHealth
+        self.tg = pStat.pToughness + pStat.aToughness
+        self.ev = pStat.pEvasion + pStat.aEvasion
+        self.dmg = pStat.damage
+        self.acc = pStat.accuracy 
+        self.num = pStat.attackSpeed
 
 #temp for testing purposes
 #p1 = Player(100, 100, 10, 2, 100, 1, 0, 0, 0)
