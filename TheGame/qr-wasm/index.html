@@ -1,0 +1,25 @@
+<html>
+  <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type"/>
+  </head>
+  <body>
+    <script type="module">
+      import init, { load_qr_list } from './pkg/qr_wasm.js';
+
+      async function run() {
+        await init();
+        
+        var loadQRinput = document.getElementById("loadQR");
+        loadQRinput.onchange = () => {
+          load_qr_list(loadQRinput.files);
+        }
+      }
+
+      run();
+    </script>
+    <form>
+      <input type="file" id='loadQR' name="file" accept="image/*" capture="camera" multiple />
+    </form>
+    
+  </body>
+</html>

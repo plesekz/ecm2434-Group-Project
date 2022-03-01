@@ -1,5 +1,4 @@
 """TheGame URL Configuration
-
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
 Examples:
@@ -14,14 +13,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-
-from TheGame.views import homePageView
-
+from django.urls import path
+from . import views
+from . import processes
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('qr/', include("QRC.urls")),
-    path('', homePageView, name="homePage"),
-    path('login/', include("Login.urls")),
+    path('qr-landing', views.qr_landing, name="qr-landing"),
+    path('manage', views.QR_management, name="manage"),
 ]
