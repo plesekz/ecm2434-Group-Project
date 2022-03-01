@@ -2,6 +2,7 @@ from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
+from TheGame.processes import getUserFromName
 
 def homePageView(request):
 
@@ -22,9 +23,21 @@ def characterMenu(request):
         return HttpResponseRedirect('login')
 
     user = getUserFromCookie(request)
+    userStats = getUserFromName(request)
 
     template = loader.get_template('TheGame/CharacterMenu.html')
-    context = {"username" : user.username}
+    context = {
+    "username" : user.username,
+    "pHealth" : userStats.pHealth,
+    "pToughness" : userStats.pToughness,
+    "pEvasion" : userStats.pEvasion,
+    "damage" : userStats.damage,
+    "accuracy" : userStats.accuracy,
+    "attackSpeed" : userStats.attackSpeed,
+    "aHealth" : userStats.aHealth,
+    "aToughness" : userStats.aToughness,
+    "aEvasion" : userStats.aEvasion,
+    }
     output = template.render(context, request)
 
     return HttpResponse(output)
