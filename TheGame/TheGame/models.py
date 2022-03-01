@@ -1,8 +1,9 @@
 from turtle import speed
 from django.db import models
+from Login.models import Player
 
 class pStat(models.Model):
-    username = models.CharField(max_length=50)
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
     pHealth = models.PositiveIntegerField(default=0)
     pToughness = models.PositiveIntegerField(default=0)
     pEvasion = models.PositiveIntegerField(default=0)
