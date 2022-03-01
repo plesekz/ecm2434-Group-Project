@@ -1,4 +1,5 @@
 import time
+import secrets
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from Login.forms import PlayerForm
@@ -67,7 +68,7 @@ def logoutUser(request):
     return response
 
 def bake_cookie(usrname):
-    cookie = hashlib.sha256((usrname +''+ str(time.time())).encode()).hexdigest()
+    cookie = secrets.token_urlsafe(64)
     return cookie
 
 def is_game_master(cookie):
