@@ -46,6 +46,7 @@ pub fn main() -> Result<(), JsValue> {
     {
         elem.set_onclick(Some(function));
     }
+    closure.forget();
 
     Ok(())
 }
