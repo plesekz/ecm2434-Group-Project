@@ -15,9 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
 from TheGame.views import homePageView, characterMenu
-from . import processes
+from . import processes, views
 
 
 urlpatterns = [
@@ -35,5 +34,5 @@ urlpatterns = [
     path('buyatoughness/', processes.buyAToughness, name="buyatoughness"),
     path('buyaevasion/', processes.buyAEvasion, name="buyaevasion"),
     path('login/', include("Login.urls")),
-    path('battleSelect/', battleSelectView, name="battleSelect"),
+    path('battleSelect/', views.battleSelectView, name="battleSelect"),
 ]
