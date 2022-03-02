@@ -24,7 +24,7 @@ quircs = "0.10.0"
 [dependencies.image]
 version = "0.24"
 default-features=false
-features = ["gif", "jpeg", "png", "tiff", "webp", "bmp"]
+features = ["jpeg", "png"]
 
 
 [dependencies.web-sys]
