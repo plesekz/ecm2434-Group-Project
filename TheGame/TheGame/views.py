@@ -9,8 +9,11 @@ def homePageView(request):
 
     if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
+    try:
+        user = getUserFromCookie(request)
+    except:
+        return HttpResponseRedirect('login')
 
-    user = getUserFromCookie(request)
     resources = getAllUserResources(user)
 
     template = loader.get_template('TheGame/HomePage.html')
