@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from Login.forms import PlayerForm
 from Login.models import Player
+from TheGame.models import pStat
 from django.contrib import messages
 from django.db.models import Q
 import hashlib
@@ -54,10 +55,12 @@ def validateRegister(request):
 
     cookie = bake_cookie(_username)
     form = Player(email=_email, username=_username, password=_password, userID=cookie, role='user')
+    pstatform = pStat(player = form)
 
     response.set_cookie('TheGameSessionID', cookie)
 
     form.save()
+    pstatform.save()
     response = redirect("login")
     messages.success(request, ('Successfully registered'))
     return response

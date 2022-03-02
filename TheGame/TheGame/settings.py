@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'QRC',
     'TheGame',
-    'Login'
+    'Login',
+    'Resources',
 ]
 
 MIDDLEWARE = [

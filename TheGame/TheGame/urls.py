@@ -16,12 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from TheGame.views import homePageView
+from TheGame.views import homePageView, characterMenu
+from . import processes
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('qr/', include("QRC.urls")),
     path('', homePageView, name="homePage"),
+    path('characterMenu/', characterMenu, name="characterMenu"),
+    path('buyphealth/', processes.buyPHealth, name="buyphealth"),
+    path('buyptoughness/', processes.buyPToughness, name="buyptoughness"),
+    path('buypevasion/', processes.buyPEvasion, name="buypevasion"),
+    path('buydamage/', processes.buyDamage, name="buydamage"),
+    path('buyaccuracy/', processes.buyAccuracy, name="buyaccuracy"),
+    path('buyattackspeed/', processes.buyAttackSpeed, name="buyattackspeed"),
+    path('buyahealth/', processes.buyAHealth, name="buyahealth"),
+    path('buyatoughness/', processes.buyAToughness, name="buyatoughness"),
+    path('buyaevasion/', processes.buyAEvasion, name="buyaevasion"),
     path('login/', include("Login.urls")),
 ]
