@@ -1,4 +1,5 @@
 from logging import exception
+from operator import truediv
 from django.shortcuts import redirect
 from django.contrib import messages
 from Login.models import Player
@@ -13,22 +14,23 @@ def getUserFromName(request):
     userStats = pStat.objects.get(player=user)
     return userStats
 
-def spendResource(response, request, rNeeded, amount):
+def spendResource(request, rNeeded, amount):
     try:
         removeResourceFromUser(getUserFromCookie(request), getResourceByName(rNeeded), amount)
+        return True
     except Exception as e:
         messages.error(request, ('Not enough resources'))
-        return response
+        return False
 
 def buyPHealth(request):
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    spendResource(response, request,  'wood', 1)
-    userStats = getUserFromName(request)
-    userStats.pHealth += 1
-    userStats.save()
+    if spendResource(request,  'wood', 1):
+        userStats = getUserFromName(request)
+        userStats.pHealth += 1
+        userStats.save()
     
     return response
 
@@ -37,10 +39,10 @@ def buyPToughness(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5)
-    userStats = getUserFromName(request)
-    userStats.pToughness += 1
-    userStats.save()    
+    if addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5):
+        userStats = getUserFromName(request)
+        userStats.pToughness += 1
+        userStats.save()    
 
     return response
 
@@ -49,10 +51,10 @@ def buyPEvasion(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    spendResource(response, request,  'wood', 1)
-    userStats = getUserFromName(request)
-    userStats.pEvasion += 1
-    userStats.save()    
+    if spendResource(request,  'wood', 1):
+        userStats = getUserFromName(request)
+        userStats.pEvasion += 1
+        userStats.save()    
 
     return response
 
@@ -61,10 +63,10 @@ def buyDamage(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    spendResource(response, request,  'wood', 1)
-    userStats = getUserFromName(request)
-    userStats.damage += 1
-    userStats.save()
+    if spendResource(request,  'wood', 1):
+        userStats = getUserFromName(request)
+        userStats.damage += 1
+        userStats.save()
     
     return response
 
@@ -73,10 +75,10 @@ def buyAccuracy(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    spendResource(response, request,  'wood', 1)
-    userStats = getUserFromName(request)
-    userStats.accuracy += 1
-    userStats.save()    
+    if spendResource(request,  'wood', 1):
+        userStats = getUserFromName(request)
+        userStats.accuracy += 1
+        userStats.save()    
 
     return response
 
@@ -85,10 +87,10 @@ def buyAttackSpeed(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    spendResource(response, request,  'wood', 1)
-    userStats = getUserFromName(request)
-    userStats.attackSpeed += 1
-    userStats.save()    
+    if spendResource(request,  'wood', 1):
+        userStats = getUserFromName(request)
+        userStats.attackSpeed += 1
+        userStats.save()    
 
     return response
 
@@ -97,10 +99,10 @@ def buyAHealth(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    spendResource(response, request,  'wood', 1)
-    userStats = getUserFromName(request)
-    userStats.aHealth += 1
-    userStats.save()
+    if spendResource(request,  'wood', 1):
+        userStats = getUserFromName(request)
+        userStats.aHealth += 1
+        userStats.save()
     
     return response
 
@@ -109,10 +111,10 @@ def buyAToughness(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    spendResource(response, request,  'wood', 1)
-    userStats = getUserFromName(request)
-    userStats.aToughness += 1
-    userStats.save()    
+    if spendResource(request,  'wood', 1):
+        userStats = getUserFromName(request)
+        userStats.aToughness += 1
+        userStats.save()    
 
     return response
 
@@ -121,9 +123,9 @@ def buyAEvasion(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    spendResource(response, request,  'wood', 1)
-    userStats = getUserFromName(request)
-    userStats.aEvasion += 1
-    userStats.save()
+    if spendResource(request,  'wood', 1):
+        userStats = getUserFromName(request)
+        userStats.aEvasion += 1
+        userStats.save()
 
     return response
