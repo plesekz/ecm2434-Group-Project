@@ -1,13 +1,21 @@
 from django.db import models
+from Resource.models import Resource
 from django.core.validators import MinLengthValidator
 
 
-class Resource(models.Model):
-    codeID = models.IntegerField(max_length=5)
-    resourceType = models.IntegerField(max_length=3, validators=[MinLengthValidator(3)])
-    amount = models.IntegerField(max_length=2)
-    latitude = models.DecimalField(max_length=32)
-    longitude = models.DecimalField(max_length=32)
+class QRC(models.Model):
+    QRID = models.PositiveIntegerField()
+    latitude = models.DecimalField()
+    longitude = models.DecimalField()
 
     def __str__(self):
-        return self.resourceID
+        return self.QRID
+
+
+class QRResource(models.Model):
+    QRID = models.ForeignKey(QRC, on_delete=models.CASCADE)
+    amount = models.PositiveIntegerField()
+    resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.QRID
