@@ -249,19 +249,128 @@ impl QRManager {
     }
 }
 
-async fn load_image(file: web_sys::File) -> Result<image::GrayImage, Box<dyn std::error::Error>> {
+async fn browser_load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
+    let blob = web_sys::Blob::from(file);
+
+    let url: String = web_sys::Url::create_object_url_with_blob(&blob)?;
+    let img = web_sys::HtmlImageElement::new()?;
+    img.set_src(&url);
+    wasm_bindgen_futures::JsFuture::from(img.decode()).await?;
+    log::info!("Decoded image");
+
+    let width = img.natural_width();
+    let height = img.natural_height();
+    log::info!("Size: {:?}", (width, height));
+    let canvas = web_sys::window()
+        .unwrap()
+        .document()
+        .unwrap()
+        .create_element("canvas")?;
+    let canvas = canvas.dyn_into::<web_sys::HtmlCanvasElement>()?;
+    canvas.set_width(width);
+    canvas.set_height(height);
+    let ctx = canvas
+        .get_context("2d")?
+        .ok_or("Failed to create context")?;
+    let ctx = ctx.dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+
+    let window = web_sys::window().unwrap();
+
+    let bitmap = wasm_bindgen_futures::JsFuture::from(
+        window.create_image_bitmap_with_html_image_element(&img)?,
+    )
+    .await?;
+    let bitmap = bitmap.dyn_into::<web_sys::ImageBitmap>()?;
+    log::info!("bitmap: {:?}", bitmap);
+
+    /*let mut img_vec: Vec<u8> = Vec::with_capacity(width as usize * height as usize);
+    let res = wasm_bindgen_futures::JsFuture::from(bitmap.map_data_into_with_u8_array(
+        web_sys::ImageBitmapFormat::Gray8,
+        &mut img_vec,
+        0,
+    )?)
+    .await?;
+    log::info!("Res: {:?}", res);*/
+
+    //todo!();
+
+    ctx.draw_image_with_image_bitmap(&bitmap, 0.0, 0.0)?;
+
+    log::info!("Created Canvas: {:?}", ctx);
+
+    let data = ctx
+        .get_image_data(0.0, 0.0, width as f64, height as f64)?
+        .data()
+        .0;
+
+    log::info!("data: {:?}", &data[..1000]);
+
+    let img = image::RgbaImage::from_raw(width, height, data);
+    let img = img.ok_or("Invalid image")?;
+
+    let img: image::DynamicImage = image::DynamicImage::from(img);
+    return Ok(img.into_luma8());
+}
+
+async fn lib_load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
     let buffer = wasm_bindgen_futures::JsFuture::from(file.array_buffer())
         .await
         .map_err(|e| format!("{:?}", e))?;
     let buffer: js_sys::Uint8Array = js_sys::Uint8Array::new(&buffer);
+
     let buffer: Vec<u8> = buffer.to_vec();
-    let mut img = image::load_from_memory(&buffer)?;
-    if img.height() > 1000 {
-        img = img.thumbnail(1000, 1000);
+
+    let img = if let Some(format) = match file.name() {
+        name if name.ends_with(".jpeg") => Some(image::ImageFormat::Jpeg),
+        name if name.ends_with(".jpg") => Some(image::ImageFormat::Jpeg),
+        name if name.ends_with(".png") => Some(image::ImageFormat::Png),
+        _ => None,
+    } {
+        image::load_from_memory_with_format(&buffer, format)
+    } else {
+        image::load_from_memory(&buffer)
+    };
+    let img = img.map_err(|e| format!("Error: {:?}", e))?;
+
+    Ok(img.into_luma8())
+}
+
+async fn load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
+    log::info!("Loading image: {}", file.name());
+
+    let canvas = web_sys::window()
+        .unwrap()
+        .document()
+        .unwrap()
+        .create_element("canvas")?;
+    let canvas = canvas.dyn_into::<web_sys::HtmlCanvasElement>()?;
+    canvas.set_width(100);
+    canvas.set_height(100);
+
+    let ctx = canvas
+        .get_context("2d")?
+        .ok_or("Failed to create context")?;
+    let ctx = ctx.dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+
+    if ctx
+        .get_image_data(0.0, 0.0, 10.0, 10.0)?
+        .data()
+        .0
+        .iter()
+        .all(|pixel| *pixel == 0)
+    {
+        log::info!("Trusty");
+        browser_load_image(file).await
+    } else {
+        log::info!("Unreliable");
+        lib_load_image(file).await
     }
 
+    /*if img.height() > 1000 {
+        img = img.thumbnail(1000, 1000);
+    }*/
+
     //Ok(img)
-    Ok(img.into_luma8())
 }
 
 async fn load_qr(
@@ -271,7 +380,7 @@ async fn load_qr(
     impl std::iter::Iterator<Item = Result<String, Box<dyn std::error::Error>>> + '_,
     Box<dyn std::error::Error>,
 > {
-    let img = load_image(file).await?;
+    let img = load_image(file).await.map_err(|e| format!("{:?}", e))?;
     log::info!("Loaded image");
 
     let codes = decoder.identify(img.width() as usize, img.height() as usize, &img);

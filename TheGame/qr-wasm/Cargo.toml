@@ -40,7 +40,14 @@ features = [
   'Response',
   'console',
   'FileList',
-  'File'
+  'File',
+  'Url',
+  'HtmlCanvasElement',
+  'ImageBitmap',
+  'ImageBitmapFormat',
+  'HtmlImageElement',
+  'CanvasRenderingContext2d',
+  'ImageData'
 ]
 
 
