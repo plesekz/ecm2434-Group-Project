@@ -303,8 +303,6 @@ async fn browser_load_image(file: web_sys::File) -> Result<image::GrayImage, JsV
         .data()
         .0;
 
-    log::info!("data: {:?}", &data[..1000]);
-
     let img = image::RgbaImage::from_raw(width, height, data);
     let img = img.ok_or("Invalid image")?;
 
