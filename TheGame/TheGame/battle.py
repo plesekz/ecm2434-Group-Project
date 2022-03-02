@@ -34,9 +34,9 @@ def callBattle(request):
     log = battle(getLocalPlayer(request), getOpponent(request))
     p = getLocalPlayer(request)
     if log[0]:
-        messages.success(request, (f'Victory with stats hp {p.hp}, tg {p.tg}, ev {p.ev}, dmg {p.dmg}, acc {p.acc}, num  {p.num}, log <br> {log[1]}'))
+        messages.success(request, (f'Victory'))# with stats hp {p.hp}, tg {p.tg}, ev {p.ev}, dmg {p.dmg}, acc {p.acc}, num  {p.num}, log <br> {log[1]}'))
         return redirect("/battleSelect")
-    messages.success(request, (f'Loss with stats hp {p.hp}, tg {p.tg}, ev {p.ev}, dmg {p.dmg}, acc {p.acc}, num  {p.num}, log <br> {log[1]}'))
+    messages.success(request, (f'Loss'))# with stats hp {p.hp}, tg {p.tg}, ev {p.ev}, dmg {p.dmg}, acc {p.acc}, num  {p.num}, log <br> {log[1]}'))
     return redirect("/battleSelect")
 
 def battle(p1, p2):
@@ -73,7 +73,7 @@ def battle(p1, p2):
     while(True):
         #player 2's turn
         if check_if_dead(p2):
-            log[0] = False
+            log[0] = True
             return log
             #return True #if player 1 wins
         log[1] += " <br> p2:"
