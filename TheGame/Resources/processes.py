@@ -37,6 +37,7 @@ def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> 
 
     be sure to wrap this function in a try/catch block as it will throw Exceptions
     that should be dealt with
+    it will throw and exception is the user does not have enough resources
     '''
     ##code
     # check the player has this resource
