@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
 from TheGame.processes import getUserFromName
+from Resources.processes import getAllUserResources
 
 def homePageView(request):
 
@@ -10,9 +11,13 @@ def homePageView(request):
         return HttpResponseRedirect('login')
 
     user = getUserFromCookie(request)
+    resources = getAllUserResources(user)
 
     template = loader.get_template('TheGame/HomePage.html')
-    context = {"userID" : user.pk}
+    context = {
+        "user" : user, 
+        "resources" : resources
+    }
     output = template.render(context)
 
     return HttpResponse(output)
