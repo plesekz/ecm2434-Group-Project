@@ -33,6 +33,11 @@
   <title>{{username}}</title>
   </head>
   <body>
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
     <div class="mprof1">
       <div class="mproftop">
         <h1>{{username}}</h1>

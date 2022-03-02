@@ -73,7 +73,7 @@ def getAllUserResources(user : Player) -> "list[tuple[Resource, int]]":
 def getResourceByName(name : String) -> Resource:
     """returns a resource given its name
     """
-    if (not (res := Resource.objects.filter(name=name)).exists()):
+    if (not (res := Resource.objects.get(name=name))):
         return None
 
     return res

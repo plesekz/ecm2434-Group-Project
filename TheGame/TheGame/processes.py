@@ -1,7 +1,8 @@
+from logging import exception
 from django.shortcuts import redirect
 from django.contrib import messages
 from Login.models import Player
-from Resources.processes import removeResourceFromUser, addResourceToUser
+from Resources.processes import removeResourceFromUser, addResourceToUser, getResourceByName
 from .models import pStat
 from Login.processes import getUserFromCookie
 from Login.models import Player
@@ -16,20 +17,27 @@ def buyPHealth(request):
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
+    response = redirect("characterMenu")
+    rNeeded = 'wood'
+    amount = 1
 
-    removeResourceFromUser(getUserFromCookie(request), 'wood', 1)
+    try:
+        removeResourceFromUser(getUserFromCookie(request), getResourceByName(rNeeded), amount)
+    except Exception as e:
+        messages.error(request, ('Not enough resources'))
+        return response
+
     userStats = getUserFromName(request)
     userStats.pHealth += 1
     userStats.save()
-    response = redirect("characterMenu")
-
+    
     return response
 
 def buyPToughness(request):
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
-    addResourceToUser(getUserFromCookie(request), 'wood', 5)
+    addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5)
     userStats = getUserFromName(request)
     userStats.pToughness += 1
     userStats.save()
