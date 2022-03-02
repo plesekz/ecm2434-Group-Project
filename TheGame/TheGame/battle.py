@@ -23,17 +23,24 @@ def getLocalPlayer(request):
     return localPlayer
 
 def getOpponent(request):
-    ops = getUserFromName(request) #This would need to be made to access the PVE database
-    oppPlayer = Player(ops)
+    #ops = getUserFromName(request) #This would need to be made to access the PVE database
+    #oppPlayer = Player(ops)
+    oppPlayer = PseudoPlayer(100, 100, 10, 2, 100, 1, 0, 0, 0)
     return oppPlayer
 
 def callBattle(request):
     battle(getLocalPlayer(request), getOpponent(request))
+    #httpResponse = HttpResponse()
+    #return httpResponse
+    
 
-def battle(player1, player2):
-    #to collapse the defensive stats once rather than every time its called
-    p1 = Player(player1)
-    p2 = Player(player2)
+def battle(p1, p2):
+    #redundant as it takes a Player input now
+    ##to collapse the defensive stats once rather than every time its called
+    #p1 = Player(player1)
+    #p2 = Player(player2)
+    
+    #
     
     #decides who goes first randomly
     #50% chance p1 goes first, 50% chance p2 goes first
@@ -70,6 +77,15 @@ class Player:
         self.acc = playerStats.accuracy 
         self.num = playerStats.attackSpeed
 
+class PseudoPlayer:
+    #useful for testing
+    def __init__(self, php, ptg, pev, dmg, acc, num, ahp, atg, aev):
+        self.hp = php + ahp
+        self.tg = ptg + atg
+        self.ev = pev + aev
+        self.dmg = dmg
+        self.acc = acc
+        self.num = num
 #temp for testing purposes
 #p1 = Player(100, 100, 10, 2, 100, 1, 0, 0, 0)
 #p2 = Player(100, 100, 10, 2, 100, 1, 0, 0, 0)
