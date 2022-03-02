@@ -1,4 +1,3 @@
-from turtle import speed
 from django.db import models
 from Login.models import Player
 
