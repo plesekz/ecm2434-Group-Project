@@ -39,6 +39,12 @@ def battle(player1, player2):
         if check_if_dead(p1):
             return False #if player 2 wins
         take_turn(p1,p2)
+    else if (p1.num == p2,num): #if speed tie,
+        if (randint(0,1) == 1): #50% chance of each player going first
+        if check_if_dead(p1):
+            return False #if player 2 wins
+        take_turn(p1,p2)
+            
     
     #loop forever, breaks out when a player is dead
     while(True):
