@@ -109,7 +109,15 @@
             
             xhttp.setRequestHeader("X-CSRFToken", csrftoken);
             
-            xhttp.send(values); // <- form data goes here
+            let json = {};
+
+            for (var key in values) {
+                if (values.hasOwnProperty(key)) {
+                    json[key] = values[key];
+                }
+            }
+
+            xhttp.send(JSON.stringify(json)); // <- form data goes here
         }
 
         //event bindings
@@ -182,6 +190,16 @@
                                 ID
                             </label>
                             <input type="text" class="form-control" id="codeID" name="codeID" placeholder="Code's ID">
+
+                            <label for="Latitude" class="form-label">
+                                Latitude
+                            </label>
+                            <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Latitude">
+
+                            <label for="Longtitude" class="form-label">
+                                Longitude
+                            </label>
+                            <input type="text" class="form-control" id="longitude" name="longitude" placeholder="Longitude">
                         </div>
                         <div>
                             <!-- structure which adds one set of buttons -->
