@@ -6,7 +6,6 @@ from Login.processes import getUserFromCookie
 from Login.models import Player
 
 def getUserFromName(request):
-    cookie = request.COOKIES.get('TheGameSessionID')
     user = getUserFromCookie(request)
     userStats = pStat.objects.get(player=user)
     return userStats
