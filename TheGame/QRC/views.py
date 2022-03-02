@@ -73,8 +73,17 @@ def listRes(request):
 # Create your views here.
 
 def QR_management(request):
-    codes = get_object_or_404(PLACEHOLDER_FOR_CODES)
-    list_of_resources = get_object_or_404(PLACEHOLDER_FOR_ALL_RESOURCE_TYPES_IN_THE_RESOURCE_MANAGEMENT_MODULE)
+    codes = []
+    for QRCode in QRC.objects.all():
+        codes.append(
+            {
+                'name': QRCode.QRID,
+                'lat': QRCode.latitude,
+                'lon': QRCode.longitude,
+                'resources': QRResource.objects.filter(QRID=QRCode.QRID)
+            }
+        ) 
+    list_of_resources = Resource.objects.all()
     dict = {
         "codes" : codes,
         "list_of_resources" : list_of_resources

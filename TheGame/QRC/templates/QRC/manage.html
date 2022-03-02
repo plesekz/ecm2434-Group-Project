@@ -125,7 +125,11 @@
                         <li>
                             Longtitude: {{ code.lon }}
                         </li>
-                        <!-- resources -->
+                        {% for resource in code.resources %}
+                        <li>
+                            {{ resource.resource }}: {{ resource.amount }}
+                        </li>
+                        {% endfor %}
                     </ul>
                 </div>
                 {% endfor %}
@@ -159,8 +163,8 @@
                                 <fieldset>
                                     {% for resource in list_of_resources %}
                                     <div class="form-check">
-                                        <input type="radio" name="res1Type" class="form-check-input" id="resource1Type{{resource.type}}" placeholder="Resource Type" value="{{resource.ID}}">
-                                        <label class="form-check-label" for="resource1Type">{{resource.type}}</label>
+                                        <input type="radio" name="res1Type" class="form-check-input" id="resource1Type{{resource.name}}" placeholder="Resource Type" value="{{resource.pk}}">
+                                        <label class="form-check-label" for="resource1Type">{{resource.name}}</label>
                                     </div>
                                     {% endfor %}
                                 </fieldset>
