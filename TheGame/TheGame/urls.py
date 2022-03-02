@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from TheGame.views import homePageView, characterMenu
+from TheGame.views import homePageView, characterMenu, battleSelectView
 from . import processes
 
 
