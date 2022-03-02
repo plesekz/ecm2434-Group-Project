@@ -73,10 +73,10 @@ def getResourceByName(name : String) -> Resource:
     Returns:
         (Resource): the resource object correlating to the name
     """
-    if (not (res := Resource.objects.get(name=name))):
+    if (not (res := Resource.objects.filter(name=name)).exists()):
         return None
 
-    return res
+    return res[0]
 
 def getAllResources() -> "list[Resource]":
     """function that returns all avaliable resources in the database
