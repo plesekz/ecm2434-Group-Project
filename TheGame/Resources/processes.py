@@ -35,7 +35,7 @@ def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> 
     '''
 
     if not (pr := user.playerresource_set.filter(resource=resource)).exists():
-        raise Exception("this player has never has this resource")
+        raise Exception("this player has never had this resource")
 
     playerRes = pr[0]
 
