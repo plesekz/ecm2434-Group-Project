@@ -15,17 +15,11 @@ def addResourceToUser(user : Player, resource : Resource, amount : int) -> None:
     that should be dealt with
     '''
 
-    ##code
-    ## if player already has this resource then increment
-    if (pr := PlayerResource.objects.filter(resource=resource, player=user)).exists():
-        relation = pr[0]
-        relation.amount += amount
-        relation.save()
-    else:   ## create this player-resource relation
-        relation = PlayerResource.objects.create(
-            player=user, resource=resource, amount=amount
-        )
-        relation.save()
+    if not (pr := user.playerresource_set.filter(resource=resource)):
+        user.playerresource_set.create(resource=resource, amount=amount)
+    else:
+        pr[0].amount += amount
+        pr[0].save()
 
 def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> None:
     '''function to remove an amount of a resource to a user
@@ -37,41 +31,47 @@ def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> 
 
     be sure to wrap this function in a try/catch block as it will throw Exceptions
     that should be dealt with
+    it will throw and exception is the user does not have enough resources
     '''
-    ##code
-    # check the player has this resource
-    if not (pr := PlayerResource.objects.filter(resource=resource, player=user)).exists():
-        raise Exception('player does not have these resources')
-    relation = pr[0]
-    
-    # make sure that the player has enough resources to remove
-    if relation.amount < amount:
-        raise Exception('player does not have sufficient resources')
 
-    # remove the resources
-    relation.amount -= amount
-    relation.save()
+    if not (pr := user.playerresource_set.filter(resource=resource)).exists():
+        raise Exception("this player has never had this resource")
+
+    playerRes = pr[0]
+
+    if playerRes.amount < amount:
+        raise Exception("this player does not have enough resource")
+
+    playerRes.amount = playerRes.amount - amount
+    playerRes.save()
 
 def getAllUserResources(user : Player) -> "list[tuple[Resource, int]]":
     """function to return a list of all resources and amounts associated with a user
 
     Args:
         user (Player): the user that you would like to get resources of
+
+    Returns:
+        (list[tuple[Resource, int]]) list of tuples for each resource the user has in format (Resource, amount)
     """
 
-    #check if the user has any resources
-    if not (playerResources := PlayerResource.objects.filter(player=user)).exists():
-        return []
+    resList = user.playerresource_set.all()
+    returnList = []
 
-    ##iterate throught resources and add them to list
-    resourceList = []
-    for pr in playerResources:
-        resourceList.append((pr.resource, pr.amount))
+    for res in resList: 
+        returnList.append((res.resource, res.amount))
 
-    return resourceList
+    return returnList
+
 
 def getResourceByName(name : String) -> Resource:
     """returns a resource given its name
+
+    Args:
+        name(String): the name of the resource
+
+    Returns:
+        (Resource): the resource object correlating to the name
     """
     if (not (res := Resource.objects.get(name=name))):
         return None
@@ -80,6 +80,9 @@ def getResourceByName(name : String) -> Resource:
 
 def getAllResources() -> "list[Resource]":
     """function that returns all avaliable resources in the database
+
+    Returns:
+        (list[Resource]) list of all the resources in the database
     """
     resources = Resource.objects.all()
 
