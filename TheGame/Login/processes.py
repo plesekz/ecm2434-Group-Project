@@ -66,7 +66,7 @@ def validateRegister(request):
     return response
 
 def logoutUser(request):
-    response = HttpResponseRedirect('login')
+    response = HttpResponseRedirect('/login')
     response.delete_cookie('TheGameSessionID')
     return response
 
