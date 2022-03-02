@@ -7,7 +7,7 @@ urlpatterns = [
     path('createRes/', views.createRes),
     path('deleteRes/', views.deleteRes),
     path('listRes/', views.listRes),
-    path('retreiveRes/', views.retrieveRes, name="retrieveRes"),
+    path('retrieveRes/', views.retrieveRes, name="retrieveRes"),
     path('qr-landing', views.qr_landing, name="qr-landing"),
     path('manage', views.QR_management, name="manage"),
 ]
