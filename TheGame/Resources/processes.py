@@ -57,6 +57,9 @@ def getAllUserResources(user : Player) -> "list[tuple[Resource, int]]":
 
     Args:
         user (Player): the user that you would like to get resources of
+
+    Returns:
+        (list[tuple[Resource, int]]) list of tuples for each resource the user has in format (Resource, amount)
     """
 
     #check if the user has any resources
@@ -72,14 +75,23 @@ def getAllUserResources(user : Player) -> "list[tuple[Resource, int]]":
 
 def getResourceByName(name : String) -> Resource:
     """returns a resource given its name
+
+    Args:
+        name(String): the name of the resource
+
+    Returns:
+        (Resource): the resource object correlating to the name
     """
-    if (not (res := Resource.objects.filter(name=name)).exists()):
+    if (not (res := Resource.objects.get(name=name)).exists()):
         return None
 
     return res
 
 def getAllResources() -> "list[Resource]":
     """function that returns all avaliable resources in the database
+
+    Returns:
+        (list[Resource]) list of all the resources in the database
     """
     resources = Resource.objects.all()
 
