@@ -1,5 +1,6 @@
 from random import randint
 from TheGame.processes import getUserFromName
+from django.shortcuts import redirect
 import TheGame.models
 import math
 
@@ -30,9 +31,7 @@ def getOpponent(request):
 
 def callBattle(request):
     battle(getLocalPlayer(request), getOpponent(request))
-    #httpResponse = HttpResponse()
-    #return httpResponse
-    
+    return redirect("/")
 
 def battle(p1, p2):
     #redundant as it takes a Player input now
