@@ -32,7 +32,7 @@
 
   <title>{{username}}</title>
   </head>
-  <body>
+  {% block bodyBlock %}
     {% if messages %}
     {% for message in messages %}
         <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
@@ -89,19 +89,19 @@
               </tr>
               <tr>
                 <td>            
-                  <form action="{% url 'buyphealth' %}" method="post">
+                  <form action="{% url 'buydamage' %}" method="post">
                   {% csrf_token %}
                   <button type="submit">Buy</button>
                   </form>
                 </td>
                 <td>            
-                  <form action="{% url 'buyphealth' %}" method="post">
+                  <form action="{% url 'buyaccuracy' %}" method="post">
                   {% csrf_token %}
                   <button type="submit" >Buy</button>
                   </form>
                 </td>
                 <td>            
-                  <form action="{% url 'buyphealth' %}" method="post">
+                  <form action="{% url 'buyattackspeed' %}" method="post">
                   {% csrf_token %}
                   <button type="submit">Buy</button>
                   </form>
@@ -119,19 +119,19 @@
               </tr>
               <tr>
                 <td>            
-                  <form action="{% url 'buyphealth' %}" method="post">
+                  <form action="{% url 'buyahealth' %}" method="post">
                   {% csrf_token %}
                   <button type="submit">Buy</button>
                   </form>
                 </td>
                 <td>            
-                  <form action="{% url 'buyphealth' %}" method="post">
+                  <form action="{% url 'buyatoughness' %}" method="post">
                   {% csrf_token %}
                   <button type="submit" >Buy</button>
                   </form>
                 </td>
                 <td>            
-                  <form action="{% url 'buyphealth' %}" method="post">
+                  <form action="{% url 'buyaevasion' %}" method="post">
                   {% csrf_token %}
                   <button type="submit">Buy</button>
                   </form>
@@ -163,13 +163,14 @@
                 <td>{{damage}}</td>
               </tr>
               <tr>
-                <th>Attack Speed:</th>
-                <td>{{attackSpeed}}</td>
-              </tr>
-              <tr>
                 <th>Accuracy:</th>
                 <td>{{accuracy}}</td>
               </tr>
+              <tr>
+                <th>Attack Speed:</th>
+                <td>{{attackSpeed}}</td>
+              </tr>
+
             </table>
             <table>
               <h1>Armour</h1>
@@ -190,5 +191,5 @@
         </div>
       </div>
     </div>
-  </body>
+    {% endblock %}
 </html>

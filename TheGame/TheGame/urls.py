@@ -26,5 +26,11 @@ urlpatterns = [
     path('buyphealth/', processes.buyPHealth, name="buyphealth"),
     path('buyptoughness/', processes.buyPToughness, name="buyptoughness"),
     path('buypevasion/', processes.buyPEvasion, name="buypevasion"),
+    path('buydamage/', processes.buyDamage, name="buydamage"),
+    path('buyaccuracy/', processes.buyAccuracy, name="buyaccuracy"),
+    path('buyattackspeed/', processes.buyAttackSpeed, name="buyattackspeed"),
+    path('buyahealth/', processes.buyAHealth, name="buyahealth"),
+    path('buyatoughness/', processes.buyAToughness, name="buyatoughness"),
+    path('buyaevasion/', processes.buyAEvasion, name="buyaevasion"),
     path('login/', include("Login.urls")),
 ]
