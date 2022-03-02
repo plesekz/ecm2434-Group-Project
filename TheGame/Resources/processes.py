@@ -1,3 +1,4 @@
+from tokenize import String
 from django.http import HttpResponse, HttpResponseRedirect
 from Resources.models import PlayerResource, Resource
 from Login.models import Player
@@ -68,6 +69,14 @@ def getAllUserResources(user : Player) -> "list[tuple[Resource, int]]":
         resourceList.append((pr.resource, pr.amount))
 
     return resourceList
+
+def getResourceByName(name : String) -> Resource:
+    """returns a resource given its name
+    """
+    if (not (res := Resource.objects.filter(name=name)).exists()):
+        return None
+
+    return res
 
 def getAllResources() -> "list[Resource]":
     """function that returns all avaliable resources in the database
