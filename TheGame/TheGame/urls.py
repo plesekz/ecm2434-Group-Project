@@ -35,4 +35,5 @@ urlpatterns = [
     path('buyatoughness/', processes.buyAToughness, name="buyatoughness"),
     path('buyaevasion/', processes.buyAEvasion, name="buyaevasion"),
     path('login/', include("Login.urls")),
+    path('battleSelect/', battleSelectView, name="battleSelect"),
 ]
