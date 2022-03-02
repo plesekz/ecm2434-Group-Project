@@ -60,3 +60,6 @@ This is a game master and admin-level command. We can return all resources, as J
 Although this view will iterate through the database like `deleteRes` and `retrieveRes`, it will not search for a specific resource unlike the other two. Each resource will instead be appended to a list as a JSON object which will finally be returned.
 
 The `listRes` view will be mapped to the **`/listRes`** URL path. Simply visiting this URL will trigger the view. **If retrieval is unsuccessful, the server replies with a HTTP 400.**
+
+
+The `listRes` view will be mapped to the **`/listRes`** URL path. Simply visiting this URL will trigger the view. **If retrieval is unsuccessful, the server replies with a HTTP 400.**
