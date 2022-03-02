@@ -1,0 +1,67 @@
+[package]
+name = "qr-wasm"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+wasm-logger = "0.2.0"
+log = "0.4"
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4.29"
+console_error_panic_hook = "0.1.7"
+js-sys = "0.3.56"
+
+
+quircs = "0.10.0"
+#bardecoder = "0.3"
+#rqrr = {version = "0.5.1", default-features = false}
+
+[dependencies.image]
+version = "0.24"
+default-features=false
+features = ["jpeg", "png"]
+
+
+[dependencies.web-sys]
+version = "0.3"
+features = [
+  'Document',
+  'Element',
+  'HtmlElement',
+  'HtmlInputElement',
+  'HtmlCollection',
+  'Node',
+  'Window',
+  'Response',
+  'console',
+  'FileList',
+  'File',
+  'Url',
+  'HtmlCanvasElement',
+  'ImageBitmap',
+  'ImageBitmapFormat',
+  'HtmlImageElement',
+  'CanvasRenderingContext2d',
+  'ImageData'
+]
+
+
+
+
+[profile.release]
+lto = true
+opt-level = 3
+
+[profile.release.package.quircs]
+opt-level = 3
+
+[profile.release.package.image]
+opt-level = 3
+
+[profile.dev]
+opt-level = 3

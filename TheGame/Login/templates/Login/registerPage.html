@@ -1,0 +1,68 @@
+{% extends 'Login/navbarTemplate.html' %}
+
+{% block headBlock %}
+<style>
+
+</style>
+
+<script>
+    function validateForm(){
+        let f = document.forms["mainForm"];
+        let emailString = f["email"].value;
+        let pword = f["password"].value;
+        let cpword = f["confirmPassword"].value;
+        const emailRegEx = /^\w+@\w+(\.\w+)+$/
+        if (!(emailRegEx.exec(emailString) != null)){
+            alert("email address formatted incorrectly");
+            return false;
+        }
+        if (!(pword === cpword)){
+            alert("passwords do not match");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+
+{% endblock %}
+
+
+{% block bodyBlock %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<main class="form-signin text-center">
+<div class="container">
+    <form name="mainForm" class="signForm" action="{% url 'validateRegister' %}" method="post" onsubmit="return validateForm()">
+        {% csrf_token %}
+        <h1 class="h2 mb-3">Register here</h1>
+        <div class="form-floating">
+            <input type="text" class="form-control" placeholder="email" name="email" id="emailInput" required>
+            <label for="emailInput">email address</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" placeholder="username" name="username" id="usernameInput" required>
+            <label for="usernameInput">username</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" placeholder="password" name="password" id="passwordInput" required>
+            <label for="passwordInput">password</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" placeholder="confirmPassword" name="confirmPassword" id="confirmPasswordInput" required>
+            <label for="passwordInput">confim password</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit" value="Submit">
+            Register
+        </button>
+    </form>
+</div>
+</main>
+
+
+{% endblock %}

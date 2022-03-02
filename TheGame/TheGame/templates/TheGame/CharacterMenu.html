@@ -1,0 +1,211 @@
+<!doctype html>
+
+
+<html lang="en">
+  <head>
+
+      <style>
+    .mprof1 { width: 600px; margin: auto; padding: 10px; position: relative; }
+
+    .mproftop, .mprofend { background: #d0133d; padding: 10px; position: relative; }
+    .mproftop h1 { margin: 10px 20px; color: #fff; font-family: andale mono; text-transform: uppercase; font-size: 30px; letter-spacing: -2px; }
+    .mproftop h2, .mprofend h1 { position: absolute; right: 40px;  top: 15px; font-family: andale mono; font-size: 12px; text-transform: uppercase; letter-spacing: -1px; }
+    .mproftop h2 a, .mprofend h1 a { border-top: 1px solid #eee; text-align: right; padding: 1px 2px 0px 0px; width: 120px; overflow: hidden; display: inline-block; text-decoration: none; color: #eee; transition: all, 1s; }
+    .mproftop a:hover, .mprofend h1 a:hover { border-top: 1px solid #8a1837; }
+
+    .mproftop h3 { background-color: #fff; margin: 0px; font-family: andale mono; text-transform: uppercase; font-size: 10px; padding: 5px 10px; }
+    .mproftop h3 b { color: #8a1837; }
+    .mproftop h3 span { display: inline-block; width: 250px; }
+
+    .mprofmid { margin: 10px 0px; border: 1px solid #ddd; padding: 10px; position: relative; height: 720px; }
+    .profav img { border: 2px solid #ddd;  }
+    .profav { position: absolute; width: 200px; }
+    .prof1 { position: absolute; right: 10px; top: 10px; width: 315px; }
+    .prof1 h1 { border-bottom: 1px solid #000000; font-family: andale mono; text-transform: uppercase; font-size: 14px; letter-spacing: -1px; padding: 3px 0px; margin: 0px; }
+    .profbox { background-color: #efefef; padding: 10px; text-align: center; margin: 1px 0px 10px; overflow: auto; font-family: helvetica; font-size: 11px; line-height: 17px; height: 90px;  }
+    .profbox1 { background-color: #efefef; padding: 10px; text-align: justify; margin: 1px 0px 10px; overflow: auto; font-family: helvetica; font-size: 11px; line-height: 17px; height: 280px; }
+
+    .prof2 { margin-top: 35px; margin-bottom: 5px; }
+    .prof2 span { display: inline-block; width: 278px; font-family: 'andale mono'; color: #eee; font-size: 10px; text-transform: uppercase; background: #d91c49; padding: 5px; margin-bottom: 2px; }
+    table {width: 100%;}
+    </style>
+
+  <title>{{username}}</title>
+  </head>
+  {% block bodyBlock %}
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    
+    <div class="mprof1">
+      
+      <div class="mproftop">
+        <h1>
+          <table>
+            <tr>
+              <th>{{username}}</th>
+              <td><button style="background-color:#ffffff; font-size: large; text-align: justify;" onclick="onManageButtonClick()">Back</h1></button></td>
+            </tr>
+          </table>
+        </h1>
+      </div>
+      
+      <div class="mprofmid">
+        <div class="profav">
+          <img src="http://placehold.it/250x400">
+        </div>
+        <div class="prof1">
+          <h1>Improvements</h1>
+          <div class="profbox">
+            <h1>Player</h1>
+            <table>
+              <tr>
+                <th>Health</th>
+                <th>Toughness</th>
+                <th>Evasion</th>
+              </tr>
+              <tr>
+                <td>            
+                  <form action="{% url 'buyphealth' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit">Buy</button>
+                  </form>
+                </td>
+                <td>            
+                  <form action="{% url 'buyptoughness' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" >Buy</button>
+                  </form>
+                </td>
+                <td>            
+                  <form action="{% url 'buypevasion' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit">Buy</button>
+                  </form>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="profbox">
+            <h1>Weapon</h1>
+            <table>
+              <tr>
+                <th>Damage</th>
+                <th>Accuracy</th>
+                <th>Attack Speed</th>
+              </tr>
+              <tr>
+                <td>            
+                  <form action="{% url 'buydamage' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit">Buy</button>
+                  </form>
+                </td>
+                <td>            
+                  <form action="{% url 'buyaccuracy' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" >Buy</button>
+                  </form>
+                </td>
+                <td>            
+                  <form action="{% url 'buyattackspeed' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit">Buy</button>
+                  </form>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="profbox">
+            <h1>Armour</h1>
+            <table>
+              <tr>
+                <th>Health</th>
+                <th>Toughness</th>
+                <th>Evasion</th>
+              </tr>
+              <tr>
+                <td>            
+                  <form action="{% url 'buyahealth' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit">Buy</button>
+                  </form>
+                </td>
+                <td>            
+                  <form action="{% url 'buyatoughness' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit" >Buy</button>
+                  </form>
+                </td>
+                <td>            
+                  <form action="{% url 'buyaevasion' %}" method="post">
+                  {% csrf_token %}
+                  <button type="submit">Buy</button>
+                  </form>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <h1>Stats</h1>
+          <div class="profbox1">
+            <table>
+              <h1>Player</h1>
+              <tr>
+                <th>Health:</th>
+                <td>{{pHealth}}</td>
+              </tr>
+              <tr>
+                <th>Toughness:</th>
+                <td>{{pToughness}}</td>
+              </tr>
+              <tr>
+                <th>Evasion:</th>
+                <td>{{pEvasion}}</td>
+              </tr>
+            </table>
+            <table>
+              <h1>Weapon</h1>
+              <tr>
+                <th>Damage:</th>
+                <td>{{damage}}</td>
+              </tr>
+              <tr>
+                <th>Accuracy:</th>
+                <td>{{accuracy}}</td>
+              </tr>
+              <tr>
+                <th>Attack Speed:</th>
+                <td>{{attackSpeed}}</td>
+              </tr>
+
+            </table>
+            <table>
+              <h1>Armour</h1>
+              <tr>
+                <th>Health:</th>
+                <td>{{aHealth}}</td>
+              </tr>
+              <tr>
+                <th>Toughness:</th>
+                <td>{{aToughness}}</td>
+              </tr>
+              <tr>
+                <th>Evasion:</th>
+                <td>{{aEvasion}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function onManageButtonClick()
+      {
+        window.location.href = "/"
+      }
+    </script>
+    {% endblock %}
+</html>

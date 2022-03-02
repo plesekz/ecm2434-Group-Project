@@ -62,4 +62,4 @@ Although this view will iterate through the database like `deleteRes` and `retri
 The `listRes` view will be mapped to the **`/listRes`** URL path. Simply visiting this URL will trigger the view. **If retrieval is unsuccessful, the server replies with a HTTP 400.**
 
 
-
+The `listRes` view will be mapped to the **`/listRes`** URL path. Simply visiting this URL will trigger the view. **If retrieval is unsuccessful, the server replies with a HTTP 400.**

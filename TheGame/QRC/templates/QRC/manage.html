@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Manage QR codes</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script>
+        //func to handle logging out
+        function logout() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // successful execution
+                    reload();
+                }
+            }
+            xhttp.open("GET", "/login/logout", true);
+            xhttp.send();
+            //needs to call the logout endpoint in the login module and destroy the session cookie
+        }
+
+        //func to handle cancelling a specific QR code
+        function cancel(intID) {
+            //needs to call the /deleteRes endoint passing the argument as Int(5)
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // successful execution
+                    reload();
+                }
+                if (this.readyState == 4 && this.status == 400) {
+                    // unsuccessful execution
+                    alert("Something has gone wrong!\n400 Error");
+                }
+            }
+
+            xhttp.open("POST", "/deleteRes", true);
+            xhttp.setRequestHeader("Content-type", "text/plain");
+            
+            xhttp.send(intID);
+        }
+
+        //funct to handle submitting
+        function addQR(){
+            //needs to pass the content of the modal's form to the /addRes endpoint, while editing the css to communicate with the user
+            //after staring needs to hide #submit and display #processing
+            //after getting (async) reply, needs to hide #processing, display #success, and refresh the page in a few seconds
+            //if it cannot comply hide #processing and display #submitError
+
+            const form = document.getElementById('submit_form');
+            const data = new FormData(form);
+            const values = Object.fromEntries(data.entries());
+
+            var xhttp = new XMLHttpRequest();
+            document.getElementById("submit").style.display = "none";
+            document.getElementById("processing").style.display = "inline-block";
+
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    // successful execution
+                    document.getElementById("processing").style.display = "none";
+                    document.getElementById("success").style.display = "inline-block";
+                }
+                if (this.readyState == 4 && this.status == 400) {
+                    // unsuccessful execution
+                    document.getElementById("processing").style.display = "none";
+                    document.getElementById("submitError").contentEditable = this.responseText;
+                    document.getElementById("submitError").style.display = "inline-block";
+                }
+            }
+
+            xhttp.open("POST", "/createRes", true);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            
+            xhttp.send(values); // <- form data goes here
+        }
+
+        //event bindings
+    </script>
+    <header>
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <img /> <!-- Logo -->
+                <button class="btn btn-danger" onlick="logout()">Log-out</button>
+            </div>
+        </div>
+    </header>
+    <main><!-- class="bg-dark text-white"-->
+        <div class="py-5 pb-3 text-left">
+            <div class="container">
+                <!-- button container -->
+                <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#addQRCodeModal">Add a QR code</button>
+            </div>
+        </div>
+        <div class="py-5">
+            <div class="container">
+                <!-- active QR codes -->
+                {% if active_QR_codes_list %}
+                {% for code in active_QR_codes_list %}
+                <div class="col w-25">
+                    <h4 class="text-center"> {{ code.name }} </h4>
+                    <div class="row mb-3">
+                        <!-- QR code and cancel button -->
+                        <div class="col-md-9">
+
+                            <img />
+                            <!-- create the png -->
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn btn-danger" onclick="cancel('{{ code.ID }}')">X</button> <!-- cancel button -->
+                        </div>
+                    </div>
+                    <ul class="list-unstyled">
+                        <li>
+                            Latittude: {{ code.lat }}
+                        </li>
+                        <li>
+                            Longtitude: {{ code.lon }}
+                        </li>
+                        <!-- resources -->
+                    </ul>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </main>
+    <div class="modal fade" id="addQRCodeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addQRCodeModal" style="display:none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Add a QR code
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="submit_form">
+                        <div>
+                            <label for="codeID" class="form-label">
+                                ID
+                            </label>
+                            <input type="text" class="form-control" id="codeID" name="codeID" placeholder="Code's ID">
+                        </div>
+                        <div>
+                            <!-- structure which adds one set of buttons -->
+                            <div>
+                                <label for="resource1Type" class="form-label">
+                                    Resource 1 type
+                                </label>
+                                <fieldset>
+                                    {% for resource in list_of_resources %}
+                                    <div class="form-check">
+                                        <input type="radio" name="res1Type" class="form-check-input" id="resource1Type{{resource.type}}" placeholder="Resource Type" value="{{resource.ID}}">
+                                        <label class="form-check-label" for="resource1Type">{{resource.type}}</label>
+                                    </div>
+                                    {% endfor %}
+                                </fieldset>
+                            </div>
+                            <div>
+                                <label for="resource1Type" class="form-label">
+                                    Resource 1 amount
+                                </label>
+                                <input type="text" class="form-control" id="resource1Amount" name="resource1Amount" placeholder="Resource Amount">
+                            </div>
+                        </div>
+                        <!-- repeat above structure for the number of resources in game -->
+                        <!-- add buttons that add and remove resource fields as needed -->
+                    </form >
+                </div>
+                <div class="modal-footer" style="justify-content:space-between; align-items:start;">
+                    <button id="closeModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Dismiss</button>
+                    <div class="w-75">
+                        <button id="submit" type="button" class="btn btn-success" onclick="addQR()">Submit</button>
+                        <div id="processing" class="spinner-border text-success" role="status" style="display:none;"></div>
+                        <div id="success" class="alert alert-success fade show" style="display:none;">
+                            Success!
+                        </div>
+                        <div id="submitError" class="alert alert-danger fade show" style="display:none;">
+                            This text should be replaced by an error message. If you are seeing this, something is wrong.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

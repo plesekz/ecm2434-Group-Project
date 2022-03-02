@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <title>Load QR code</title>
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+	<script type="module">
+		{% load static %}
+      import init from "{% static 'QRC/qr_wasm.js' %}";
+
+      init();
+    </script>
+    <header>
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <img /> <!-- Logo -->
+                <button class="btn btn-danger" onlick="logout()">Log-out</button>
+            </div>
+        </div>
+    </header>
+    <main><!-- class="bg-dark text-white"-->
+        <div class="py-5 pb-3 text-left">
+            <div class="container">
+                <!-- button container -->
+				Load QR code
+				<button class="loadQR btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#addQRCodeModal">Upload QR</button>
+            </div>
+        </div>
+    </main>
+	<div class="modal fade" id="addQRCodeModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addQRCodeModal" style="display:none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Loading QRs
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+					<p> Running <span id='runningStatus'/></p>
+					<div class="progress">
+						<style>
+							#taskCount {
+								transition: width 0s ease
+							}
+						</style>
+						<div id="taskCount" class="progress-bar" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+					</div>
+                </div>
+                <div class="modal-footer" style="justify-content:space-between; align-items:start;">
+
+					<div class="container">
+						<input type="file" name="file" accept="image/*" capture="camera" multiple value="" class="loadQR btn btn-success"/>
+					</div>
+                    <button id="closeModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Dismiss</button>
+
+                    <input type="button" class="cancelQR btn btn-danger" value="Cancel Loading">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
