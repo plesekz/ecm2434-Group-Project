@@ -12,7 +12,7 @@ def homePageView(request):
     try:
         user = getUserFromCookie(request)
     except:
-        return HttpResponse('login')
+        return HttpResponseRedirect('login')
 
     resources = getAllUserResources(user)
 
