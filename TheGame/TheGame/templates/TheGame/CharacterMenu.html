@@ -38,9 +38,18 @@
         <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
     {% endfor %}
     {% endif %}
+    
     <div class="mprof1">
+      
       <div class="mproftop">
-        <h1>{{username}}</h1>
+        <h1>
+          <table>
+            <tr>
+              <th>{{username}}</th>
+              <td><button style="background-color:#ffffff; font-size: large; text-align: justify;" onclick="onManageButtonClick()">Back</h1></button></td>
+            </tr>
+          </table>
+        </h1>
       </div>
       
       <div class="mprofmid">
@@ -191,5 +200,12 @@
         </div>
       </div>
     </div>
+
+    <script>
+      function onManageButtonClick()
+      {
+        window.location.href = "/"
+      }
+    </script>
     {% endblock %}
 </html>
