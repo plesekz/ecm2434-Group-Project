@@ -27,6 +27,9 @@ def getOpponent(request):
     oppPlayer = Player(ops)
     return oppPlayer
 
+def callBattle(request):
+    battle(getLocalPlayer(request), getOpponent(request))
+
 def battle(player1, player2):
     #to collapse the defensive stats once rather than every time its called
     p1 = Player(player1)

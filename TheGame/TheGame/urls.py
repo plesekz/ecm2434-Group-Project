@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 from TheGame.views import homePageView, characterMenu, battleSelectView
-from . import processes
+from . import processes, battle
 
 
 urlpatterns = [
@@ -34,6 +34,7 @@ urlpatterns = [
     path('buyahealth/', processes.buyAHealth, name="buyahealth"),
     path('buyatoughness/', processes.buyAToughness, name="buyatoughness"),
     path('buyaevasion/', processes.buyAEvasion, name="buyaevasion"),
+    path('battleSelect/', battle.callBattle, name="battleSelect"),
     path('login/', include("Login.urls")),
     path('battleSelect/', battleSelectView, name="battleSelect"),
 ]
