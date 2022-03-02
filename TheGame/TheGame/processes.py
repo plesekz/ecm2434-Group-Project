@@ -17,7 +17,7 @@ def buyPHealth(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
 
-    removeResourceFromUser(getUserFromCookie(), 'wood', 1)
+    removeResourceFromUser(getUserFromCookie(request), 'wood', 1)
     userStats = getUserFromName(request)
     userStats.pHealth += 1
     userStats.save()
@@ -29,7 +29,7 @@ def buyPToughness(request):
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
-    addResourceToUser(getUserFromCookie(), 'wood', 5)
+    addResourceToUser(getUserFromCookie(request), 'wood', 5)
     userStats = getUserFromName(request)
     userStats.pToughness += 1
     userStats.save()

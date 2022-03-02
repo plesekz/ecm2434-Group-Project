@@ -14,4 +14,4 @@ class pStat(models.Model):
     aEvasion = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return str(self.username)
+        return str(self.player.username)
