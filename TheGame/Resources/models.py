@@ -15,7 +15,7 @@ class PlayerResource(models.Model):
     amount = models.IntegerField()
 
     def __str__(self):
-        return self.player + " has " + self.amount + " " + self.resource
+        return str(self.player) + " has " + str(self.amount) + " " + str(self.resource)
 
 # class QRResources(model.Model):
 #     qr = models.ForeignKey(QRCode, on_delete=models.CASCADE)
