@@ -49,3 +49,16 @@ def characterMenu(request):
     output = template.render(context, request)
 
     return HttpResponse(output)
+
+def battleSelectView(request):
+    if request.COOKIES.get('TheGameSessionID') == None:
+        return HttpResponseRedirect('login')
+    
+    user = getUserFromCookie(request)
+    
+    template = loader.get_template('TheGame/battleSelect.html')
+    context = {}
+    
+    output = template.render(context, request)
+    
+    return HttpResponse(output)
