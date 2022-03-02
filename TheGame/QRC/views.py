@@ -23,8 +23,9 @@ def createRes(request):
 
 
 def deleteRes(request):
-    UID = request.GET['data']
-    if not (qrresources := QRResource.objects.filter(QRID=UID)).exists():
+    UID = int(request.GET['data'])
+    qrCode = QRC.objects.get(QRID=UID)
+    if not (qrresources := QRResource.objects.filter(QRID=qrCode)).exists():
         return HttpResponse(status=201) # A QRResource with the given UID doesn't exist so already 'deleted'
     for qrres in qrresources:
         qrres.delete()
@@ -35,7 +36,9 @@ def retrieveRes(request):
     UID = request.GET['data']
     # resource = get_object_or_404(Resource.objects.filter(name=UID))[0]
 
-    if not (qrResources := QRResource.objects.filter(QRID=UID)).exists():
+    qrCode = QRC.objects.get(QRID=UID)
+
+    if not (qrResources := QRResource.objects.filter(QRID=qrCode)).exists():
         return HttpResponse(status=501) # A QRResource with the given UID doesn't exist
 
     user = getUserFromCookie(request)

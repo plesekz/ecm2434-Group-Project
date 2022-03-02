@@ -18,5 +18,5 @@ class QRResource(models.Model):
     resource = models.ForeignKey(Resource, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.QRID
+        return str(self.QRID)
      
