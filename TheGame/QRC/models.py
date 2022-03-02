@@ -1,12 +1,12 @@
 from django.db import models
-from Resource.models import Resource
+from Resources.models import Resource
 from django.core.validators import MinLengthValidator
 
 
 class QRC(models.Model):
     QRID = models.PositiveIntegerField()
-    latitude = models.DecimalField()
-    longitude = models.DecimalField()
+    latitude = models.DecimalField(decimal_places=4, max_digits=6)
+    longitude = models.DecimalField(decimal_places=4, max_digits=6)
 
     def __str__(self):
         return self.QRID

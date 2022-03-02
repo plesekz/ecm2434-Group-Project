@@ -1,6 +1,6 @@
-from Resources import Resource
+from Resources.models import Resource
 from Resources.processes import addResourceToUser
-from Login.proccesses import getUserFromCookie
+from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
