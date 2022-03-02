@@ -4,7 +4,7 @@ from . import views
 from . import processes
 
 urlpatterns = [
-    path('createRes/', views.createRes),
+    path('createRes', views.createRes),
     path('deleteRes/', views.deleteRes),
     path('listRes/', views.listRes),
     path('retrieveRes/', views.retrieveRes, name="retrieveRes"),
