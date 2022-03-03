@@ -67,6 +67,28 @@ pub struct QRManager {
 }
 
 #[derive(Debug)]
+enum QrError {
+    InvalidQrID,
+    UnknownQrID,
+    UnknownServerError,
+    JsError(JsValue),
+}
+
+impl std::fmt::Display for QrError {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter<'_>) -> Result<(), std::fmt::Error> {
+        write!(fmt, "{:?}", self)
+    }
+}
+
+impl std::error::Error for QrError {}
+
+impl std::convert::From<JsValue> for QrError {
+    fn from(val: JsValue) -> Self {
+        Self::JsError(val)
+    }
+}
+
+#[derive(Debug)]
 pub struct Status {
     pub running: bool,
     pub scanned: usize,
@@ -93,6 +115,8 @@ impl QRManager {
             match load_qr(&mut decoder, file).await {
                 Ok(codes) => {
                     for code in codes {
+                        let code: Result<usize, _> =
+                            code.and_then(|code| Ok(code.parse().map_err(|_| QrError::InvalidQrID)?));
                         match code {
                             Ok(code) => {
                                 let result = self.retrieve_res(&code).await;
@@ -104,7 +128,9 @@ impl QRManager {
                                 self.window.alert_with_message(&msg).unwrap();
                             }
                             Err(err) => {
-                                log::error!("Error: {:?}", err);
+                                let msg = format!("Error: {:?}", err);
+                                log::error!("{}", &msg);
+                                self.window.alert_with_message(&msg).unwrap();
                             }
                         }
                     }
@@ -127,7 +153,7 @@ impl QRManager {
         self.call_callback();
     }
 
-    async fn retrieve_res(&self, data: &str) -> Result<String, JsValue> {
+    async fn retrieve_res(&self, data: &usize) -> Result<String, QrError> {
         let promise = self
             .window
             .fetch_with_str(&format!("/qr/retrieveRes?data={}", data));
@@ -137,6 +163,12 @@ impl QRManager {
         log::info!("{}", response.ok());
         log::info!("{}", response.status());
         log::info!("{}", response.status_text());
+        if !response.ok() {
+            return Err(match response.status() {
+                501 => QrError::UnknownQrID,
+                _ => QrError::UnknownServerError,
+            });
+        }
         let json_promise = response.json()?;
         let result = wasm_bindgen_futures::JsFuture::from(json_promise).await?;
         let object: js_sys::Object = result.dyn_into()?;

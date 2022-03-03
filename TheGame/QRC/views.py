@@ -36,7 +36,10 @@ def retrieveRes(request):
     UID = request.GET['data']
     # resource = get_object_or_404(Resource.objects.filter(name=UID))[0]
 
-    qrCode = QRC.objects.get(QRID=UID)
+    try:
+        qrCode = QRC.objects.get(QRID=UID)
+    except QRC.DoesNotExist:
+        return HttpResponse(status=501)
 
     if not (qrResources := QRResource.objects.filter(QRID=qrCode)).exists():
         return HttpResponse(status=501) # A QRResource with the given UID doesn't exist
