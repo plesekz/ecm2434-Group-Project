@@ -127,23 +127,32 @@ impl QRManager {
         self.call_callback();
     }
 
-    async fn retrieve_res(&self, data: &str) -> Result<String, String> {
+    async fn retrieve_res(&self, data: &str) -> Result<String, JsValue> {
         let promise = self
             .window
             .fetch_with_str(&format!("/qr/retrieveRes?data={}", data));
         let result = wasm_bindgen_futures::JsFuture::from(promise).await;
-        let result = result.map_err(|err| format!("Error: {:?}", err))?;
+        let result = result?;
         let response: web_sys::Response = result.into();
         log::info!("{}", response.ok());
         log::info!("{}", response.status());
         log::info!("{}", response.status_text());
-        let text_promise = response.text().map_err(|err| format!("Error: {:?}", err))?;
-        let result = wasm_bindgen_futures::JsFuture::from(text_promise).await;
-        let result = result.map_err(|err| format!("Error: {:?}", err))?;
-        let text: String = result
-            .as_string()
-            .ok_or_else(|| format!("Failed to convert to string: {:?}", result))?;
-        Ok(format!("{:?}", text))
+        let json_promise = response.json()?;
+        let result = wasm_bindgen_futures::JsFuture::from(json_promise).await?;
+        let object: js_sys::Object = result.dyn_into()?;
+        let values: Vec<_> = js_sys::Object::values(&object)
+            .iter()
+            .flat_map(|val| val.dyn_into::<js_sys::Array>())
+            .flat_map(|val| {
+                let mut iter = val.iter();
+                let name: String = iter.next()?.as_string()?;
+                let amount = iter.next()?;
+                Some((name, amount))
+            })
+            //.flat_map(|val| val.dyn_into::<js_sys::Object>())
+            //.map(|val| js_sys::Object::entries(&val).to_vec())
+            .collect();
+        Ok(format!("{:?}", values))
     }
     fn spawn_task(&self) {
         self.age.set(self.age.get().wrapping_add(1));

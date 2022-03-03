@@ -42,13 +42,15 @@ def retrieveRes(request):
         return HttpResponse(status=501) # A QRResource with the given UID doesn't exist
 
     user = getUserFromCookie(request)
+    output = []
     try:
         for qrResource in qrResources:
             addResourceToUser(user, qrResource.resource, qrResource.amount)
+            output.append([str(qrResource.resource), qrResource.amount])
     except Exception as e:
         print(e)
         return HttpResponse(status=502) # Failed to add resource to user
-    return HttpResponse(status=200)
+    return HttpResponse(json.dumps(output), status=200)
 
 
 def listRes(request):
