@@ -146,11 +146,9 @@ impl QRManager {
             .flat_map(|val| {
                 let mut iter = val.iter();
                 let name: String = iter.next()?.as_string()?;
-                let amount = iter.next()?;
+                let amount = iter.next()?.as_f64()? as usize;
                 Some((name, amount))
             })
-            //.flat_map(|val| val.dyn_into::<js_sys::Object>())
-            //.map(|val| js_sys::Object::entries(&val).to_vec())
             .collect();
         Ok(format!("{:?}", values))
     }
