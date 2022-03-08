@@ -49,15 +49,16 @@ def createRes(request : HttpRequest) -> HttpResponse:
 def deleteRes(request : HttpRequest) -> HttpResponse:
     """ function that recieves an http request containing the QRID of a qr code and removes that qr code from the system\n
     Args:
-        request(HttpRequest): GET request containing a QRID in the url
+        request(HttpRequest): POST request containing a QRID in the body
     Returns:
         HttpResponse: response with status code:
             200: success
             201: no resource with QRID exists
     """
-    UID = int(request.GET['data'])
-    qrCode = QRC.objects.get(QRID=UID)
+    qrid = int(request.body)
+    qrCode = QRC.objects.get(QRID=qrid)
     if not (qrresources := QRResource.objects.filter(QRID=qrCode)).exists():
+        QRC.objects.get(QRID=qrid).delete()
         return HttpResponse(status=201) # A QRResource with the given UID doesn't exist so already 'deleted'
     for qrres in qrresources:
         qrres.delete()
