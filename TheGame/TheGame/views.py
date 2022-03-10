@@ -1,5 +1,5 @@
 from django.template import loader
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
 from TheGame.processes import getUserFromName
@@ -61,4 +61,19 @@ def battleSelectView(request):
     
     output = template.render(context, request)
     
+    return HttpResponse(output)
+
+def inventoryView(request : HttpRequest) -> HttpResponse:
+    if request.COOKIE.get('TheGameSessionID') == None:
+        return HttpResponseRedirect('login')
+
+    user = getUserFromCookie(request)
+
+    template = loader.get_template('TheGame/CharacterViewer.html')
+    context = {
+        "user" : user
+    }
+
+    output = template.render(context, request)
+
     return HttpResponse(output)
