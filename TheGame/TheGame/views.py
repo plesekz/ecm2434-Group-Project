@@ -63,21 +63,69 @@ def battleSelectView(request):
     
     return HttpResponse(output)
 
-def inventoryView(request : HttpRequest) -> HttpResponse:
-    if request.COOKIES.get('TheGameSessionID') == None:
-        return HttpResponseRedirect('login')
+def homePageView2(request : HttpRequest) -> HttpResponse:
+    if not 'TheGameSessionID' in request.COOKIES.keys():
+        return HttpResponseRedirect('/login')
 
-    user = getUserFromCookie(request)
-    userStats = getUserFromName(request)
-    resources = getAllUserResources(user)
+    try:
+        user = getUserFromCookie(request)
+        stats = getUserFromName(request)
+        resources = getAllUserResources(user)
+    except:
+        return HttpResponseRedirect('/login')
 
-    template = loader.get_template('TheGame/CharacterViewer.html')
+    template = loader.get_template('TheGame/HomePage2.html')
     context = {
         "user" : user,
-        "stats": userStats,
+        "stats": stats,
         "resources": resources
     }
 
     output = template.render(context, request)
 
     return HttpResponse(output)
+
+def characterMenu2(request : HttpRequest) -> HttpResponse:
+    if not 'TheGameSessionID' in request.COOKIES.keys():
+        return HttpResponseRedirect('/login')
+
+    try:
+        user = getUserFromCookie(request)
+        stats = getUserFromName(request)
+        resources = getAllUserResources(user)
+    except:
+        return HttpResponseRedirect('/login')
+
+    template = loader.get_template('TheGame/CharacterMenu2.html')
+    context = {
+        "user" : user,
+        "stats" : stats,
+        "resources" : resources,
+    }
+
+    output = template.render(context, request)
+
+    return HttpResponse(output)
+
+def battleSelectView2(request : HttpRequest) -> HttpResponse:
+    if not 'TheGameSessionID' in request.COOKIES.keys():
+        return HttpResponseRedirect('/login')
+
+    try:
+        user = getUserFromCookie(request)
+        stats = getUserFromName(request)
+        resources = getAllUserResources(user)
+    except:
+        return HttpResponseRedirect('/login')
+
+    template = loader.get_template('TheGame/battleSelect2.html')
+    context = {
+        "user" : user,
+        "stats" : stats,
+        "resources" : resources
+    }
+
+    output = template.render(context, request)
+
+    return HttpResponse(output)
+

@@ -1,0 +1,60 @@
+{% extends 'TheGame/CharacterSettingsTemplate.html' %}
+
+{% block headBlock %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'TheGame/styles/CharacterPages.css' %}">
+{% endblock %}
+
+{% block bodyBlock %}
+
+<div class="container" style="color:white;">
+    <div class="row">
+        <div class="col-sm-4">
+            <h1>Character image</h1>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="container-floating stat-highlight">
+                <ul>
+                    <h3>Stats:</h3>
+                    <li>
+                        Health: {{stats.pHealth}}
+                    </li>
+                    <li>
+                        Toughness: {{stats.pToughness}}
+                    </li>
+                    <li>
+                        Evasion: {{stats.pEvasion}}
+                    </li>
+                </ul>
+            </div>
+            <div class="container-floating stat-highlight">
+                <h3>Average joe's stats</h3>
+                <button onclick="fightAverageJoe()">
+                    <h1>Fight 'Average Joe'</h1>
+                </button>
+                {% if messages %}
+                {% for message in messages %}
+                    <div class="font-weight-boldx">{{ message }}</div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-sm-4">
+            <div class="container-floating">
+                <h1>Choose your opponent</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function fightAverageJoe() {
+        window.location.href = "battle"
+    }
+</script>
+
+
+{% endblock %}
