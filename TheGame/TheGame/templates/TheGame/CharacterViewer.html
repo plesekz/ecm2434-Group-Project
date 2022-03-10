@@ -6,31 +6,70 @@
 
 {% block bodyBlock%}
 
-<div class="text-center">
-    <div class="container">
-        <div class="row">
-            <button class="col-4">
-                <a href="">
+<style>
+    button.top-bar-button{
+        background-color: rgb(175, 60, 60);
+        color: white;
+        border-color: rgb(100, 60, 60);
+    }
+
+    div.stat-highlight{
+        background-color: rgb(150, 80, 80);
+        padding: 2%;
+        margin: 5%;
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    div.top-bar-container {
+        background-color: rgb(100, 60, 60);
+        padding: 1%;
+        margin-bottom: 1%;
+    }
+</style>
+
+<div class="text-center" style="background-color: rgb(75, 40, 40);">
+    <div class="container-floating top-bar-container">
+        <div class="row justify-content-around">
+            <button class="col-3 top-bar-button">
                     <h1>Factions</h1>
-                </a>
             </button>
-            <button class="col-4">
-                <a href="">
+            <button class="col-4 top-bar-button">
                     <h1>Inventory</h1>
-                </a>
             </button>
-            <button class="col-4">
-                <a href="">
+            <button class="col-3 top-bar-button">
                     <h1>Map</h1>
-                </a>
             </button>
         </div>
     </div>
 
-    <div class="container">
+    <div class="container-floating" style="color:white">
         <div class="row">
+            {% load static %}
             <div class="col-3">
-                <h1>icons?</h1>
+                <ul style="list-style-type: none;">
+                    <li >
+                        <a href="/qr/qr-landing">   
+                            <div class="stat-highlight">
+                                <img src="{% static 'TheGame/scanQRButton.png' %}" alt="" style="max-height: 100%; max-width: 100%;">
+                            </div>
+                        </a>
+                    </li>
+                    <li >
+                        <a href="/characterMenu">
+                            <div class="stat-highlight">
+                                <img src="{% static 'TheGame/buyStatsButton.png' %}" alt="" style="max-height: 100%; max-width: 100%;">
+                            </div>
+                        </a>
+                    </li>
+                    <li >
+                        <a href="/battleSelect">
+                            <div class="stat-highlight">
+                                <img src="{% static 'TheGame/battleButton.png' %}" alt="" style="max-height: 100%; max-width: 100%;">
+                            </div>
+                        </a>
+                    </li>
+                </ul>
             </div>
 
             <div class="col-6">
@@ -38,7 +77,7 @@
             </div>
 
             <div class="col-3">
-                <div class="container">
+                <div class="container-floating stat-highlight">
                     <ul>
                         <h3>Stats:</h3>
                         <li>
@@ -52,7 +91,7 @@
                         </li>
                     </ul>
                 </div>
-                <div class="container">
+                <div class="container-floating stat-highlight">
                     <ul>
                         <h3>Resources:</h3>
                         {%for r in resources%}
@@ -66,7 +105,7 @@
         </div>
     </div>
 
-    <div class="container">
+    <div class="container" style="color:white">
         <div class="row">
             <div class="col-sm">
                 <h1>GOOD PLACE</h1>
