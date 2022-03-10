@@ -65,14 +65,14 @@ def battleSelectView(request):
 
 def homePageView2(request : HttpRequest) -> HttpResponse:
     if not 'TheGameSessionID' in request.COOKIES.keys():
-        return HttpResponseRedirect('login')
+        return HttpResponseRedirect('/login')
 
     try:
         user = getUserFromCookie(request)
         stats = getUserFromName(request)
         resources = getAllUserResources(user)
     except:
-        return HttpResponseRedirect('login')
+        return HttpResponseRedirect('/login')
 
     template = loader.get_template('TheGame/HomePage2.html')
     context = {
@@ -87,14 +87,14 @@ def homePageView2(request : HttpRequest) -> HttpResponse:
 
 def characterMenu2(request : HttpRequest) -> HttpResponse:
     if not 'TheGameSessionID' in request.COOKIES.keys():
-        return HttpResponseRedirect('login')
+        return HttpResponseRedirect('/login')
 
     try:
         user = getUserFromCookie(request)
         stats = getUserFromName(request)
         resources = getAllUserResources(user)
     except:
-        return HttpResponseRedirect('login')
+        return HttpResponseRedirect('/login')
 
     template = loader.get_template('TheGame/CharacterMenu2.html')
     context = {
@@ -109,14 +109,14 @@ def characterMenu2(request : HttpRequest) -> HttpResponse:
 
 def battleSelectView2(request : HttpRequest) -> HttpResponse:
     if not 'TheGameSessionID' in request.COOKIES.keys():
-        return HttpResponseRedirect('login')
+        return HttpResponseRedirect('/login')
 
     try:
         user = getUserFromCookie(request)
         stats = getUserFromName(request)
         resources = getAllUserResources(user)
     except:
-        return HttpResponseRedirect('login')
+        return HttpResponseRedirect('/login')
 
     template = loader.get_template('TheGame/battleSelect2.html')
     context = {

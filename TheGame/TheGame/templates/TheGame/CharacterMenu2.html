@@ -13,8 +13,11 @@
         </div>
         <div class="col-6 col-md order order-3 order-md-2">
             <div class="container stat-highlight">
-                <h1>Buy stats here:</h1>
+                <h1>Buy stats:</h1>
                 <ul style="list-style-type: none;">
+                    <li>
+                        <h3>Character</h3>
+                    </li>
                     <li>
                         <form action="{% url 'buyphealth' %}">
                             {% csrf_token %}
@@ -30,43 +33,46 @@
                     <li>
                         <form action="{% url 'buypevasion' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Health</button>
+                            <button class="btn buyButton" type="submit">Buy Evasion</button>
                         </form>
                     </li>
                     <li>
                         <form action="{% url 'buydamage' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Health</button>
+                            <button class="btn buyButton" type="submit">Buy Damage</button>
                         </form>
                     </li>
                     <li>
                         <form action="{% url 'buyaccuracy' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Health</button>
+                            <button class="btn buyButton" type="submit">Buy Accuracy</button>
                         </form>
                     </li>
                     <li>
                         <form action="{% url 'buyattackspeed' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Health</button>
+                            <button class="btn buyButton" type="submit">Buy Attack Speed</button>
                         </form>
+                    </li>
+                    <li>
+                        <h3>Armour</h3>
                     </li>
                     <li>
                         <form action="{% url 'buyahealth' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Health</button>
+                            <button class="btn buyButton" type="submit">Buy Armour Health</button>
                         </form>
                     </li>
                     <li>
                         <form action="{% url 'buyatoughness' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Health</button>
+                            <button class="btn buyButton" type="submit">Buy Armour Toughness</button>
                         </form>
                     </li>
                     <li>
                         <form action="{% url 'buyaevasion' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Health</button>
+                            <button class="btn buyButton" type="submit">Buy Armour Evasion</button>
                         </form>
                     </li>
                 </ul>
