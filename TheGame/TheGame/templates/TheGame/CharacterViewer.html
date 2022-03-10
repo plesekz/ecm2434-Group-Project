@@ -6,14 +6,79 @@
 
 {% block bodyBlock%}
 
-<div class="container">
-    <div class="row">
-        <button class="col-4">
-            <a href="">
-                <h1>Factions</h1>
-            </a>
-        </button>
+<div class="text-center">
+    <div class="container">
+        <div class="row">
+            <button class="col-4">
+                <a href="">
+                    <h1>Factions</h1>
+                </a>
+            </button>
+            <button class="col-4">
+                <a href="">
+                    <h1>Inventory</h1>
+                </a>
+            </button>
+            <button class="col-4">
+                <a href="">
+                    <h1>Map</h1>
+                </a>
+            </button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-3">
+                <h1>icons?</h1>
+            </div>
+
+            <div class="col-6">
+                <h1>character image</h1>
+            </div>
+
+            <div class="col-3">
+                <div class="container">
+                    <ul>
+                        <h3>Stats:</h3>
+                        <li>
+                            Health: {{stats.pHealth}}
+                        </li>
+                        <li>
+                            Toughness: {{stats.pToughness}}
+                        </li>
+                        <li>
+                            Evasion: {{stats.pEvasion}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="container">
+                    <ul>
+                        <h3>Resources:</h3>
+                        {%for r in resources%}
+                        <li>
+                            {{r.0}}: {{r.1}}
+                        </li>
+                        {%endfor%}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <h1>GOOD PLACE</h1>
+            </div>
+            <div class="col-sm">
+                <h1>A PLACE</h1>
+            </div>
+            <div class="col-sm">
+                <h1>BAD PLACE</h1>
+            </div>
+        </div>
     </div>
 </div>
 
-{% endBlock %}
+{% endblock %}

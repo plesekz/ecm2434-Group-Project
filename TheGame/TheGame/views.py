@@ -64,14 +64,18 @@ def battleSelectView(request):
     return HttpResponse(output)
 
 def inventoryView(request : HttpRequest) -> HttpResponse:
-    if request.COOKIE.get('TheGameSessionID') == None:
+    if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
 
     user = getUserFromCookie(request)
+    userStats = getUserFromName(request)
+    resources = getAllUserResources(user)
 
     template = loader.get_template('TheGame/CharacterViewer.html')
     context = {
-        "user" : user
+        "user" : user,
+        "stats": userStats,
+        "resources": resources
     }
 
     output = template.render(context, request)
