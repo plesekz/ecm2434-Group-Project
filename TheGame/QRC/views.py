@@ -17,9 +17,9 @@ def createRes(request : HttpRequest) -> HttpResponse:
         200: success
         500: resource does not exist
     """
+
     data = request.body.decode('utf-8') # decode the body to a string
     json_data = json.loads(data) # load json from string data
-    print (json_data)
 
     qrid = json_data['codeID']
 

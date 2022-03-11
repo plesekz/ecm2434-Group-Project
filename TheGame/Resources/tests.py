@@ -1,15 +1,20 @@
 from django.test import TestCase
 from Resources.models import Resource, PlayerResource
 from Login.models import Player
-from Resources.processes import addResourceToUser, removeResourceFromUser
+from Resources.processes import *
 
 # Create your tests here.
 class ResourceTestCase(TestCase):
     
     def setUp(self):
         self.res1 = Resource.objects.create(name="wood")
+        self.res2 = Resource.objects.create(name="stone")
 
         self.p1 = Player.objects.create(role="placeholder",
+            email="dave@email.com",
+            username="dave", password="placeholder")
+
+        self.p2 = Player.objects.create(role="placeholder",
             email="dave@email.com",
             username="dave", password="placeholder")
 
@@ -47,3 +52,26 @@ class ResourceTestCase(TestCase):
             assert False
         except:
             assert True
+
+    def test_getting_resources(self):
+        """ function to test functions that will get resources
+        """
+
+        # give the player some resources that we can use
+        # 10 wood
+        addResourceToUser(self.p2, self.res1, 10)
+        # 15 stone
+        addResourceToUser(self.p2, self.res2, 15)
+
+        # get all the resources for the user
+        resList = getAllUserResources(self.p2)
+
+        # check the output is as expected, should be a list of tuples
+        # each containing a resources and an amount
+        self.assertEqual(resList, [(self.res1, 10), (self.res2, 15)] )
+
+        # test that we can get a resource by its name
+        resWood = getResourceByName("wood")
+        # should return the wood resource
+        self.assertEquals(resWood, self.res1)
+

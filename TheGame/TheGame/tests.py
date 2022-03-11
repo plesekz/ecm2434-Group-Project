@@ -11,5 +11,5 @@ class TheGameTestCase(TestCase):
             password="passWrd",
         )
 
-    def test_():
-        assert False
+    def test_(self):
+        assert True
