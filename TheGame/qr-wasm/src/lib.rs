@@ -4,7 +4,7 @@ use wasm_bindgen::closure::Closure;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-// Called when the wasm module is instantiated
+/** Setup event hooks*/
 #[cfg(not(test))]
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
@@ -49,6 +49,9 @@ pub fn main() -> Result<(), JsValue> {
     Ok(())
 }
 
+/**
+Function to be called with status whenever it changes
+*/
 pub struct Callback(Box<dyn Fn(Status)>);
 
 impl Default for Callback {
@@ -79,10 +82,16 @@ impl std::convert::From<JsValue> for QrError {
     }
 }
 
+/**
+Current image parsing progress to be displayed
+*/
 #[derive(Debug)]
 pub struct Status {
+    /** Whether there are currently any in progress tasks*/
     pub running: bool,
+    /** Number of files scanned*/
     pub scanned: usize,
+    /** Number of files left to scan*/
     pub tasks: usize,
 }
 
@@ -455,15 +464,17 @@ mod tests {
     use wasm_bindgen_test::*;
     #[wasm_bindgen_test]
     pub async fn load_qr_test() {
-        let data: &[(&[u8], &str, &[_])] = &[(
-            &include_bytes!("../test_images/IMG_20220303_131339.jpg")[..],
-            "../test_images/IMG_20220303_131339.jpg",
-            &[Ok("1041758308".to_string())],
-        ),(
-            &include_bytes!("../test_images/IMG_20220311_173540.jpg")[..],
-            "../test_images/IMG_20220311_173540.jpg",
-            &[Ok("3653067026".to_string())],
-        ),
+        let data: &[(&[u8], &str, &[_])] = &[
+            (
+                &include_bytes!("../test_images/IMG_20220303_131339.jpg")[..],
+                "../test_images/IMG_20220303_131339.jpg",
+                &[Ok("1041758308".to_string())],
+            ),
+            (
+                &include_bytes!("../test_images/IMG_20220311_173540.jpg")[..],
+                "../test_images/IMG_20220311_173540.jpg",
+                &[Ok("3653067026".to_string())],
+            ),
         ];
 
         for (image_data, name, desired) in data {
