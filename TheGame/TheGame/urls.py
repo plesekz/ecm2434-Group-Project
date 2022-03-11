@@ -25,8 +25,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("/", include("Login.urls"), name='login'),
     path('qr/', include("QRC.urls")),
-    path('', homePageView2, name="homePage"),
-    path('characterMenu/', characterMenu2, name="characterMenu"),
+    path('', homePageView, name="homePage"),
+    path('characterMenu/', characterMenu, name="characterMenu"),
     path('buyphealth/', processes.buyPHealth, name="buyphealth"),
     path('buyptoughness/', processes.buyPToughness, name="buyptoughness"),
     path('buypevasion/', processes.buyPEvasion, name="buypevasion"),
@@ -38,5 +38,5 @@ urlpatterns = [
     path('buyaevasion/', processes.buyAEvasion, name="buyaevasion"),
     path('battleSelect/battle', battle.callBattle, name="battleSelect/battle"),
     path('login/', include("Login.urls")),
-    path('battleSelect/', battleSelectView2, name="battleSelect"),
+    path('battleSelect/', battleSelectView, name="battleSelect"),
 ]
