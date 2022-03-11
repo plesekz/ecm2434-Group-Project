@@ -16,19 +16,16 @@ class LoginTestCase(TestCase):
 
         client = Client()
         # send a request to the validate login page
-        client.post(
-            "/login/validateRegister/",
-            data={
+        response = client.post(
+            "/login/ValidateRegister/",
+            {
                 'email' : "test@email.com",
                 'username' : "testUsername",
                 'password': "testPassword",
                 'confirmPassword' : "testPassword"
             },
-            content_type='application/json'
         )
-
         #check that the user was added to the database
-        sleep(2)
 
         try:
             user = Player.objects.get(username="testUsername")
