@@ -5,6 +5,7 @@ use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
 // Called when the wasm module is instantiated
+#[cfg(not(test))]
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
     std::panic::set_hook(Box::new(console_error_panic_hook::hook)); /* Sets panics to display to console for debugging*/
@@ -420,7 +421,6 @@ async fn load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
     //Ok(img)
 }
 
-
 /** Extracts all QR codes from javascript file input
 
 Parses image and then uses quircs to identify QR codes
@@ -445,4 +445,38 @@ async fn load_qr(
         log::info!("{}", &msg);
         Ok(msg.to_owned())
     }))
+}
+
+#[cfg(test)]
+mod tests {
+
+    wasm_bindgen_test_configure!(run_in_browser);
+    use crate::*;
+    use wasm_bindgen_test::*;
+    #[wasm_bindgen_test]
+    pub async fn load_qr_test() {
+        let data: &[(&[u8], &str, &[_])] = &[(
+            &include_bytes!("../test_images/IMG_20220303_131339.jpg")[..],
+            "../test_images/IMG_20220303_131339.jpg",
+            &[Ok("1041758308".to_string())],
+        ),(
+            &include_bytes!("../test_images/IMG_20220311_173540.jpg")[..],
+            "../test_images/IMG_20220311_173540.jpg",
+            &[Ok("3653067026".to_string())],
+        ),
+        ];
+
+        for (image_data, name, desired) in data {
+            let array = js_sys::Array::new();
+            array.set(0, js_sys::Uint8Array::from(*image_data).dyn_into().unwrap());
+            let file = web_sys::File::new_with_blob_sequence(&array, name).unwrap();
+            let mut decoder = quircs::Quirc::default();
+            let vals: Vec<_> = load_qr(&mut decoder, file)
+                .await
+                .unwrap()
+                .map(|val| val.map_err(|e| e.to_string()))
+                .collect();
+            assert_eq!(&vals, desired);
+        }
+    }
 }
