@@ -17,7 +17,7 @@ def homePageView(request : HttpRequest) -> HttpResponse:
     except:
         return HttpResponseRedirect('/login')
 
-    template = loader.get_template('TheGame/HomePage2.html')
+    template = loader.get_template('TheGame/HomePage.html')
     context = {
         "user" : user,
         "stats": stats,
@@ -39,7 +39,7 @@ def characterMenu(request : HttpRequest) -> HttpResponse:
     except:
         return HttpResponseRedirect('/login')
 
-    template = loader.get_template('TheGame/CharacterMenu2.html')
+    template = loader.get_template('TheGame/CharacterMenu.html')
     context = {
         "user" : user,
         "stats" : stats,
@@ -61,7 +61,7 @@ def battleSelectView(request : HttpRequest) -> HttpResponse:
     except:
         return HttpResponseRedirect('/login')
 
-    template = loader.get_template('TheGame/battleSelect2.html')
+    template = loader.get_template('TheGame/battleSelect.html')
     context = {
         "user" : user,
         "stats" : stats,
