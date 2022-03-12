@@ -1,5 +1,5 @@
 [package]
-name = "qr-wasm"
+name = "qrwasm"
 version = "0.1.0"
 edition = "2021"
 
@@ -47,8 +47,11 @@ features = [
   'ImageBitmapFormat',
   'HtmlImageElement',
   'CanvasRenderingContext2d',
-  'ImageData'
+  'ImageData',
 ]
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
 
 
 
