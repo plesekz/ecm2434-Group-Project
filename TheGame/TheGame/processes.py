@@ -39,10 +39,10 @@ def buyPToughness(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5):
-        userStats = getUserFromName(request)
-        userStats.pToughness += 1
-        userStats.save()    
+    addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5):
+    userStats = getUserFromName(request)
+    userStats.pToughness += 1
+    userStats.save()    
 
     return response
 
