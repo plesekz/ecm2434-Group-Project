@@ -1,4 +1,5 @@
 from email import header
+from getpass import getuser
 from time import sleep
 from django.test import TestCase, Client
 from QRC.models import QRC, QRResource
@@ -6,18 +7,23 @@ from Resources.models import Resource, PlayerResource
 from Resources.processes import getAllUserResources
 from http.cookies import SimpleCookie
 from Login.models import Player
+from Login.processes import getUserFromCookie
 import json
 
 # Create your tests here.
 
 class QrTestCase(TestCase):
+
     def setUp(self):
+
+        #set up a qr code that we can use
         self.qr1 = QRC.objects.create(
             QRID = 1234,
             latitude = 12.4567,
             longitude = 23.5678,
         )
 
+        # set up some resources
         self.res1 = Resource.objects.create(
             name="wood"
         )
@@ -26,12 +32,14 @@ class QrTestCase(TestCase):
             name="stone"
         )
 
+        # set up a qr code to test deleting
         self.qrToDelete = QRC.objects.create(
             QRID = 9876,
             latitude = 12.4567,
             longitude = 23.5678,
         )
 
+        # give the qr code some resources to delete
         QRResource.objects.create(
             QRID=self.qrToDelete,
             amount=12,
@@ -44,6 +52,31 @@ class QrTestCase(TestCase):
             resource=self.res1,
         )
 
+        # create a client to log in to the system
+        self.client = Client()
+
+        #register the client
+        res = self.client.post('/login/ValidateRegister/',
+            {
+                'email': "test@email.com",
+                'username': 'testUsername',
+                'password': 'testPassword',
+                'confirmPassword': 'testPassword'
+            }
+        )
+        self.client = res.client
+
+        # log in the client
+
+        res = self.client.post('/login/ValidateLogin/',
+            {
+                'email': 'test@email.com',
+                'password': 'testPassword'
+            }
+        )
+
+        self.client = res.client
+        
 
 
     def test_qrc_constraints(self):
@@ -161,14 +194,6 @@ class QrTestCase(TestCase):
         change the players password to a hashed version of the password
         """
 
-        pToLogIn = Player.objects.create(
-            userID = 0,
-            role = "placeHolder",
-            email="testing@email.com",
-            username="testingUsername",
-            password="testingPassword", #this has be to changeed to a hash
-        )
-
         # qrid of qr to test deleting is 9876
 
         c = Client()
@@ -192,24 +217,10 @@ class QrTestCase(TestCase):
 
         assert not QRResource.objects.filter(QRID=9876).exists()
 
+
     def test_retrieve_resource(self):
 
-        c = Client(HTTP_USER_AGENT='Mozilla/5.0')
-        
-        #log in a player and get the cookie
-
-        res = c.post('/login/ValidateLogin/',
-            {
-                'email': spToLogIn.email,
-                'password': "testingPassword",
-            }
-        )
-
-        c = res.client
-
-        assert res.status_code < 400
-        # create a new qr and resource
-
+        # create a new qr and give it resource 1
         qr = QRC.objects.create(
             QRID = 5678,
             latitude = 12.4567,
@@ -222,9 +233,9 @@ class QrTestCase(TestCase):
             amount=200,
         )
 
-        # now the user should have the right cookies to request resources
+        # send out client to the url to retrieve the resources
         url = f"/qr/retrieveRes/?data={qr.QRID}"
-        res = c.get(url)
+        res = self.client.get(url)
 
         print(res.status_code)
 
@@ -232,6 +243,15 @@ class QrTestCase(TestCase):
 
         #check that the user has got the 200 wood
 
-        assert PlayerResource.objects.filter(player=pToLogIn, resource=self.res1).exists()
-        assert (self.res1, 200) in getAllUserResources(pToLogIn)
+        p = Player.objects.get(username="testUsername")
 
+        assert PlayerResource.objects.filter(player=p, resource=self.res1).exists()
+
+        assert (self.res1, 200) in getAllUserResources(p)
+
+
+    def test_list_resource():
+        """ function to test if resources are listed correctly
+        """
+
+        assert True
