@@ -189,16 +189,7 @@ class QrTestCase(TestCase):
         """ function to test deleting resources
         """
 
-        """ this unit test currently doesnt work because
-        password is hashed before being checked so we have to
-        change the players password to a hashed version of the password
-        """
-
-        # qrid of qr to test deleting is 9876
-
-        c = Client()
-
-        res = c.post('/qr/deleteRes',
+        res = self.client.post('/qr/deleteRes',
             json.dumps(9876),
             content_type='application/json'
         )
@@ -210,7 +201,7 @@ class QrTestCase(TestCase):
         # now we send the same request and it should delete the qr code from the system
         # as there are no associated resources
 
-        res = c.post('/qr/deleteRes',
+        res = self.client.post('/qr/deleteRes',
             json.dumps(9876),
             content_type='application/json'
         )
@@ -219,6 +210,9 @@ class QrTestCase(TestCase):
 
 
     def test_retrieve_resource(self):
+        """ function to test that a user can retrieve the resources of a given qr code
+        by using the urls that we have created
+        """
 
         # create a new qr and give it resource 1
         qr = QRC.objects.create(
@@ -250,7 +244,7 @@ class QrTestCase(TestCase):
         assert (self.res1, 200) in getAllUserResources(p)
 
 
-    def test_list_resource():
+    def test_list_resource(self):
         """ function to test if resources are listed correctly
         """
 

@@ -12,7 +12,7 @@ class LoginTestCase(TestCase):
     def setUp(self):
         return None
 
-    def test_registration(self):
+    def test_registration_and_login(self):
 
         client = Client()
         # send a request to the validate login page
@@ -27,8 +27,27 @@ class LoginTestCase(TestCase):
         )
         #check that the user was added to the database
 
+        client = response.client
+
         try:
             user = Player.objects.get(username="testUsername")
             assert True
         except:
             assert False
+
+        # test that we can log in to the system
+
+        response = client.post('/login/ValidateLogin/',
+            {
+                'email': "test@email.com",
+                'password': 'testPassword'
+            }
+        )
+
+        # check that the cookie was set to the right value
+        client = response.client
+        user = Player.objects.get(username="testUsername")
+
+        self.assertEquals( user.userID , client.cookies.get('TheGameSessionID').value )
+
+        
