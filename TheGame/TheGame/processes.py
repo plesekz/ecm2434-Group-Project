@@ -42,7 +42,7 @@ def buyPToughness(request):
     if addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5):
         userStats = getUserFromName(request)
         userStats.pToughness += 1
-        userStats.save()    
+        userStats.save()
 
     return response
 
