@@ -272,9 +272,7 @@ impl QRManager {
         let result = wasm_bindgen_futures::JsFuture::from(promise).await;
         let result = result?;
         let response: web_sys::Response = result.into();
-        log::info!("{}", response.ok());
-        log::info!("{}", response.status());
-        log::info!("{}", response.status_text());
+        log::info!("Response: {} {}", response.status(), response.status_text());
         if !response.ok() {
             return Err(match response.status() {
                 501 => QrError::UnknownQrID,
@@ -372,10 +370,13 @@ async fn lib_load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue
 
     let buffer: Vec<u8> = buffer.to_vec();
     /*If extension says image type skip guessing the type, creates slight performance improvement*/
-    let img = if let Some(format) = match file.name() {
-        name if name.ends_with(".jpeg") => Some(image::ImageFormat::Jpeg),
-        name if name.ends_with(".jpg") => Some(image::ImageFormat::Jpeg),
-        name if name.ends_with(".png") => Some(image::ImageFormat::Png),
+    let name = file.name();
+    let path = std::path::Path::new(&name);
+    let extension: Option<&str> = path.extension().and_then(|v|v.to_str());
+    let img = if let Some(format) = match extension {
+        Some("jpeg") => Some(image::ImageFormat::Jpeg),
+        Some("jpg") => Some(image::ImageFormat::Jpeg),
+        Some("png") => Some(image::ImageFormat::Png),
         _ => None,
     } {
         image::load_from_memory_with_format(&buffer, format)
