@@ -99,7 +99,7 @@ pub struct Status {
 /** Contains currently processed files and status*/
 #[derive(Clone)]
 pub struct QRManager {
-    files: Rc<Cell<Vec<web_sys::File>>>,
+    files: Rc<Cell<Vec<gloo::file::File>>>,
     scan_count: Rc<Cell<usize>>,
     running: Rc<Cell<bool>>,
     age: Rc<Cell<usize>>,
@@ -138,8 +138,10 @@ impl QRManager {
     ) {
         /* Find the elements once and store them as part of the closure, so they only get searched for once*/
         let running_elem: Option<web_sys::Element> = self.document.get_element_by_id(&running_id);
-        let tasks_left_elem: Option<web_sys::Element> = self.document.get_element_by_id(&tasks_left_id);
-        let scanned_elem: Option<web_sys::Element> = self.document.get_element_by_id(&scanned_count_id);
+        let tasks_left_elem: Option<web_sys::Element> =
+            self.document.get_element_by_id(&tasks_left_id);
+        let scanned_elem: Option<web_sys::Element> =
+            self.document.get_element_by_id(&scanned_count_id);
         self.set_callback(Callback(Box::new(move |status| {
             if let Some(elem) = &running_elem {
                 let new = status.running.to_string();
@@ -147,7 +149,8 @@ impl QRManager {
             }
             if let Some(elem) = &tasks_left_elem {
                 let new = status.tasks.to_string();
-                let width: f64 = status.tasks as f64 / (status.scanned + status.tasks).max(1) as f64;
+                let width: f64 =
+                    status.tasks as f64 / (status.scanned + status.tasks).max(1) as f64;
                 let width: f64 = 100.0 - width * 100.0;
                 if let Err(err) =
                     elem.set_attribute("style", &format!("width: {}%", width as usize))
@@ -172,15 +175,12 @@ impl QRManager {
     /** Adds files to list of pending files, and spawns new progess task */
     pub fn load_file_list(&self, new_files: web_sys::FileList) {
         {
-            let mut files: Vec<web_sys::File> = self.files.take();
+            let new_files: gloo::file::FileList = From::from(new_files);
+            let mut files: Vec<gloo::file::File> = self.files.take();
             if files.is_empty() {
                 self.scan_count.set(0);
             }
-            for i in 0..new_files.length() {
-                if let Some(file) = new_files.get(i) {
-                    files.push(file);
-                }
-            }
+            files.extend_from_slice(&new_files);
             self.files.set(files);
         }
         self.spawn_task();
@@ -219,11 +219,11 @@ impl QRManager {
         while age == self.age.get() {
             /* Check if any new task has been spawned */
             self.call_callback();
-            let mut files: Vec<web_sys::File> = self.files.take();
-            let file: Option<web_sys::File> = files.pop();
+            let mut files: Vec<gloo::file::File> = self.files.take();
+            let file: Option<gloo::file::File> = files.pop();
             self.files.set(files);
             self.running.set(true);
-            let file: web_sys::File = if let Some(file) = file { file } else { break };
+            let file: gloo::file::File = if let Some(file) = file { file } else { break };
             match load_qr(&mut decoder, file).await {
                 Ok(codes) => {
                     for code in codes {
@@ -231,7 +231,8 @@ impl QRManager {
                             .and_then(|code| Ok(code.parse().map_err(|_| QrError::InvalidQrID)?));
                         match code {
                             Ok(code) => {
-                                let result: Result<Vec<(String, usize)>, QrError> = self.retrieve_res(&code).await;
+                                let result: Result<Vec<(String, usize)>, QrError> =
+                                    self.retrieve_res(&code).await;
                                 log::info!("result: {:?}", result);
                                 let msg = match result {
                                     Ok(res) => format!("Result: {:?}", res),
@@ -307,10 +308,9 @@ Use html <img> tag to parse image, and convert to canvas to extract pixels
 
 Faster as it uses the browsers native image parser, but not always supported
 */
-async fn browser_load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
-    let blob = web_sys::Blob::from(file);
-
-    let url: String = web_sys::Url::create_object_url_with_blob(&blob)?;
+async fn browser_load_image(file: gloo::file::File) -> Result<image::GrayImage, JsValue> {
+    let blob: &web_sys::Blob = file.as_ref();
+    let url: String = web_sys::Url::create_object_url_with_blob(blob)?;
     let img = web_sys::HtmlImageElement::new()?;
     img.set_src(&url);
     wasm_bindgen_futures::JsFuture::from(img.decode()).await?; /* Wait for image to finish parsing before continuing*/
@@ -327,6 +327,7 @@ async fn browser_load_image(file: web_sys::File) -> Result<image::GrayImage, JsV
     let canvas = canvas.dyn_into::<web_sys::HtmlCanvasElement>()?;
     canvas.set_width(width);
     canvas.set_height(height);
+
     let ctx: js_sys::Object = canvas
         .get_context("2d")?
         .ok_or("Failed to create context")?;
@@ -362,8 +363,9 @@ Use rust image library to parse image
 
 Slower as wasm is slower than native, but always supported
 */
-async fn lib_load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
-    let buffer = wasm_bindgen_futures::JsFuture::from(file.array_buffer())
+async fn lib_load_image(file: gloo::file::File) -> Result<image::GrayImage, JsValue> {
+    let blob: &web_sys::Blob = file.as_ref();
+    let buffer = wasm_bindgen_futures::JsFuture::from(blob.array_buffer())
         .await
         .map_err(|e| format!("{:?}", e))?;
     let buffer: js_sys::Uint8Array = js_sys::Uint8Array::new(&buffer);
@@ -372,7 +374,7 @@ async fn lib_load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue
     /*If extension says image type skip guessing the type, creates slight performance improvement*/
     let name = file.name();
     let path = std::path::Path::new(&name);
-    let extension: Option<&str> = path.extension().and_then(|v|v.to_str());
+    let extension: Option<&str> = path.extension().and_then(|v| v.to_str());
     let img = if let Some(format) = match extension {
         Some("jpeg") => Some(image::ImageFormat::Jpeg),
         Some("jpg") => Some(image::ImageFormat::Jpeg),
@@ -393,7 +395,7 @@ Loads the image data from javascript file input
 
 If browser supports extracting data from canvas uses that, otherwise uses an image parsing library
 */
-async fn load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
+async fn load_image(file: gloo::file::File) -> Result<image::GrayImage, JsValue> {
     log::info!("Loading image: {}", file.name());
 
     let canvas: web_sys::Element = web_sys::window()
@@ -439,7 +441,7 @@ Parses image and then uses quircs to identify QR codes
 */
 async fn load_qr(
     decoder: &mut quircs::Quirc,
-    file: web_sys::File,
+    file: gloo::file::File,
 ) -> Result<
     impl std::iter::Iterator<Item = Result<String, Box<dyn std::error::Error>>> + '_,
     Box<dyn std::error::Error>,
@@ -481,10 +483,8 @@ mod tests {
         ];
 
         for (image_data, name, desired) in data {
-            let array = js_sys::Array::new();
-            array.set(0, js_sys::Uint8Array::from(*image_data).dyn_into().unwrap());
-            let file = web_sys::File::new_with_blob_sequence(&array, name).unwrap();
             let mut decoder = quircs::Quirc::default();
+            let file = gloo::file::File::new(name, *image_data);
             let vals: Vec<_> = load_qr(&mut decoder, file)
                 .await
                 .unwrap()
