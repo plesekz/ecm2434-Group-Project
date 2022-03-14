@@ -4,15 +4,22 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from Login.models import Player
 from Resources.processes import removeResourceFromUser, addResourceToUser, getResourceByName
-from .models import pStat
+from .models import Champion
 from Login.processes import getUserFromCookie
 from Login.models import Player
 from Resources.models import PlayerResource, Resource
 
 def getUserFromName(request):
     user = getUserFromCookie(request)
-    userStats = pStat.objects.get(player=user)
+    userStats = Champion.objects.get(player=user)
     return userStats
+
+def getChampion(player : Player) -> Champion:
+    if not (champs := Champion.objects.filter(player=player)).exists():
+        return None
+
+    return champs[0]
+
 
 def spendResource(request, rNeeded, amount):
     try:

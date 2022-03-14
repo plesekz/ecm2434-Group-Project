@@ -2,7 +2,7 @@ from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
-from TheGame.processes import getUserFromName
+from TheGame.processes import getUserFromName, getChampion
 from Resources.processes import getAllUserResources
 
 def homePageView(request):
@@ -31,20 +31,21 @@ def characterMenu(request):
         return HttpResponseRedirect('login')
 
     user = getUserFromCookie(request)
-    userStats = getUserFromName(request)
+    if not (champion := getChampion(user)):
+        return HttpResponseRedirect('createChampion')
 
     template = loader.get_template('TheGame/CharacterMenu.html')
     context = {
     "username" : user.username,
-    "pHealth" : userStats.pHealth,
-    "pToughness" : userStats.pToughness,
-    "pEvasion" : userStats.pEvasion,
-    "damage" : userStats.damage,
-    "accuracy" : userStats.accuracy,
-    "attackSpeed" : userStats.attackSpeed,
-    "aHealth" : userStats.aHealth,
-    "aToughness" : userStats.aToughness,
-    "aEvasion" : userStats.aEvasion,
+    "pHealth" : champion.pHealth,
+    "pToughness" : champion.pToughness,
+    "pEvasion" : champion.pEvasion,
+    "damage" : champion.damage,
+    "accuracy" : champion.accuracy,
+    "attackSpeed" : champion.attackSpeed,
+    "aHealth" : champion.aHealth,
+    "aToughness" : champion.aToughness,
+    "aEvasion" : champion.aEvasion,
     }
     output = template.render(context, request)
 
@@ -55,6 +56,11 @@ def battleSelectView(request):
         return HttpResponseRedirect('login')
     
     user = getUserFromCookie(request)
+
+    if not (champ := getChampion(user)):
+        return HttpResponseRedirect('createChampion')
+
+    user = getUserFromCookie(request)
     
     template = loader.get_template('TheGame/battleSelect.html')
     context = {}
@@ -62,3 +68,6 @@ def battleSelectView(request):
     output = template.render(context, request)
     
     return HttpResponse(output)
+
+def createChampionView(request):
+    return HttpResponse("this is the champion create page")
