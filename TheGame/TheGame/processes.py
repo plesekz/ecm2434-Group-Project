@@ -1,5 +1,6 @@
 from logging import exception
 from operator import truediv
+from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
 from Login.models import Player
@@ -136,3 +137,38 @@ def buyAEvasion(request):
         userStats.save()
 
     return response
+
+
+def getAllBosses() -> "list[Champion]":
+
+    if not (bosses := Champion.objects.filter(player=None)):
+        return None
+
+    bossList = []
+
+    for b in bosses:
+        bossList.append(b)
+
+    return bossList
+
+def addBossToSystem(request : HttpRequest):
+    if not request.method == "POST":
+        return HttpResponse("failed to perform operation")
+
+    statInfo = request.POST;
+
+    Champion.objects.create(
+        player=None,
+        name = statInfo['name'],
+        pHealth =  statInfo['pHealth'],
+        pToughness = statInfo['pToughness'],
+        pEvasion = statInfo['pEvasion'],
+        damage = statInfo['damage'],
+        accuracy = statInfo['accuracy'],
+        attackSpeed = statInfo['attackSpeed'],
+        aHealth = statInfo['aHealth'],
+        aToughness = statInfo['aToughness'],
+        aEvasion = statInfo['aEvasion'],
+    )
+
+    return HttpResponseRedirect('addBosses')

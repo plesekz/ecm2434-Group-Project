@@ -55,7 +55,7 @@ def validateRegister(request):
 
     cookie = bake_cookie(_username)
     form = Player(email=_email, username=_username, password=_password, userID=cookie, role='user')
-    championForm = Champion(player = form)
+    championForm = Champion(player = form, name = _username)
 
     response.set_cookie('TheGameSessionID', cookie)
 

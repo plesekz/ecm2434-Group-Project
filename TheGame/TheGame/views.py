@@ -2,7 +2,7 @@ from django.template import loader
 from django.http import HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
-from TheGame.processes import getUserFromName, getChampion
+from TheGame.processes import getAllBosses, getUserFromName, getChampion
 from Resources.processes import getAllUserResources
 
 def homePageView(request):
@@ -71,3 +71,21 @@ def battleSelectView(request):
 
 def createChampionView(request):
     return HttpResponse("this is the champion create page")
+
+def addNewBossView(request):
+    user = getUserFromCookie(request)
+
+    # if not user.role == "gameMaster":
+    #     return HttpResponseRedirect('homePage')
+
+    template = loader.get_template('TheGame/newBoss.html')
+
+    bosses = getAllBosses()
+
+    context = {
+        "bosses" : bosses,
+    }
+
+    output = template.render(context, request)
+
+    return HttpResponse(output)

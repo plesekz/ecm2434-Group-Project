@@ -15,9 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from TheGame.TheGame.views import createChampionView
 
-from TheGame.views import homePageView, characterMenu, battleSelectView
+from TheGame.views import *
 from . import processes, battle
 
 
@@ -38,5 +37,7 @@ urlpatterns = [
     path('battleSelect/battle', battle.callBattle, name="battleSelect/battle"),
     path('login/', include("Login.urls")),
     path('battleSelect/', battleSelectView, name="battleSelect"),
-    path('createChampion/', createChampionView, name='createChampion')
+    path('createChampion/', createChampionView, name='createChampion'),
+    path('addBosses/', addNewBossView, name='addNewBoss'),
+    path('newBossValidation', processes.addBossToSystem)
 ]
