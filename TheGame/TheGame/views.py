@@ -65,7 +65,7 @@ def battleSelectView(request : HttpRequest) -> HttpResponse:
     context = {
         "user" : user,
         "stats" : stats,
-        "resources" : resources
+        "resources" : resources,
     }
 
     output = template.render(context, request)
