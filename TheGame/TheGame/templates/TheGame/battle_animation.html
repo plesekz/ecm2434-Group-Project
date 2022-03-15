@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<style>
+/*<!--
+sets up the different sprites
+character is the bounding box, the default position is entirely within it
+-->*/
+#character {
+    width: 512px;
+    height: 848px;
+    position: relative;
+    background: yellow;
+}
+#head {
+    width: 256px;
+    height: 256px;
+    position: absolute;
+    background:url(sprites/head.png);
+}
+#torso {
+    width: 256px;
+    height: 384px;
+    position: absolute;
+    background:url(sprites/torso.png);
+}
+#upperarm {
+    width: 256px;
+    height: 256px;
+    position: absolute;
+    background:url(sprites/upperarm.png);
+}
+#forearm {
+    width: 256px;
+    height: 256px;
+    position: absolute;
+    background:url(sprites/forearm.png);
+}
+#hand {
+    width: 128px;
+    height: 128px;
+    position: absolute;
+    background:url(sprites/hand.png);
+}
+#thigh {
+    width: 256px;
+    height: 384px;
+    position: absolute;
+    background:url(sprites/thigh.png);
+}
+#shin {
+    width: 256px;
+    height: 384px;
+    position: absolute;
+    background:url(sprites/shin.png);
+}
+#foot {
+    width: 128px;
+    height: 128px;
+    position: absolute;
+    background:url(sprites/foot.png);
+}
+
+
+</style>
+<body>
+    <p>
+        <!--buttons, for testing-->
+        <button onclick="setup()">Setup</button> 
+        <button onclick="attack()">Attack</button> 
+    </p>
+    <!--places each sprite on the page, this order for layering purposes-->
+    <div id ="character">
+        <div id ="torso"></div>
+        <div id ="head"></div>
+        <div id ="forearm"></div>
+        <div id ="upperarm"></div>
+        <div id ="hand"></div>
+        <div id ="thigh"></div>
+        <div id ="shin"></div>
+        <div id ="foot"></div>
+    </div>
+    <script>
+        var id = null;
+        
+        function setup() {
+            //variables 
+            var head     = document.getElementById("head");
+            var torso    = document.getElementById("torso");
+            var upperarm = document.getElementById("upperarm");
+            var forearm  = document.getElementById("forearm");
+            var hand     = document.getElementById("hand");
+            var thigh    = document.getElementById("thigh"); 
+            var shin     = document.getElementById("shin");
+            var foot     = document.getElementById("foot");
+            
+            //for each part, it is placed in the default position           
+            
+            head.style.top = '0px'; 
+            head.style.left = '48px';
+            
+            torso.style.top = (10 * 16) + 'px';
+            torso.style.left = (0 * 16)+ 'px';
+            
+            upperarm.style.top = (13 * 16) + 'px';
+            upperarm.style.left = (5 * 16)+ 'px';
+            
+            forearm.style.top = (12 * 16) + 'px';
+            forearm.style.left = (13 * 16)+ 'px';
+            
+            hand.style.top = (11 * 16) + 'px';
+            hand.style.left = (22 * 16)+ 'px';
+            
+            thigh.style.top = (21 * 16) + 'px';
+            thigh.style.left = (3 * 16)+ 'px';
+            
+            shin.style.top = (31 * 16) + 'px';
+            shin.style.left = (3 * 16)+ 'px';
+            
+            foot.style.top = (45 * 16) + 'px';
+            foot.style.left = (9 * 16)+ 'px';
+            
+        }
+        
+        function attack() {
+            //variables
+            var head     = document.getElementById("head");
+            var torso    = document.getElementById("torso");
+            var upperarm = document.getElementById("upperarm");
+            var forearm  = document.getElementById("forearm");
+            var hand     = document.getElementById("hand");
+            var thigh    = document.getElementById("thigh"); 
+            var shin     = document.getElementById("shin");
+            var foot     = document.getElementById("foot");
+        
+            
+            //temporary
+            var pos = 0;
+            clearInterval(id);
+            id = setInterval(frame, 10);
+            function frame() {
+                if (pos == 50) {
+                    clearInterval(id);
+                }
+                else {
+                    pos++; 
+                    head.style.top = pos + 'px'; 
+                    head.style.left = pos + 'px';
+                    torso.style.top = (+pos + 160) + 'px';
+                    torso.style.left = (+pos - 48)+ 'px';
+                }
+            }
+        }
+        setup(); //runs setup after the page has loaded, so the character is in default position
+    </script>
+</body>
+</html>
