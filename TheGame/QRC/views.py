@@ -7,6 +7,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.template import loader
 import json
 import qrcode
+import os
 
 
 def createRes(request : HttpRequest) -> HttpResponse:
@@ -44,8 +45,8 @@ def createRes(request : HttpRequest) -> HttpResponse:
         qr.make(fit=True)
         
         qrImage = qr.make_image(fill="black", back_color="white")
-        filepath =  f"QRC/static/QRC/qrImages/{json_data['codeID']}.png"
-        qrImage.save(filepath)
+        filepath =  f"QRC/qrImages/{json_data['codeID']}.png"
+        qrImage.save("QRC/static/" + filepath)
 
         qrc = QRC.objects.create(
             QRID=int(json_data['codeID']),
@@ -80,6 +81,8 @@ def deleteRes(request : HttpRequest) -> HttpResponse:
     qrCode = QRC.objects.get(QRID=qrid)
     if not (qrresources := QRResource.objects.filter(QRID=qrCode)).exists():
         QRC.objects.get(QRID=qrid).delete()
+        # delete image
+        os.remove(f"static/QRC/qrImages/{qrid}.png")
         return HttpResponse(status=201) # A QRResource with the given UID doesn't exist so already 'deleted'
     for qrres in qrresources:
         qrres.delete()
@@ -161,7 +164,8 @@ def QR_management(request : HttpRequest) -> HttpResponse:
                 'lat': QRCode.latitude,
                 'lon': QRCode.longitude,
                 'resources': QRResource.objects.filter(QRID=QRCode),
-                'imagePath': QRCode.image
+                'imagePath': QRCode.image,
+                'staticPath': "QRC/qrImages/"
             }
         ) 
     list_of_resources = Resource.objects.all()
