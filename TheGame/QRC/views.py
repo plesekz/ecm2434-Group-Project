@@ -44,13 +44,14 @@ def createRes(request : HttpRequest) -> HttpResponse:
         qr.make(fit=True)
         
         qrImage = qr.make_image(fill="black", back_color="white")
-        qrImage.save("media/qrImages")
+        filepath =  f"QRC/static/QRC/qrImages/{json_data['codeID']}.png"
+        qrImage.save(filepath)
 
         qrc = QRC.objects.create(
             QRID=int(json_data['codeID']),
             latitude=float(json_data['latitude']),
             longitude=float(json_data['longitude']),
-            image = ""
+            image = filepath
         )
     
     # if that resource is already on that qr then update else create a new entry
@@ -159,7 +160,8 @@ def QR_management(request : HttpRequest) -> HttpResponse:
                 'name': QRCode.QRID,
                 'lat': QRCode.latitude,
                 'lon': QRCode.longitude,
-                'resources': QRResource.objects.filter(QRID=QRCode)
+                'resources': QRResource.objects.filter(QRID=QRCode),
+                'imagePath': QRCode.image
             }
         ) 
     list_of_resources = Resource.objects.all()

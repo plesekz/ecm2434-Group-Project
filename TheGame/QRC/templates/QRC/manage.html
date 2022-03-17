@@ -149,8 +149,8 @@
                     <div class="row mb-3">
                         <!-- QR code and cancel button -->
                         <div class="col-md-9">
-
-                            <img />
+                            {% load static %}
+                            <img src="{% static 'QRC/qrImage/1234.png' {{code.imagePath}} %}"/>
                             <!-- create the png -->
                         </div>
                         <div class="col-md-3">
