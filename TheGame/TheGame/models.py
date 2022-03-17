@@ -25,14 +25,17 @@ class Champion(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=50)
     price = models.IntegerField()
-    type = models.CharField(max_length=15)
+    type = models.CharField(max_length=32)
 
-    damageReduction = models.IntegerField()
-    damgeScaling = models.DecimalField(decimal_places=2)
-    specialEffect = models.CharField(max_length=20)
+    Stat1 = models.IntegerField(default=1)
+    Stat2 = models.IntegerField(default=1)
+    Stat3 = models.IntegerField(default=1)
+    def __str__(self):
+        return str(self.name)
 
 class ChampionItems(models.Model):
-    champion = models.ForeignKey(Champion)
-    item = models.ForeignKey(Item)
+    champion = models.ForeignKey(Champion, on_delete=models.CASCADE, null=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
     amount = models.IntegerField()
     itemLevel = models.IntegerField()
+
