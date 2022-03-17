@@ -6,7 +6,8 @@ from TheGame.processes import getUserFromName
 from Resources.processes import getAllUserResources
 
 def homePageView(request):
-
+    """ creates response for the Home page
+    """
     if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
     try:
@@ -26,7 +27,8 @@ def homePageView(request):
     return HttpResponse(output)
 
 def characterMenu(request):
-
+    """ creates response for the character menu
+    """
     if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
 
@@ -51,6 +53,8 @@ def characterMenu(request):
     return HttpResponse(output)
 
 def battleSelectView(request):
+    """ create response for the battle selection page
+    """
     if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
     
