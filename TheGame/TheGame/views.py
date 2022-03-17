@@ -40,10 +40,10 @@ def characterMenu(request):
     "pHealth" : champion.pHealth,
     "pToughness" : champion.pToughness,
     "pEvasion" : champion.pEvasion,
-    "damage" : champion.damage,
+    "damage" : champion.damage, #item stats would replace this when item database is created
     "accuracy" : champion.accuracy,
     "attackSpeed" : champion.attackSpeed,
-    "aHealth" : champion.aHealth,
+    "aHealth" : champion.aHealth, #armour stats would replace this when armour database is created
     "aToughness" : champion.aToughness,
     "aEvasion" : champion.aEvasion,
     }
