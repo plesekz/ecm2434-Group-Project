@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.template import loader
 import json
+import qrcode
 
 
 def createRes(request : HttpRequest) -> HttpResponse:
@@ -31,7 +32,26 @@ def createRes(request : HttpRequest) -> HttpResponse:
     if (qrcs := QRC.objects.filter(QRID=qrid)).exists():
         qrc = qrcs[0]
     else:
-        qrc = QRC.objects.create(QRID=int(json_data['codeID']), latitude=float(json_data['latitude']), longitude=float(json_data['longitude']))
+        #generate a new qr code
+        data = f"{request.get_host()}/qr/retrieveRes/{json_data['codeID']}"
+
+        qr = qrcode.QRCode(
+            box_size=15,
+            border=5
+        )
+
+        qr.add_data(data)
+        qr.make(fit=True)
+        
+        qrImage = qr.make_image(fill="black", back_color="white")
+        qrImage.save("media/qrImages")
+
+        qrc = QRC.objects.create(
+            QRID=int(json_data['codeID']),
+            latitude=float(json_data['latitude']),
+            longitude=float(json_data['longitude']),
+            image = ""
+        )
     
     # if that resource is already on that qr then update else create a new entry
     if (qrr := QRResource.objects.filter(QRID=qrc, resource=res)).exists():
