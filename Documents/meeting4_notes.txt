@@ -1,0 +1,46 @@
+	System requirements
+
+	Software license
+
+	Add to github:
+		nickdfross
+
+	add testing
+		they are readily available in Django
+
+	elaborate in the ReadMe.txt
+
+	add comments everywhere
+
+	codebase seems okay
+	good thing we have dtb
+
+
+product side:
+	slaes pitch
+		lead the whole thing as a story
+
+process feedback:
+	good kanbaan structure
+	good to see policies and procedures and meeting notes
+	everyone is accountable and people are tagged
+	pleased to see the description field being used in each card
+	to improve
+		add more detail to the kanbaan board
+			the tasks describe only high level items
+			there is no prioritisation
+		policy details need to be expanded
+			there is no insight what the product will look like
+			there is no 
+
+			specification adds no detail what constitutes the product being complete
+			would be good to see workload estimation
+				(for the future, and what was done too.)
+			no policies what should be done in the specification and validation step
+				have a policy what a specification looks like
+				have a policy what needs to be checked in the validation step
+			
+random note:
+	if going with the champion combat
+		have linear distance rather than map
+

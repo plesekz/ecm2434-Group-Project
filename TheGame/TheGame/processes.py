@@ -10,11 +10,16 @@ from Login.models import Player
 from Resources.models import PlayerResource, Resource
 
 def getUserFromName(request):
+    """ returns a users stat block,
+    you should probably use getChampion instead
+    """
     user = getUserFromCookie(request)
     userStats = pStat.objects.get(player=user)
     return userStats
 
 def spendResource(request, rNeeded, amount):
+    """ spends a requested amount of a resource from a user
+    """
     try:
         removeResourceFromUser(getUserFromCookie(request), getResourceByName(rNeeded), amount)
         return True
@@ -23,6 +28,8 @@ def spendResource(request, rNeeded, amount):
         return False
 
 def buyPHealth(request):
+    """ makes a purchase of pHealth from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -35,18 +42,22 @@ def buyPHealth(request):
     return response
 
 def buyPToughness(request):
+    """ makes a purchase of pToughness from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5):
-        userStats = getUserFromName(request)
-        userStats.pToughness += 1
-        userStats.save()    
+    addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5)
+    userStats = getUserFromName(request)
+    userStats.pToughness += 1
+    userStats.save()    
 
     return response
 
 def buyPEvasion(request):
+    """ makes a purchase of pEvasion from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -59,6 +70,8 @@ def buyPEvasion(request):
     return response
 
 def buyDamage(request):
+    """ makes a purchase of damage from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -71,6 +84,8 @@ def buyDamage(request):
     return response
 
 def buyAccuracy(request):
+    """ makes a purchase of accuracy from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -83,6 +98,8 @@ def buyAccuracy(request):
     return response
 
 def buyAttackSpeed(request):
+    """ makes a purchase of attackSpeed from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -95,6 +112,8 @@ def buyAttackSpeed(request):
     return response
 
 def buyAHealth(request):
+    """ makes a purchase of aHealth from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -107,6 +126,8 @@ def buyAHealth(request):
     return response
 
 def buyAToughness(request):
+    """ makes a purchase of aToughness from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -119,6 +140,8 @@ def buyAToughness(request):
     return response
 
 def buyAEvasion(request):
+    """ makes a purchase of aEvasion from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
