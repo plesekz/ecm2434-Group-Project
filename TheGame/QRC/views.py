@@ -119,6 +119,7 @@ def retrieveRes(request : HttpRequest) -> HttpResponse:
     except Exception as e:
         print(e)
         return HttpResponse(status=502) # Failed to add resource to user
+    return HttpResponseRedirect('/')
     return HttpResponse(json.dumps(output), status=200)
 
 
