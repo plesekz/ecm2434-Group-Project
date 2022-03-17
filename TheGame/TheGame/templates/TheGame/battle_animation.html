@@ -5,60 +5,27 @@
 sets up the different sprites
 character is the bounding box, the default position is entirely within it
 -->*/
+
 #character {
-    width: 512px;
-    height: 848px;
+    width: 384px;
+    height: 768px;
     position: relative;
-    background: yellow;
 }
-#head {
-    width: 256px;
-    height: 256px;
+#body {
+    width: 384px;
+    height: 768px;
     position: absolute;
-    background:url(sprites/head.png);
+    z-index:-2;
+    background:url(sprites/body.png);
 }
-#torso {
-    width: 256px;
-    height: 384px;
+#arm {
+    width: 768px;
+    height: 768px;
     position: absolute;
-    background:url(sprites/torso.png);
+    z-index:-1;
+    background:url(sprites/arm.png);
 }
-#upperarm {
-    width: 256px;
-    height: 256px;
-    position: absolute;
-    background:url(sprites/upperarm.png);
-}
-#forearm {
-    width: 256px;
-    height: 256px;
-    position: absolute;
-    background:url(sprites/forearm.png);
-}
-#hand {
-    width: 128px;
-    height: 128px;
-    position: absolute;
-    background:url(sprites/hand.png);
-}
-#thigh {
-    width: 256px;
-    height: 384px;
-    position: absolute;
-    background:url(sprites/thigh.png);
-}
-#shin {
-    width: 256px;
-    height: 384px;
-    position: absolute;
-    background:url(sprites/shin.png);
-}
-#foot {
-    width: 128px;
-    height: 128px;
-    position: absolute;
-    background:url(sprites/foot.png);
-}
+
 
 
 </style>
@@ -67,89 +34,89 @@ character is the bounding box, the default position is entirely within it
         <!--buttons, for testing-->
         <button onclick="setup()">Setup</button> 
         <button onclick="attack()">Attack</button> 
+        <button onclick="rotateArm(45)">Rotate arm</button> 
     </p>
-    <!--places each sprite on the page, this order for layering purposes-->
     <div id ="character">
-        <div id ="torso"></div>
-        <div id ="head"></div>
-        <div id ="forearm"></div>
-        <div id ="upperarm"></div>
-        <div id ="hand"></div>
-        <div id ="thigh"></div>
-        <div id ="shin"></div>
-        <div id ="foot"></div>
+        <div id ="body"></div>
+        <div id ="arm"></div>
     </div>
+    
     <script>
         var id = null;
         
         function setup() {
             //variables 
-            var head     = document.getElementById("head");
-            var torso    = document.getElementById("torso");
-            var upperarm = document.getElementById("upperarm");
-            var forearm  = document.getElementById("forearm");
-            var hand     = document.getElementById("hand");
-            var thigh    = document.getElementById("thigh"); 
-            var shin     = document.getElementById("shin");
-            var foot     = document.getElementById("foot");
+            var body = document.getElementById("body");
+            var arm = document.getElementById("arm");
             
             //for each part, it is placed in the default position           
             
-            head.style.top = '0px'; 
-            head.style.left = '48px';
-            
-            torso.style.top = (10 * 16) + 'px';
-            torso.style.left = (0 * 16)+ 'px';
-            
-            upperarm.style.top = (13 * 16) + 'px';
-            upperarm.style.left = (5 * 16)+ 'px';
-            
-            forearm.style.top = (12 * 16) + 'px';
-            forearm.style.left = (13 * 16)+ 'px';
-            
-            hand.style.top = (11 * 16) + 'px';
-            hand.style.left = (22 * 16)+ 'px';
-            
-            thigh.style.top = (21 * 16) + 'px';
-            thigh.style.left = (3 * 16)+ 'px';
-            
-            shin.style.top = (31 * 16) + 'px';
-            shin.style.left = (3 * 16)+ 'px';
-            
-            foot.style.top = (45 * 16) + 'px';
-            foot.style.left = (9 * 16)+ 'px';
-            
+            arm.style.top = '-160px'; 
+            arm.style.left = '-208px';
+            arm.style.transform = 'rotate(60deg)';
         }
         
         function attack() {
             //variables
-            var head     = document.getElementById("head");
-            var torso    = document.getElementById("torso");
-            var upperarm = document.getElementById("upperarm");
-            var forearm  = document.getElementById("forearm");
-            var hand     = document.getElementById("hand");
-            var thigh    = document.getElementById("thigh"); 
-            var shin     = document.getElementById("shin");
-            var foot     = document.getElementById("foot");
-        
+            var character = document.getElementById("character");
+            var arm = document.getElementById("arm");
+            var body = document.getElementById("body");
+            pos = 0;
+            deg = 0;
             
-            //temporary
-            var pos = 0;
+            //move forward
             clearInterval(id);
-            id = setInterval(frame, 10);
-            function frame() {
-                if (pos == 50) {
+            id = setInterval(moveForward, 1);
+            function moveForward() {
+                if (pos > 320) {
                     clearInterval(id);
                 }
                 else {
-                    pos++; 
-                    head.style.top = pos + 'px'; 
-                    head.style.left = pos + 'px';
-                    torso.style.top = (+pos + 160) + 'px';
-                    torso.style.left = (+pos - 48)+ 'px';
+                    pos+=4;
+                    character.style.left = pos + 'px';
+                    //arm.style.left = (+pos - 208) + 'px';
+                    //body.start.left = (+pos) + 'px';
                 }
             }
+            
+            
+            //swing            
+            
+            //move back
+            /*
+            not sure why this doesn't work when uncommented
+            clearInterval(id);
+            id = setInterval(moveBackwards, 1);
+            function moveBackwards() {
+                if (pos <= 0) {
+                    clearInterval(id);
+                }
+                else {
+                    pos-=4;
+                    character.style.left = pos + 'px';
+                    //arm.style.left = (+pos - 208) + 'px';
+                    //body.start.left = (+pos) + 'px';
+                }
+            }
+            */
+            
+            ////temporary
+            //deg = 0;
+            //clearInterval(id);
+            //id = setInterval(frame, 10);
+            //function frame() {
+            //    if (deg > 360) {
+            //        deg = 0;
+            //        clearInterval(id);
+            //    }
+            //    else {
+            //        deg++; 
+            //    }
+            //    arm.style.transform = 'rotate(' + deg + 'deg)';
+            //}
         }
+
+        
         setup(); //runs setup after the page has loaded, so the character is in default position
     </script>
 </body>
