@@ -34,7 +34,7 @@ def createRes(request : HttpRequest) -> HttpResponse:
         qrc = qrcs[0]
     else:
         #generate a new qr code
-        data = f"http://{request.get_host()}/qr/retrieveRes?data={json_data['codeID']}"
+        data = json_data['codeID']
 
         qr = qrcode.QRCode(
             box_size=15,
