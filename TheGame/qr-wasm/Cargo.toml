@@ -20,7 +20,7 @@ gloo = "0.6.1"
 
 quircs = "0.10.0"
 #bardecoder = "0.3"
-#rqrr = {version = "0.5.1", default-features = false}
+rqrr = {version = "0.5.1", default-features = false}
 
 [dependencies.image]
 version = "0.24"
