@@ -41,18 +41,21 @@ def characterMenu(request : HttpRequest) -> HttpResponse:
         return HttpResponseRedirect('createChampion')
 
     template = loader.get_template('TheGame/CharacterMenu.html')
+
+    resources = getAllUserResources(user)
+
     context = {
-    "username" : user.username,
-    "pHealth" : champion.pHealth,
-    "pToughness" : champion.pToughness,
-    "pEvasion" : champion.pEvasion,
-    "damage" : champion.damage, #item stats would replace this when item database is created
-    "accuracy" : champion.accuracy,
-    "attackSpeed" : champion.attackSpeed,
-    "aHealth" : champion.aHealth, #armour stats would replace this when armour database is created
-    "aToughness" : champion.aToughness,
-    "aEvasion" : champion.aEvasion,
-     "resources" : resources,
+        "username" : user.username,
+        "pHealth" : champion.pHealth,
+        "pToughness" : champion.pToughness,
+        "pEvasion" : champion.pEvasion,
+        "damage" : champion.damage, #item stats would replace this when item database is created
+        "accuracy" : champion.accuracy,
+        "attackSpeed" : champion.attackSpeed,
+        "aHealth" : champion.aHealth, #armour stats would replace this when armour database is created
+        "aToughness" : champion.aToughness,
+        "aEvasion" : champion.aEvasion,
+        "resources" : resources,
     }
 
     output = template.render(context, request)

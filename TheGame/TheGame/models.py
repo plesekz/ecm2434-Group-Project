@@ -27,15 +27,77 @@ class Item(models.Model):
     price = models.IntegerField()
     type = models.CharField(max_length=32)
 
-    Stat1 = models.IntegerField(default=1)
-    Stat2 = models.IntegerField(default=1)
-    Stat3 = models.IntegerField(default=1)
+    armourValue = models.IntegerField(default=1)
+    vitalityBoost = models.IntegerField(default=1)
+    
+    specialAbilities = models.CharField(max_length=50)
+
     def __str__(self):
         return str(self.name)
+
+class Weapon(models.Model):
+    name = models.CharField(max_length=50)
+    price = models.IntegerField()
+    type = models.CharField(max_length=32)
+
+    damageNumber = models.IntegerField()
+    damageInstances = models.IntegerField()
+    range = models.IntegerField()
 
 class ChampionItems(models.Model):
     champion = models.ForeignKey(Champion, on_delete=models.CASCADE, null=True)
     item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
     amount = models.IntegerField()
     itemLevel = models.IntegerField()
+    glory = models.IntegerField()
 
+
+from polymorphic.models import PolymorphicModel
+
+class tItem(PolymorphicModel):
+    name = models.CharField(max_length=50)
+    price = models.CharField(max_length=50)
+    type = models.CharField(max_length=50)
+
+    def __str__(self):
+        return "item: " + self.name
+
+class BaseItem(tItem):
+    armourValue = models.IntegerField()
+    vitalityBoost = models.IntegerField()
+
+    specialAbilities = models.CharField(max_length=50)
+
+    def __str__(self):
+        return "BaseItem: " + self.name
+
+class SpecificItem(BaseItem):
+    # contains defaults for items
+    level = models.IntegerField()
+    glory = models.IntegerField()
+
+    def __str__(self):
+        return "Specificitem: " + self.name
+
+class BaseWeapon(tItem):
+    damageNumber = models.IntegerField()
+    damageInstances = models.IntegerField()
+    range = models.IntegerField()
+
+    def __str__(self):
+        return "BaseWeapon: " + self.name
+
+class SpecificWeapon(BaseWeapon):
+    level = models.IntegerField()
+    glory = models.IntegerField()
+
+    def __str__(self):
+        return "SpecificWeapon: " + self.name
+
+class tChampionItems(models.Model):
+    champion = models.ForeignKey(Champion, on_delete=models.CASCADE, null=True)
+    item = models.ForeignKey(tItem, on_delete=models.CASCADE, null=True)
+    amount = models.IntegerField()
+
+    def __str__(self):
+        return str(self.champion) + " " +  str(self.item)
