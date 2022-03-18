@@ -110,12 +110,22 @@ def preprocess(character : Champion) -> Unit:
     c = character.pControl
     h = character.pHealth
 
-    shield = 0
-    armour = 0
-    glory = 0
+    
+    shield = processShield(character)
+    armour = processArmour(character)
+    glory = processGlory(character)
 
     u = Unit(a, b, c, h, shield, armour, glory)
 
     u.setPrimaryWeapon = character.primaryWeapon
 
     return u
+
+# implement compiling character's shield, armour and glory from their items here
+    
+def processShield(character : Champion) -> int:
+    pass
+def processArmour(character : Champion) -> int:
+    pass
+def processGlory(character : Champion) -> int:
+    pass
