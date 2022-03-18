@@ -1,0 +1,34 @@
+Functions:
+	● Receive two champions and control combat between them. Including:
+		● Keeping track and controlling distance between the two characters.
+		● Keeping track and controlling damage dealt to each other.
+		● Deciding what order the champions act in.
+		● Keeping track and controlling action points available to the champion.
+	In combat, each character has following options:
+		● move:
+			- get closer.
+			- get further away.
+		● attack
+		● use ability:
+			[TO BE DEFINED IN THEIR OWN TASK]
+Database tables:
+	External:
+	● Champions table
+		● module relies on champion's attributes
+		● module may adjust champion's health.
+	● Weapons table
+		● module relies on weapon's statistics
+	● Other items table
+		● module relies on armours' and auxiliary items' stats to determine some stats
+		● module relies on auxiliary items to determine other abilities
+Interface:
+	● Battle (attacker : Champion, defender : Champion ) -> LinkedList<Actions>
+		The delegation function.
+		Receives two Champion objects as argument and returns a linked list of resolved actions.
+Endpoints:
+	No endpoints.
+
+Other notes:
+	For notes on te combat mechanics, see Combat system.odt
+	Defined from top-down perspective. Delegation functions will be specc'd and implemented in their own
+		task.
