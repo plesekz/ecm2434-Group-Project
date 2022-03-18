@@ -8,7 +8,7 @@ from Resources.processes import getAllUserResources
 def homePageView(request : HttpRequest) -> HttpResponse:
     """ creates response for the Home page
     """
-    if not 'TheGameSessionID' in request.COOKIES.keys():
+    if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('/login')
       
     try:
