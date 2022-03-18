@@ -46,13 +46,6 @@ class SpecificWeapon(BaseWeapon):
     def __str__(self):
         return "SpecificWeapon: " + self.name + ", lvl: " + str(self.level)
 
-class ChampionItems(models.Model):
-    champion = models.ForeignKey(Champion, on_delete=models.CASCADE)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return str(self.champion) + " " +  str(self.item)
-
 class Champion(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=50, null=True)
@@ -64,13 +57,20 @@ class Champion(models.Model):
     pBrain = models.PositiveIntegerField(default=1)
     pControl = models.PositiveIntegerField(default=1)
     
-    primaryWeapon = models.ForeignKey(SpecificWeapon)
-    secondaryWeapon = models.ForeignKey(SpecificWeapon)
+    primaryWeapon = models.ForeignKey(SpecificWeapon, on_delete=models.CASCADE, related_name="pWeapon")
+    secondaryWeapon = models.ForeignKey(SpecificWeapon, on_delete=models.CASCADE, related_name="sWeapon")
 
-    armour = models.ForeignKey(SpecificItem)
-    auxItem1 = models.ForeignKey(SpecificItem)
-    auxItem2 = models.ForeignKey(SpecificItem)
-    auxItem3 = models.ForeignKey(SpecificItem)
+    armour = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="armour")
+    auxItem1 = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="aux1")
+    auxItem2 = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="aux2")
+    auxItem3 = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="aux3")
 
     def __str__(self):
         return str(self.name)
+
+class ChampionItems(models.Model):
+    champion = models.ForeignKey(Champion, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.champion) + " " +  str(self.item)
