@@ -15,7 +15,8 @@ def homePageView(request : HttpRequest) -> HttpResponse:
         user = getUserFromCookie(request)
         stats = getUserFromName(request)
         resources = getAllUserResources(user)
-    except:
+    except Exception as e:
+        print(e)
         return HttpResponseRedirect('/login')
 
     template = loader.get_template('TheGame/HomePage.html')
