@@ -52,6 +52,7 @@ class BaseWeapon(Item):
     damageNumber = models.IntegerField()
     damageInstances = models.IntegerField()
     range = models.IntegerField()
+    associated = models.CharField(max_length=1)
 
     def __str__(self):
         return "BaseWeapon: " + self.name
@@ -66,7 +67,6 @@ class SpecificWeapon(BaseWeapon):
 class ChampionItems(models.Model):
     champion = models.ForeignKey(Champion, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    amount = models.IntegerField()
 
     def __str__(self):
         return str(self.champion) + " " +  str(self.item)
