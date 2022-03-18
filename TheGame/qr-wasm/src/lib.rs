@@ -442,23 +442,40 @@ Parses image and then uses quircs to identify QR codes
 async fn load_qr(
     decoder: &mut quircs::Quirc,
     file: gloo::file::File,
-) -> Result<
-    impl std::iter::Iterator<Item = Result<String, Box<dyn std::error::Error>>> + '_,
-    Box<dyn std::error::Error>,
-> {
+) -> Result<Vec<Result<String, Box<dyn std::error::Error>>>, Box<dyn std::error::Error>> {
     let img = load_image(file).await.map_err(|e| format!("{:?}", e))?;
     log::info!("Loaded image");
 
-    let codes = decoder.identify(img.width() as usize, img.height() as usize, &img);
+    let quircs_codes = decoder.identify(img.width() as usize, img.height() as usize, &img);
 
-    Ok(codes.map(|code| {
+    let quircs_codes = quircs_codes.map(|code| {
         let code = code?;
+        log::info!(
+            "Code corners: {:?} size: {:?} cell_bitmap: {:?}",
+            code.corners,
+            code.size,
+            code.cell_bitmap
+        );
         let decoded = code.decode()?;
         let payload = decoded.payload;
         let msg = std::str::from_utf8(&payload)?;
-        log::info!("{}", &msg);
+        log::info!("quircs {}", &msg);
         Ok(msg.to_owned())
-    }))
+    });
+
+    let mut img = rqrr::PreparedImage::prepare_from_greyscale(
+        img.width() as usize,
+        img.height() as usize,
+        |x, y| img.get_pixel(x as u32, y as u32).0[0],
+    );
+    let grids = img.detect_grids();
+    let rqrr_codes = grids.iter().map(|grid| {
+        let (meta, content) = grid.decode()?;
+        log::info!("rqrr Code metadata: {:?}, content: {}", meta, content);
+        Ok::<_, Box<dyn std::error::Error>>(content)
+    });
+
+    Ok(quircs_codes.chain(rqrr_codes).collect())
 }
 
 #[cfg(test)]

@@ -22,6 +22,7 @@ from . import processes, battle
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("/", include("Login.urls"), name='login'),
     path('qr/', include("QRC.urls")),
     path('', homePageView, name="homePage"),
     path('characterMenu/', characterMenu, name="characterMenu"),

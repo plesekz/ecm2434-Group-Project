@@ -1,32 +1,38 @@
 from django.template import loader
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
 from TheGame.processes import getAllBosses, getUserFromName, getChampion
 from Resources.processes import getAllUserResources
 
-def homePageView(request):
-
+def homePageView(request : HttpRequest) -> HttpResponse:
+    """ creates response for the Home page
+    """
     if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
+      
     try:
         user = getUserFromCookie(request)
-    except:
-        return HttpResponseRedirect('login')
-
-    resources = getAllUserResources(user)
+        stats = getUserFromName(request)
+        resources = getAllUserResources(user)
+    except Exception as e:
+        print(e)
+        return HttpResponseRedirect('/login')
 
     template = loader.get_template('TheGame/HomePage.html')
     context = {
-        "user" : user, 
-        "resources" : resources
+        "user" : user,
+        "stats": stats,
+        "resources": resources
     }
-    output = template.render(context)
+
+    output = template.render(context, request)
 
     return HttpResponse(output)
 
-def characterMenu(request):
-
+def characterMenu(request : HttpRequest) -> HttpResponse:
+    """ creates response for the character menu
+    """
     if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
 
@@ -46,12 +52,16 @@ def characterMenu(request):
     "aHealth" : champion.aHealth, #armour stats would replace this when armour database is created
     "aToughness" : champion.aToughness,
     "aEvasion" : champion.aEvasion,
+     "resources" : resources,
     }
+
     output = template.render(context, request)
 
     return HttpResponse(output)
 
-def battleSelectView(request):
+def battleSelectView(request : HttpRequest) -> HttpResponse:
+    """ create response for the battle selection page
+    """
     if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
     
@@ -63,8 +73,12 @@ def battleSelectView(request):
     user = getUserFromCookie(request)
     
     template = loader.get_template('TheGame/battleSelect.html')
-    context = {}
-    
+    context = {
+        "user" : user,
+        "stats" : stats,
+        "resources" : resources,
+    }
+
     output = template.render(context, request)
     
     return HttpResponse(output)
