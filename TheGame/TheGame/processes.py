@@ -222,7 +222,7 @@ def createNewBaseItem(name : str, price : int, type : str,
 
     # create the base item in the database
 
-    if baseItem := BaseItem.objects.filter(name=name):
+    if baseItem := BaseItem.objects.get(name=name):
         return baseItem
 
 
