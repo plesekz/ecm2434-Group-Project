@@ -339,3 +339,77 @@ def addItemToChampion(item : Item, champion : Champion):
         champion=champion,
         item=item,
     )
+
+def getChampionsItemsAndWeapons(champion : Champion) -> "list[Item]":
+    """ function that returns a list of all the items and weapons in a champions possession
+    Args:
+        champion(Champion): the champion that you want to get the items for
+
+    returns:
+        a list of all the items and weapons that that champion has
+    """
+
+    if not (champItems := ChampionItems.objects.filter(champion=champion).exists()):
+        return None
+
+    itemList = []
+
+    for ci in champItems:
+        itemList.append(ci.item)
+
+    return itemList
+
+def getChampionsItems(champion : Champion) -> "list[Item]":
+    """ function that returns a list of all the items in a champions possession
+    Args:
+        champion(Champion): the champion that you want to get the items for
+
+    returns:
+        a list of all the items that that champion has
+    """
+
+    if not (champItems := ChampionItems.objects.filter(champion=champion).exists()):
+        return None
+
+    itemList = []
+
+    for ci in champItems:
+        if isinstance(ci, SpecificItem):
+            itemList.append(ci.item)
+
+    return itemList
+
+def getChampionsWeapons(champion : Champion) -> "list[Item]":
+    """ function that returns a list of all the weapons in a champions possession
+    Args:
+        champion(Champion): the champion that you want to get the items for
+
+    returns:
+        a list of all the weapons that that champion has
+    """
+
+    if not (champItems := ChampionItems.objects.filter(champion=champion).exists()):
+        return None
+
+    itemList = []
+
+    for ci in champItems:
+        if isinstance(ci, SpecificWeapon):
+            itemList.append(ci.item)
+
+    return itemList
+
+def removeBaseItemOrWeapon(item : Item):
+    """ function that will remove all the item in the database, note that this will also remove
+    any specific instances of that item
+    """
+
+    if not (isinstance(item, BaseItem) or isinstance(item, BaseWeapon)):
+        raise Exception("item was not a base item or weapon")
+
+    instances = SpecificItem.objects.filter(name=item.name)
+
+    for i in instances:
+        i.remove()
+
+    item.remove()
