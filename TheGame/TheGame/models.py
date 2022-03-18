@@ -57,13 +57,13 @@ class Champion(models.Model):
     pBrain = models.PositiveIntegerField(default=1)
     pControl = models.PositiveIntegerField(default=1)
     
-    primaryWeapon = models.ForeignKey(SpecificWeapon, on_delete=models.CASCADE, related_name="pWeapon")
-    secondaryWeapon = models.ForeignKey(SpecificWeapon, on_delete=models.CASCADE, related_name="sWeapon")
+    primaryWeapon = models.ForeignKey(SpecificWeapon, on_delete=models.CASCADE, related_name="pWeapon", null=True)
+    secondaryWeapon = models.ForeignKey(SpecificWeapon, on_delete=models.CASCADE, related_name="sWeapon", null=True)
 
-    armour = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="armour")
-    auxItem1 = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="aux1")
-    auxItem2 = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="aux2")
-    auxItem3 = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="aux3")
+    armour = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="armour", null=True)
+    auxItem1 = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="aux1", null=True)
+    auxItem2 = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="aux2", null=True)
+    auxItem3 = models.ForeignKey(SpecificItem, on_delete=models.CASCADE, related_name="aux3", null=True)
 
     def __str__(self):
         return str(self.name)

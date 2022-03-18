@@ -37,133 +37,6 @@ def spendResource(request, rNeeded, amount):
         messages.error(request, ('Not enough resources'))
         return False
 
-def buyPHealth(request):
-    """ makes a purchase of pHealth from the user
-    """
-    if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
-    response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
-        userStats = getUserFromName(request)
-        userStats.pHealth += 1
-        userStats.save()
-    
-    return response
-
-def buyPToughness(request):
-    """ makes a purchase of pToughness from the user
-    """
-    if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
-    response = redirect("characterMenu")
-
-    addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5)
-    userStats = getUserFromName(request)
-    userStats.pToughness += 1
-    userStats.save()    
-
-    return response
-
-def buyPEvasion(request):
-    """ makes a purchase of pEvasion from the user
-    """
-    if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
-    response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
-        userStats = getUserFromName(request)
-        userStats.pEvasion += 1
-        userStats.save()    
-
-    return response
-
-def buyDamage(request):
-    """ makes a purchase of damage from the user
-    """
-    if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
-    response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
-        userStats = getUserFromName(request)
-        userStats.damage += 1
-        userStats.save()
-    
-    return response
-
-def buyAccuracy(request):
-    """ makes a purchase of accuracy from the user
-    """
-    if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
-    response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
-        userStats = getUserFromName(request)
-        userStats.accuracy += 1
-        userStats.save()    
-
-    return response
-
-def buyAttackSpeed(request):
-    """ makes a purchase of attackSpeed from the user
-    """
-    if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
-    response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
-        userStats = getUserFromName(request)
-        userStats.attackSpeed += 1
-        userStats.save()    
-
-    return response
-
-def buyAHealth(request):
-    """ makes a purchase of aHealth from the user
-    """
-    if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
-    response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
-        userStats = getUserFromName(request)
-        userStats.aHealth += 1
-        userStats.save()
-    
-    return response
-
-def buyAToughness(request):
-    """ makes a purchase of aToughness from the user
-    """
-    if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
-    response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
-        userStats = getUserFromName(request)
-        userStats.aToughness += 1
-        userStats.save()    
-
-    return response
-
-def buyAEvasion(request):
-    """ makes a purchase of aEvasion from the user
-    """
-    if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        return "failed to process, please use POST method"
-    response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
-        userStats = getUserFromName(request)
-        userStats.aEvasion += 1
-        userStats.save()
-
-    return response
-
 
 def getAllBosses() -> "list[Champion]":
 
@@ -200,6 +73,67 @@ def addBossToSystem(request : HttpRequest):
     return HttpResponseRedirect('addBosses')
 
 
+def buyPHealth(request):
+    """ makes a purchase of aEvasion from the user
+    """
+    if not request.method == "POST":
+        messages.error(request, ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+    response = redirect("characterMenu")
+    if spendResource(request,  'wood', 1):
+        user = getUserFromCookie(request)
+        userChamp = getChampion(user)
+        userChamp.pHealth += 1
+        userChamp.save()
+
+    return response
+
+
+def buyPAthletics(request):
+    """ makes a purchase of athlectics from the user
+    """
+    if not request.method == "POST":
+        messages.error(request, ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+    response = redirect("characterMenu")
+    if spendResource(request,  'wood', 1):
+        user = getUserFromCookie(request)
+        userChamp = getChampion(user)
+        userChamp.pAthletics += 1
+        userChamp.save()
+
+    return response
+
+def buyPBrain(request):
+    """ makes a purchase of brains from the user
+    """
+    if not request.method == "POST":
+        messages.error(request, ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+    response = redirect("characterMenu")
+    if spendResource(request,  'wood', 1):
+        user = getUserFromCookie(request)
+        userChamp = getChampion(user)
+        userChamp.pBrain += 1
+        userChamp.save()
+
+    return response
+
+def buyPControl(request):
+    """ makes a purchase of control from the user
+    """
+    if not request.method == "POST":
+        messages.error(request, ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+    response = redirect("characterMenu")
+    if spendResource(request,  'wood', 1):
+        user = getUserFromCookie(request)
+        userChamp = getChampion(user)
+        userChamp.pControl += 1
+        userChamp.save()
+
+    return response
+
 #
 #   THESE ARE THE FUNCTIONS THAT WILL DEAL WITH CREATING AND REMOVING ITEMS
 #
@@ -223,8 +157,8 @@ def createNewBaseItem(name : str, price : int, type : str,
 
     # create the base item in the database
 
-    if baseItem := BaseItem.objects.get(name=name):
-        return baseItem
+    if baseItem := BaseItem.objects.filter(name=name).exists():
+        return baseItem[0]
 
 
     baseItem = BaseItem.objects.create(
@@ -257,7 +191,7 @@ def createNewSpecificItem(baseItem : BaseItem, startingLevel : int, startingGlor
 
         armourValue = baseItem.armourValue,
         vitalityBoost = baseItem.vitalityBoost,
-        specialAbilites = baseItem.specialAbilities,
+        specialAbilities = baseItem.specialAbilities,
 
         level = startingLevel,
         glory = startingGlory,
@@ -285,8 +219,8 @@ def createNewBaseWeapon(name : str, price : int, type : str,
 
     # create the base weapon instance
 
-    if bw := BaseWeapon.objects.get(name=name):
-        return bw
+    if bw := BaseWeapon.objects.filter(name=name).exists():
+        return bw[0]
 
     bw = BaseWeapon.objects.create(
         name = name,
@@ -301,7 +235,7 @@ def createNewBaseWeapon(name : str, price : int, type : str,
 
     return bw
 
-def createNewSpecificItem(baseWeapon : BaseItem, startingLevel : int, startingGlory : int) -> SpecificWeapon:
+def createNewSpecificWeapon(baseWeapon : BaseItem, startingLevel : int, startingGlory : int) -> SpecificWeapon:
     """ function to create a new specific weapon from a base weapon
     Args:
         baseWeapon(BaseWeapon): the weapon base to use
@@ -333,7 +267,7 @@ def addItemToChampion(item : Item, champion : Champion):
     if not (isinstance(item, SpecificItem) or isinstance(item, SpecificWeapon)):
         raise Exception("item must be a specific item or weapon")
 
-    if ChampionItems.objects.get(champion=champion, item=item):
+    if ChampionItems.objects.filter(champion=champion, item=item).exists():
         return
 
     ChampionItems.objects.create(
