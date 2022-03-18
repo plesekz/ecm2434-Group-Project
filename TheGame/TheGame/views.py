@@ -2,7 +2,7 @@ from django.template import loader
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
-from TheGame.processes import getUserFromName
+from TheGame.processes import getAllBosses, getUserFromName, getChampion
 from Resources.processes import getAllUserResources
 
 def homePageView(request : HttpRequest) -> HttpResponse:
@@ -35,19 +35,24 @@ def characterMenu(request : HttpRequest) -> HttpResponse:
     """
     if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
-      
-    try:
-        user = getUserFromCookie(request)
-        stats = getUserFromName(request)
-        resources = getAllUserResources(user)
-    except:
-        return HttpResponseRedirect('/login')
+
+    user = getUserFromCookie(request)
+    if not (champion := getChampion(user)):
+        return HttpResponseRedirect('createChampion')
 
     template = loader.get_template('TheGame/CharacterMenu.html')
     context = {
-        "user" : user,
-        "stats" : stats,
-        "resources" : resources,
+    "username" : user.username,
+    "pHealth" : champion.pHealth,
+    "pToughness" : champion.pToughness,
+    "pEvasion" : champion.pEvasion,
+    "damage" : champion.damage, #item stats would replace this when item database is created
+    "accuracy" : champion.accuracy,
+    "attackSpeed" : champion.attackSpeed,
+    "aHealth" : champion.aHealth, #armour stats would replace this when armour database is created
+    "aToughness" : champion.aToughness,
+    "aEvasion" : champion.aEvasion,
+     "resources" : resources,
     }
 
     output = template.render(context, request)
@@ -59,14 +64,14 @@ def battleSelectView(request : HttpRequest) -> HttpResponse:
     """
     if request.COOKIES.get('TheGameSessionID') == None:
         return HttpResponseRedirect('login')
+    
+    user = getUserFromCookie(request)
 
-    try:
-        user = getUserFromCookie(request)
-        stats = getUserFromName(request)
-        resources = getAllUserResources(user)
-    except:
-        return HttpResponseRedirect('/login')
+    if not (champ := getChampion(user)):
+        return HttpResponseRedirect('createChampion')
 
+    user = getUserFromCookie(request)
+    
     template = loader.get_template('TheGame/battleSelect.html')
     context = {
         "user" : user,
@@ -75,6 +80,26 @@ def battleSelectView(request : HttpRequest) -> HttpResponse:
     }
 
     output = template.render(context, request)
-
+    
     return HttpResponse(output)
 
+def createChampionView(request):
+    return HttpResponse("this is the champion create page")
+
+def addNewBossView(request):
+    user = getUserFromCookie(request)
+
+    # if not user.role == "gameMaster":
+    #     return HttpResponseRedirect('homePage')
+
+    template = loader.get_template('TheGame/newBoss.html')
+
+    bosses = getAllBosses()
+
+    context = {
+        "bosses" : bosses,
+    }
+
+    output = template.render(context, request)
+
+    return HttpResponse(output)
