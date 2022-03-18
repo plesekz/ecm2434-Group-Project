@@ -22,7 +22,7 @@ Database tables:
 		● module relies on armours' and auxiliary items' stats to determine some stats
 		● module relies on auxiliary items to determine other abilities
 Interface:
-	● Battle (attacker : Champion, defender : Champion ) -> LinkedList<Actions>
+	● battle (attacker : Champion, defender : Champion ) -> LinkedList<Actions>
 		The delegation function.
 		Receives two Champion objects as argument and returns a linked list of resolved actions.
 Endpoints:
