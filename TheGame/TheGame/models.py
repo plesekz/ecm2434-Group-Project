@@ -1,3 +1,4 @@
+from argparse import ArgumentDefaultsHelpFormatter
 from concurrent.futures.process import _threads_wakeups
 from unicodedata import decimal
 from django.db import models
@@ -15,6 +16,13 @@ class Champion(models.Model):
     pBrain = models.PositiveIntegerField(default=1)
     pControl = models.PositiveIntegerField(default=1)
     
+    primaryWeapon
+    secondaryWeapon
+
+    armour
+    auxItem1
+    auxItem2
+    auxItem3
 
     def __str__(self):
         return str(self.name)
