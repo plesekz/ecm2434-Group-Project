@@ -1,9 +1,13 @@
 from typing import List
-from models import Champion
-from unit import Unit
+from models import Champion, SpecificWeapon, SpecificItem
+from unit import Unit, Damage
 from GameState import GameState
+from random import seed, randint
+from action import Action
 
 def battle (attacker : Champion, defender : Champion) -> List:
+    seed()
+
     pAtt = preprocess(attacker)
     pDef = preprocess(defender)
     actions = []
@@ -35,9 +39,9 @@ def fight(pAtt: Unit, pDef : Unit):
             actions.append(action)
     else:
         if(pDef.glory == pAtt.glory):
-            resolve # who goes first randomly
-            # if defender goes first, do their turn
-            # if attacker goes first, just continue to the cycle
+            if(randint(0,1)>0):
+                for action in turn(pDef,pAtt,GS):
+                    actions.append(action)
     
     while(True):
         if(pAtt.attH<=0):
@@ -51,15 +55,27 @@ def fight(pAtt: Unit, pDef : Unit):
 
     return actions
 
+def decide(active : Unit, other : Unit, GS : GameState):
+    a = None
+    if(active.weapon.range>GS.distance):
+        a = Action("move_closer",1)
+        return a
+    
+    a = Action("attack",active.weapon.ap_cost)
+
+    return a
+
 def turn(active : Unit, other : Unit, GS: GameState) -> List:
     finished = False
     actions = []
+    active.newTurn()
+
     while(not(finished)):
         action = decide(active, other, GS)
         match(action.type):
             case "attack":
                 active.spendActionPoints(action.cost)
-                action = attack(active, other)
+                action = attack(active, action.weapon, other, GS)
             case "move_closer":
                 active.spendActionPoints(1)
                 GS.distance = GS.distance - 1
@@ -71,11 +87,22 @@ def turn(active : Unit, other : Unit, GS: GameState) -> List:
         actions.append(action)
     return actions
     
-def attack(attacker : Unit, weapon ,target : Unit):
-    hits = None
+def attack(attacker : Unit, weapon : SpecificWeapon,target : Unit, GS : GameState):
+    hits = 0
+    a = Action("attack", weapon.ap_cost)
+    if(GS.distance>weapon.range):
+        
+        return a.attackResolved([Damage(0,0)])
+
+    for _ in range(attacker.getAtt(weapon.associated)):
+        if(randint(0,1)>0):
+            hits+=1
     if(hits >= target.attA):
-        for i in range(weapon.damageInstances):
-            target.damage(weapon.damageNumber)
+        dmgs = []
+        for _ in range(weapon.damageInstances):
+            dmg = target.damage(weapon.damageNumber)
+            dmgs.append(dmg)
+    return a.attackResolved(dmgs)
 
 def preprocess(character : Champion) -> Unit:
     a = character.pAthletics
@@ -83,8 +110,22 @@ def preprocess(character : Champion) -> Unit:
     c = character.pControl
     h = character.pHealth
 
-    shield = 0
-    armour = 0
-    glory = 0
+    
+    shield = processShield(character)
+    armour = processArmour(character)
+    glory = processGlory(character)
 
-    return Unit(a, b, c, h, shield, armour, glory)
+    u = Unit(a, b, c, h, shield, armour, glory)
+
+    u.setPrimaryWeapon = character.primaryWeapon
+
+    return u
+
+# implement compiling character's shield, armour and glory from their items here
+    
+def processShield(character : Champion) -> int:
+    pass
+def processArmour(character : Champion) -> int:
+    pass
+def processGlory(character : Champion) -> int:
+    pass

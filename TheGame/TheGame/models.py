@@ -35,6 +35,7 @@ class BaseWeapon(Item):
     damageInstances = models.IntegerField()
     range = models.IntegerField()
     associated = models.CharField(max_length=1)
+    ap_cost = models.IntegerField()
 
     def __str__(self):
         return "BaseWeapon: " + self.name
