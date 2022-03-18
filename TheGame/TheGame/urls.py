@@ -16,12 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from TheGame.views import homePageView, characterMenu, battleSelectView
+#from TheGame.views import homePageView, characterMenu, battleSelectView, homePageView2
+from TheGame.views import *
 from . import processes, battle
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("/", include("Login.urls"), name='login'),
     path('qr/', include("QRC.urls")),
     path('', homePageView, name="homePage"),
     path('characterMenu/', characterMenu, name="characterMenu"),
