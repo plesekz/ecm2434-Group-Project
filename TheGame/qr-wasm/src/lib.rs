@@ -475,7 +475,19 @@ async fn load_qr(
         Ok::<_, Box<dyn std::error::Error>>(content)
     });
 
-    Ok(quircs_codes.chain(rqrr_codes).collect())
+    let mut unique_codes = std::collections::HashSet::new();
+    let codes = quircs_codes
+        .chain(rqrr_codes)
+        .filter(|code| {
+            if let Ok(code) = code {
+                !unique_codes.insert(code.clone())
+            } else {
+                true
+            }
+        })
+        .collect();
+
+    Ok(codes)
 }
 
 #[cfg(test)]
@@ -484,30 +496,71 @@ mod tests {
     wasm_bindgen_test_configure!(run_in_browser);
     use crate::*;
     use wasm_bindgen_test::*;
-    #[wasm_bindgen_test]
-    pub async fn load_qr_test() {
-        let data: &[(&[u8], &str, &[_])] = &[
-            (
-                &include_bytes!("../test_images/IMG_20220303_131339.jpg")[..],
-                "../test_images/IMG_20220303_131339.jpg",
-                &[Ok("1041758308".to_string())],
-            ),
-            (
-                &include_bytes!("../test_images/IMG_20220311_173540.jpg")[..],
-                "../test_images/IMG_20220311_173540.jpg",
-                &[Ok("3653067026".to_string())],
-            ),
-        ];
 
-        for (image_data, name, desired) in data {
-            let mut decoder = quircs::Quirc::default();
-            let file = gloo::file::File::new(name, *image_data);
-            let vals: Vec<_> = load_qr(&mut decoder, file)
-                .await
-                .unwrap()
-                .map(|val| val.map_err(|e| e.to_string()))
-                .collect();
-            assert_eq!(&vals, desired);
-        }
+    async fn test_load_qr(image_data: &[u8], name: &str, desired: &[Result<String, String>]) {
+        let mut decoder = quircs::Quirc::default();
+        let file = gloo::file::File::new(name, image_data);
+        let vals: Vec<_> = load_qr(&mut decoder, file)
+            .await
+            .unwrap()
+            .into_iter()
+            .map(|val| val.map_err(|e| e.to_string()))
+            .collect();
+        assert_eq!(&vals, desired);
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_1() {
+        let image_data = &include_bytes!("../test_images/IMG_20220303_131339.jpg")[..];
+        let name = "../test_images/IMG_20220303_131339.jpg";
+        let desired = &[Ok("1041758308".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_2() {
+        let image_data = &include_bytes!("../test_images/IMG_20220311_173540.jpg")[..];
+        let name = "../test_images/IMG_20220311_173540.jpg";
+        let desired = &[Ok("3653067026".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_3() {
+        let image_data = &include_bytes!("../test_images/IMG_20220303_130946.jpg")[..];
+        let name = "../test_images/IMG_20220303_130946.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_4() {
+        let image_data = &include_bytes!("../test_images/IMG_20220317_140822.jpg")[..];
+        let name = "../test_images/IMG_20220317_140822.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_5() {
+        let image_data = &include_bytes!("../test_images/IMG_20220303_131146.jpg")[..];
+        let name = "../test_images/IMG_20220303_131146.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_6() {
+        let image_data = &include_bytes!("../test_images/IMG_20220317_141253.jpg")[..];
+        let name = "../test_images/IMG_20220317_141253.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_7() {
+        let image_data = &include_bytes!("../test_images/IMG_20220228_230520.jpg")[..];
+        let name = "../test_images/IMG_20220228_230520.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
     }
 }
