@@ -2,6 +2,7 @@ from concurrent.futures.process import _threads_wakeups
 from unicodedata import decimal
 from django.db import models
 from Login.models import Player
+from polymorphic.models import PolymorphicModel
 
 class Champion(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
@@ -22,39 +23,7 @@ class Champion(models.Model):
     def __str__(self):
         return str(self.name)
 
-class Item(models.Model):
-    name = models.CharField(max_length=50)
-    price = models.IntegerField()
-    type = models.CharField(max_length=32)
-
-    armourValue = models.IntegerField(default=1)
-    vitalityBoost = models.IntegerField(default=1)
-    
-    specialAbilities = models.CharField(max_length=50)
-
-    def __str__(self):
-        return str(self.name)
-
-class Weapon(models.Model):
-    name = models.CharField(max_length=50)
-    price = models.IntegerField()
-    type = models.CharField(max_length=32)
-
-    damageNumber = models.IntegerField()
-    damageInstances = models.IntegerField()
-    range = models.IntegerField()
-
-class ChampionItems(models.Model):
-    champion = models.ForeignKey(Champion, on_delete=models.CASCADE, null=True)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
-    amount = models.IntegerField()
-    itemLevel = models.IntegerField()
-    glory = models.IntegerField()
-
-
-from polymorphic.models import PolymorphicModel
-
-class tItem(PolymorphicModel):
+class Item(PolymorphicModel):
     name = models.CharField(max_length=50)
     price = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
@@ -62,7 +31,7 @@ class tItem(PolymorphicModel):
     def __str__(self):
         return "item: " + self.name
 
-class BaseItem(tItem):
+class BaseItem(Item):
     armourValue = models.IntegerField()
     vitalityBoost = models.IntegerField()
 
@@ -77,9 +46,9 @@ class SpecificItem(BaseItem):
     glory = models.IntegerField()
 
     def __str__(self):
-        return "Specificitem: " + self.name
+        return "SpecificItem: " + self.name + ", lvl: " + str(self.level)
 
-class BaseWeapon(tItem):
+class BaseWeapon(Item):
     damageNumber = models.IntegerField()
     damageInstances = models.IntegerField()
     range = models.IntegerField()
@@ -92,11 +61,11 @@ class SpecificWeapon(BaseWeapon):
     glory = models.IntegerField()
 
     def __str__(self):
-        return "SpecificWeapon: " + self.name
+        return "SpecificWeapon: " + self.name + ", lvl: " + str(self.level)
 
-class tChampionItems(models.Model):
-    champion = models.ForeignKey(Champion, on_delete=models.CASCADE, null=True)
-    item = models.ForeignKey(tItem, on_delete=models.CASCADE, null=True)
+class ChampionItems(models.Model):
+    champion = models.ForeignKey(Champion, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     amount = models.IntegerField()
 
     def __str__(self):
