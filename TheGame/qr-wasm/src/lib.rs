@@ -528,7 +528,7 @@ mod tests {
     pub async fn load_qr_image_3() {
         let image_data = &include_bytes!("../test_images/IMG_20220303_130946.jpg")[..];
         let name = "../test_images/IMG_20220303_130946.jpg";
-        let desired = &[Ok("EXAMPLE".to_string())];
+        let desired = &[Ok("1234".to_string())];
         test_load_qr(image_data, name, desired).await;
     }
 
@@ -536,7 +536,7 @@ mod tests {
     pub async fn load_qr_image_4() {
         let image_data = &include_bytes!("../test_images/IMG_20220317_140822.jpg")[..];
         let name = "../test_images/IMG_20220317_140822.jpg";
-        let desired = &[Ok("EXAMPLE".to_string())];
+        let desired = &[Ok("1234".to_string())];
         test_load_qr(image_data, name, desired).await;
     }
 
@@ -544,7 +544,7 @@ mod tests {
     pub async fn load_qr_image_5() {
         let image_data = &include_bytes!("../test_images/IMG_20220303_131146.jpg")[..];
         let name = "../test_images/IMG_20220303_131146.jpg";
-        let desired = &[Ok("EXAMPLE".to_string())];
+        let desired = &[Ok("1234".to_string())];
         test_load_qr(image_data, name, desired).await;
     }
 
@@ -552,7 +552,7 @@ mod tests {
     pub async fn load_qr_image_6() {
         let image_data = &include_bytes!("../test_images/IMG_20220317_141253.jpg")[..];
         let name = "../test_images/IMG_20220317_141253.jpg";
-        let desired = &[Ok("EXAMPLE".to_string())];
+        let desired = &[Ok("1234".to_string())];
         test_load_qr(image_data, name, desired).await;
     }
 
@@ -560,7 +560,39 @@ mod tests {
     pub async fn load_qr_image_7() {
         let image_data = &include_bytes!("../test_images/IMG_20220228_230520.jpg")[..];
         let name = "../test_images/IMG_20220228_230520.jpg";
-        let desired = &[Ok("EXAMPLE".to_string())];
+        let desired = &[Ok("1234".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_img_1() {
+        let image_data = &include_bytes!("../test_images/1.png")[..];
+        let name = "../test_images/1.png";
+        let desired = &[Ok("1041758308".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_img_2() {
+        let image_data = &include_bytes!("../test_images/2.png")[..];
+        let name = "../test_images/2.png";
+        let desired = &[Ok("3653067026".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_img_3() {
+        let image_data = &include_bytes!("../test_images/3.png")[..];
+        let name = "../test_images/3.png";
+        let desired = &[Ok("485756292".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_img_4() {
+        let image_data = &include_bytes!("../test_images/4.png")[..];
+        let name = "../test_images/4.png";
+        let desired = &[Ok("1234".to_string())];
         test_load_qr(image_data, name, desired).await;
     }
 }
