@@ -5,28 +5,6 @@ from django.db import models
 from Login.models import Player
 from polymorphic.models import PolymorphicModel
 
-class Champion(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=50, null=True)
-    #sprites = somedata()
-    #items = somedata()
-
-    pHealth = models.PositiveIntegerField(default=100)
-    pAthletics = models.PositiveIntegerField(default=1)
-    pBrain = models.PositiveIntegerField(default=1)
-    pControl = models.PositiveIntegerField(default=1)
-    
-    primaryWeapon
-    secondaryWeapon
-
-    armour
-    auxItem1
-    auxItem2
-    auxItem3
-
-    def __str__(self):
-        return str(self.name)
-
 class Item(PolymorphicModel):
     name = models.CharField(max_length=50)
     price = models.CharField(max_length=50)
@@ -74,3 +52,25 @@ class ChampionItems(models.Model):
 
     def __str__(self):
         return str(self.champion) + " " +  str(self.item)
+
+class Champion(models.Model):
+    player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=50, null=True)
+    #sprites = somedata()
+    #items = somedata()
+
+    pHealth = models.PositiveIntegerField(default=100)
+    pAthletics = models.PositiveIntegerField(default=1)
+    pBrain = models.PositiveIntegerField(default=1)
+    pControl = models.PositiveIntegerField(default=1)
+    
+    primaryWeapon = models.ForeignKey(SpecificWeapon)
+    secondaryWeapon = models.ForeignKey(SpecificWeapon)
+
+    armour = models.ForeignKey(SpecificItem)
+    auxItem1 = models.ForeignKey(SpecificItem)
+    auxItem2 = models.ForeignKey(SpecificItem)
+    auxItem3 = models.ForeignKey(SpecificItem)
+
+    def __str__(self):
+        return str(self.name)
