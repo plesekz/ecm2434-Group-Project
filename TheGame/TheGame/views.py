@@ -9,7 +9,7 @@ def homePageView(request : HttpRequest) -> HttpResponse:
     """ creates response for the Home page
     """
     if request.COOKIES.get('TheGameSessionID') == None:
-        return HttpResponseRedirect('/login')
+        return HttpResponseRedirect('login')
       
     try:
         user = getUserFromCookie(request)
@@ -32,8 +32,8 @@ def homePageView(request : HttpRequest) -> HttpResponse:
 def characterMenu(request : HttpRequest) -> HttpResponse:
     """ creates response for the character menu
     """
-    if not 'TheGameSessionID' in request.COOKIES.keys():
-        return HttpResponseRedirect('/login')
+    if request.COOKIES.get('TheGameSessionID') == None:
+        return HttpResponseRedirect('login')
       
     try:
         user = getUserFromCookie(request)
@@ -56,8 +56,8 @@ def characterMenu(request : HttpRequest) -> HttpResponse:
 def battleSelectView(request : HttpRequest) -> HttpResponse:
     """ create response for the battle selection page
     """
-    if not 'TheGameSessionID' in request.COOKIES.keys():
-        return HttpResponseRedirect('/login')
+    if request.COOKIES.get('TheGameSessionID') == None:
+        return HttpResponseRedirect('login')
 
     try:
         user = getUserFromCookie(request)
