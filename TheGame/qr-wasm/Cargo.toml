@@ -1,5 +1,5 @@
 [package]
-name = "qr-wasm"
+name = "qr_wasm"
 version = "0.1.0"
 edition = "2021"
 
@@ -15,11 +15,12 @@ wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4.29"
 console_error_panic_hook = "0.1.7"
 js-sys = "0.3.56"
+gloo = "0.6.1"
 
 
 quircs = "0.10.0"
 #bardecoder = "0.3"
-#rqrr = {version = "0.5.1", default-features = false}
+rqrr = {version = "0.5.1", default-features = false}
 
 [dependencies.image]
 version = "0.24"
@@ -47,8 +48,11 @@ features = [
   'ImageBitmapFormat',
   'HtmlImageElement',
   'CanvasRenderingContext2d',
-  'ImageData'
+  'ImageData',
 ]
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3"
 
 
 

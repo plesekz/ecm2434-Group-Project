@@ -1,26 +1,29 @@
 use std::cell::Cell;
 use std::rc::Rc;
-use wasm_bindgen::closure::Closure;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-// Called when the wasm module is instantiated
+/** Setup event hooks*/
+#[cfg(not(test))]
 #[wasm_bindgen(start)]
 pub fn main() -> Result<(), JsValue> {
-    std::panic::set_hook(Box::new(console_error_panic_hook::hook));
-    wasm_logger::init(wasm_logger::Config::default());
+    std::panic::set_hook(Box::new(console_error_panic_hook::hook)); /* Sets panics to display to console for debugging*/
+    wasm_logger::init(wasm_logger::Config::default()); /* Sets logger to display to console */
 
     let mut manager = QRManager::new();
     manager.set_status_ids("runningStatus", "taskCount", "ScannedCount");
     manager.call_callback();
 
-    let elems = manager.document.get_elements_by_class_name("loadQR");
+    /* Set all elements with class loadQR to call manager.load_file_list */
+    let elems: web_sys::HtmlCollection = manager.document.get_elements_by_class_name("loadQR");
+    /* HtmlCollection doesn't implement Iterator trait, so iterating through items is less natural*/
     for elem in (0..elems.length())
         .flat_map(|i| elems.item(i))
         .flat_map(|elem| elem.dyn_into::<web_sys::HtmlInputElement>())
     {
         let manager = manager.clone();
         let elem_clone = elem.clone();
+        /* Make new closure for each file input element as the closure needs to know which element to check the file list*/
         let closure: Closure<dyn Fn()> = Closure::wrap(Box::new(move || {
             if let Some(files) = elem_clone.files() {
                 manager.load_file_list(files);
@@ -28,11 +31,11 @@ pub fn main() -> Result<(), JsValue> {
         }) as Box<dyn Fn()>);
         let function: &js_sys::Function = closure.as_ref().unchecked_ref();
         elem.set_onchange(Some(function));
-
-        closure.forget();
+        closure.forget(); /* Forget is called so that the function isn't deallocated */
     }
-
+    /* Set elements with class cancelQR to call manager.stop) */
     let elems = manager.document.get_elements_by_class_name("cancelQR");
+    /* Make only one shared closure as it doesn't need to know which element to call stop*/
     let closure: Closure<dyn Fn()> =
         Closure::wrap(Box::new(move || manager.stop()) as Box<dyn Fn()>);
     let function: &js_sys::Function = closure.as_ref().unchecked_ref();
@@ -42,28 +45,20 @@ pub fn main() -> Result<(), JsValue> {
     {
         elem.set_onclick(Some(function));
     }
-    closure.forget();
+    closure.forget(); /* Forget is called so that the function isn't deallocated */
 
     Ok(())
 }
 
+/**
+Function to be called with status whenever it changes
+*/
 pub struct Callback(Box<dyn Fn(Status)>);
 
 impl Default for Callback {
     fn default() -> Self {
         Self(Box::new(|_| {}))
     }
-}
-
-#[derive(Clone)]
-pub struct QRManager {
-    files: Rc<Cell<Vec<web_sys::File>>>,
-    scan_count: Rc<Cell<usize>>,
-    running: Rc<Cell<bool>>,
-    age: Rc<Cell<usize>>,
-    callback: Rc<Cell<Callback>>,
-    window: web_sys::Window,
-    document: web_sys::Document,
 }
 
 #[derive(Debug)]
@@ -88,38 +83,156 @@ impl std::convert::From<JsValue> for QrError {
     }
 }
 
+/**
+Current image parsing progress to be displayed
+*/
 #[derive(Debug)]
 pub struct Status {
+    /** Whether there are currently any in progress tasks*/
     pub running: bool,
+    /** Number of files scanned*/
     pub scanned: usize,
+    /** Number of files left to scan*/
     pub tasks: usize,
 }
 
+/** Contains currently processed files and status*/
+#[derive(Clone)]
+pub struct QRManager {
+    files: Rc<Cell<Vec<gloo::file::File>>>,
+    scan_count: Rc<Cell<usize>>,
+    running: Rc<Cell<bool>>,
+    age: Rc<Cell<usize>>,
+    callback: Rc<Cell<Callback>>,
+    window: web_sys::Window,
+    document: web_sys::Document,
+}
+
+impl Default for QRManager {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl QRManager {
+    /** Creates new instance*/
+    pub fn new() -> Self {
+        let window = web_sys::window().expect("no global `window` exists");
+        let document = window.document().expect("should have a document on window");
+        Self {
+            files: Default::default(),
+            scan_count: Default::default(),
+            running: Default::default(),
+            age: Default::default(),
+            callback: Default::default(),
+            window,
+            document,
+        }
+    }
+    /** Sets callback to display status by updating elements with specified ids*/
+    pub fn set_status_ids(
+        &mut self,
+        running_id: &str,
+        tasks_left_id: &str,
+        scanned_count_id: &str,
+    ) {
+        /* Find the elements once and store them as part of the closure, so they only get searched for once*/
+        let running_elem: Option<web_sys::Element> = self.document.get_element_by_id(&running_id);
+        let tasks_left_elem: Option<web_sys::Element> =
+            self.document.get_element_by_id(&tasks_left_id);
+        let scanned_elem: Option<web_sys::Element> =
+            self.document.get_element_by_id(&scanned_count_id);
+        self.set_callback(Callback(Box::new(move |status| {
+            if let Some(elem) = &running_elem {
+                let new = status.running.to_string();
+                elem.set_inner_html(&new);
+            }
+            if let Some(elem) = &tasks_left_elem {
+                let new = status.tasks.to_string();
+                let width: f64 =
+                    status.tasks as f64 / (status.scanned + status.tasks).max(1) as f64;
+                let width: f64 = 100.0 - width * 100.0;
+                if let Err(err) =
+                    elem.set_attribute("style", &format!("width: {}%", width as usize))
+                {
+                    log::error!("{:?}", err);
+                }
+                elem.set_inner_html(&new);
+            }
+            if let Some(elem) = &scanned_elem {
+                let new = status.scanned.to_string();
+                elem.set_inner_html(&new);
+            }
+        })));
+    }
+    /** Called whenever status changes*/
+    pub fn call_callback(&self) {
+        let status: Status = self.get_status();
+        let callback: Callback = self.callback.take();
+        callback.0(status);
+        self.callback.set(callback);
+    }
+    /** Adds files to list of pending files, and spawns new progess task */
+    pub fn load_file_list(&self, new_files: web_sys::FileList) {
+        {
+            let new_files: gloo::file::FileList = From::from(new_files);
+            let mut files: Vec<gloo::file::File> = self.files.take();
+            if files.is_empty() {
+                self.scan_count.set(0);
+            }
+            files.extend_from_slice(&new_files);
+            self.files.set(files);
+        }
+        self.spawn_task();
+        log::info!("{:?}", self.get_status());
+    }
+    /** Generates current status with active files count, parsed count, and running status*/
+    pub fn get_status(&self) -> Status {
+        let files = self.files.take();
+        let tasks = files.len();
+        self.files.set(files);
+
+        Status {
+            running: self.running.get(),
+            scanned: self.scan_count.get(),
+            tasks,
+        }
+    }
+    /** Stops any image parsing tasks, and empties file list*/
+    pub fn stop(&self) {
+        let _ = self.files.take();
+
+        log::info!("Stopping")
+    }
+    /** Changes which function is called when status changes*/
     pub fn set_callback(&mut self, callback: Callback) {
         self.callback.set(callback);
     }
-
+    /**
+    Task that parses images in list, stops whenever a newer task is spawned
+    */
     async fn process(self) {
         log::info!("New task");
         let age = self.age.get();
         let mut decoder = quircs::Quirc::default();
 
         while age == self.age.get() {
+            /* Check if any new task has been spawned */
             self.call_callback();
-            let mut files = self.files.take();
-            let file = files.pop();
+            let mut files: Vec<gloo::file::File> = self.files.take();
+            let file: Option<gloo::file::File> = files.pop();
             self.files.set(files);
             self.running.set(true);
-            let file = if let Some(file) = file { file } else { break };
+            let file: gloo::file::File = if let Some(file) = file { file } else { break };
             match load_qr(&mut decoder, file).await {
                 Ok(codes) => {
                     for code in codes {
-                        let code: Result<usize, _> =
-                            code.and_then(|code| Ok(code.parse().map_err(|_| QrError::InvalidQrID)?));
+                        let code: Result<usize, _> = code
+                            .and_then(|code| Ok(code.parse().map_err(|_| QrError::InvalidQrID)?));
                         match code {
                             Ok(code) => {
-                                let result = self.retrieve_res(&code).await;
+                                let result: Result<Vec<(String, usize)>, QrError> =
+                                    self.retrieve_res(&code).await;
                                 log::info!("result: {:?}", result);
                                 let msg = match result {
                                     Ok(res) => format!("Result: {:?}", res),
@@ -152,17 +265,15 @@ impl QRManager {
         }
         self.call_callback();
     }
-
-    async fn retrieve_res(&self, data: &usize) -> Result<String, QrError> {
+    /** Sends QR data to backend and returns resources */
+    async fn retrieve_res(&self, data: &usize) -> Result<Vec<(String, usize)>, QrError> {
         let promise = self
             .window
             .fetch_with_str(&format!("/qr/retrieveRes?data={}", data));
         let result = wasm_bindgen_futures::JsFuture::from(promise).await;
         let result = result?;
         let response: web_sys::Response = result.into();
-        log::info!("{}", response.ok());
-        log::info!("{}", response.status());
-        log::info!("{}", response.status_text());
+        log::info!("Response: {} {}", response.status(), response.status_text());
         if !response.ok() {
             return Err(match response.status() {
                 501 => QrError::UnknownQrID,
@@ -182,8 +293,9 @@ impl QRManager {
                 Some((name, amount))
             })
             .collect();
-        Ok(format!("{:?}", values))
+        Ok(values)
     }
+    /** Creates new task*/
     fn spawn_task(&self) {
         self.age.set(self.age.get().wrapping_add(1));
         let manager = self.clone();
@@ -191,114 +303,21 @@ impl QRManager {
     }
 }
 
-impl Default for QRManager {
-    fn default() -> Self {
-        Self::new()
-    }
-}
+/**
+Use html <img> tag to parse image, and convert to canvas to extract pixels
 
-impl QRManager {
-    pub fn new() -> Self {
-        let window = web_sys::window().expect("no global `window` exists");
-        let document = window.document().expect("should have a document on window");
-        Self {
-            files: Default::default(),
-            scan_count: Default::default(),
-            running: Default::default(),
-            age: Default::default(),
-            callback: Default::default(),
-            window,
-            document,
-        }
-    }
-
-    pub fn set_status_ids(
-        &mut self,
-        running_id: &str,
-        tasks_left_id: &str,
-        scanned_count_id: &str,
-    ) {
-        let running_elem = self.document.get_element_by_id(&running_id);
-        let tasks_left_elem = self.document.get_element_by_id(&tasks_left_id);
-        let scanned_elem = self.document.get_element_by_id(&scanned_count_id);
-        self.set_callback(Callback(Box::new(move |status| {
-            if let Some(elem) = &running_elem {
-                let new = status.running.to_string();
-                elem.set_inner_html(&new);
-            }
-            if let Some(elem) = &tasks_left_elem {
-                let new = status.tasks.to_string();
-                let width = status.tasks as f32 / (status.scanned + status.tasks).max(1) as f32;
-                let width = 100.0 - width * 100.0;
-                if let Err(err) =
-                    elem.set_attribute("style", &format!("width: {}%", width as usize))
-                {
-                    log::error!("{:?}", err);
-                }
-                elem.set_inner_html(&new);
-            }
-            if let Some(elem) = &scanned_elem {
-                let new = status.scanned.to_string();
-                elem.set_inner_html(&new);
-            }
-        })));
-    }
-
-    pub fn call_callback(&self) {
-        let status = self.get_status();
-        let callback = self.callback.take();
-        callback.0(status);
-        self.callback.set(callback);
-    }
-
-    pub fn load_file_list(&self, new_files: web_sys::FileList) {
-        {
-            let mut files = self.files.take();
-            if files.is_empty() {
-                self.scan_count.set(0);
-            }
-            for i in 0..new_files.length() {
-                if let Some(file) = new_files.get(i) {
-                    files.push(file);
-                }
-            }
-            self.files.set(files);
-        }
-        self.spawn_task();
-        log::info!("{:?}", self.get_status());
-    }
-
-    pub fn get_status(&self) -> Status {
-        let files = self.files.take();
-        let tasks = files.len();
-        self.files.set(files);
-
-        Status {
-            running: self.running.get(),
-            scanned: self.scan_count.get(),
-            tasks,
-        }
-    }
-
-    pub fn stop(&self) {
-        self.running.set(false);
-        let _ = self.files.take();
-
-        log::info!("Stopping")
-    }
-}
-
-async fn browser_load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
-    let blob = web_sys::Blob::from(file);
-
-    let url: String = web_sys::Url::create_object_url_with_blob(&blob)?;
+Faster as it uses the browsers native image parser, but not always supported
+*/
+async fn browser_load_image(file: gloo::file::File) -> Result<image::GrayImage, JsValue> {
+    let blob: &web_sys::Blob = file.as_ref();
+    let url: String = web_sys::Url::create_object_url_with_blob(blob)?;
     let img = web_sys::HtmlImageElement::new()?;
     img.set_src(&url);
-    wasm_bindgen_futures::JsFuture::from(img.decode()).await?;
+    wasm_bindgen_futures::JsFuture::from(img.decode()).await?; /* Wait for image to finish parsing before continuing*/
     log::info!("Decoded image");
 
-    let width = img.natural_width();
-    let height = img.natural_height();
+    let width: u32 = img.natural_width();
+    let height: u32 = img.natural_height();
     log::info!("Size: {:?}", (width, height));
     let canvas = web_sys::window()
         .unwrap()
@@ -308,10 +327,11 @@ async fn browser_load_image(file: web_sys::File) -> Result<image::GrayImage, JsV
     let canvas = canvas.dyn_into::<web_sys::HtmlCanvasElement>()?;
     canvas.set_width(width);
     canvas.set_height(height);
-    let ctx = canvas
+
+    let ctx: js_sys::Object = canvas
         .get_context("2d")?
         .ok_or("Failed to create context")?;
-    let ctx = ctx.dyn_into::<web_sys::CanvasRenderingContext2d>()?;
+    let ctx: web_sys::CanvasRenderingContext2d = ctx.dyn_into()?;
 
     let window = web_sys::window().unwrap();
 
@@ -319,25 +339,14 @@ async fn browser_load_image(file: web_sys::File) -> Result<image::GrayImage, JsV
         window.create_image_bitmap_with_html_image_element(&img)?,
     )
     .await?;
-    let bitmap = bitmap.dyn_into::<web_sys::ImageBitmap>()?;
+    let bitmap: web_sys::ImageBitmap = bitmap.dyn_into()?;
     log::info!("bitmap: {:?}", bitmap);
-
-    /*let mut img_vec: Vec<u8> = Vec::with_capacity(width as usize * height as usize);
-    let res = wasm_bindgen_futures::JsFuture::from(bitmap.map_data_into_with_u8_array(
-        web_sys::ImageBitmapFormat::Gray8,
-        &mut img_vec,
-        0,
-    )?)
-    .await?;
-    log::info!("Res: {:?}", res);*/
-
-    //todo!();
 
     ctx.draw_image_with_image_bitmap(&bitmap, 0.0, 0.0)?;
 
     log::info!("Created Canvas: {:?}", ctx);
 
-    let data = ctx
+    let data: Vec<u8> = ctx
         .get_image_data(0.0, 0.0, width as f64, height as f64)?
         .data()
         .0;
@@ -349,46 +358,60 @@ async fn browser_load_image(file: web_sys::File) -> Result<image::GrayImage, JsV
     return Ok(img.into_luma8());
 }
 
-async fn lib_load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
-    let buffer = wasm_bindgen_futures::JsFuture::from(file.array_buffer())
+/**
+Use rust image library to parse image
+
+Slower as wasm is slower than native, but always supported
+*/
+async fn lib_load_image(file: gloo::file::File) -> Result<image::GrayImage, JsValue> {
+    let blob: &web_sys::Blob = file.as_ref();
+    let buffer = wasm_bindgen_futures::JsFuture::from(blob.array_buffer())
         .await
         .map_err(|e| format!("{:?}", e))?;
     let buffer: js_sys::Uint8Array = js_sys::Uint8Array::new(&buffer);
 
     let buffer: Vec<u8> = buffer.to_vec();
-
-    let img = if let Some(format) = match file.name() {
-        name if name.ends_with(".jpeg") => Some(image::ImageFormat::Jpeg),
-        name if name.ends_with(".jpg") => Some(image::ImageFormat::Jpeg),
-        name if name.ends_with(".png") => Some(image::ImageFormat::Png),
+    /*If extension says image type skip guessing the type, creates slight performance improvement*/
+    let name = file.name();
+    let path = std::path::Path::new(&name);
+    let extension: Option<&str> = path.extension().and_then(|v| v.to_str());
+    let img = if let Some(format) = match extension {
+        Some("jpeg") => Some(image::ImageFormat::Jpeg),
+        Some("jpg") => Some(image::ImageFormat::Jpeg),
+        Some("png") => Some(image::ImageFormat::Png),
         _ => None,
     } {
         image::load_from_memory_with_format(&buffer, format)
     } else {
         image::load_from_memory(&buffer)
     };
-    let img = img.map_err(|e| format!("Error: {:?}", e))?;
+    let img: image::DynamicImage = img.map_err(|e| format!("Error: {:?}", e))?;
 
     Ok(img.into_luma8())
 }
 
-async fn load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
+/**
+Loads the image data from javascript file input
+
+If browser supports extracting data from canvas uses that, otherwise uses an image parsing library
+*/
+async fn load_image(file: gloo::file::File) -> Result<image::GrayImage, JsValue> {
     log::info!("Loading image: {}", file.name());
 
-    let canvas = web_sys::window()
+    let canvas: web_sys::Element = web_sys::window()
         .unwrap()
         .document()
         .unwrap()
         .create_element("canvas")?;
-    let canvas = canvas.dyn_into::<web_sys::HtmlCanvasElement>()?;
+    let canvas: web_sys::HtmlCanvasElement = canvas.dyn_into()?;
     canvas.set_width(100);
     canvas.set_height(100);
 
-    let ctx = canvas
+    let ctx: js_sys::Object = canvas
         .get_context("2d")?
         .ok_or("Failed to create context")?;
-    let ctx = ctx.dyn_into::<web_sys::CanvasRenderingContext2d>()?;
-
+    let ctx: web_sys::CanvasRenderingContext2d = ctx.dyn_into()?;
+    /*Creates an empty canvas and checks if all pixels are zero*/
     if ctx
         .get_image_data(0.0, 0.0, 10.0, 10.0)?
         .data()
@@ -396,9 +419,11 @@ async fn load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
         .iter()
         .all(|pixel| *pixel == 0)
     {
+        /*Canvas is working correctly so use faster native technique*/
         log::info!("Trusty");
         browser_load_image(file).await
     } else {
+        /*Non zero pixels means that the browser has some form of anti-canvas fingerprinting defense which means can't use canvas to parse image*/
         log::info!("Unreliable");
         lib_load_image(file).await
     }
@@ -410,58 +435,132 @@ async fn load_image(file: web_sys::File) -> Result<image::GrayImage, JsValue> {
     //Ok(img)
 }
 
+/** Extracts all QR codes from javascript file input
+
+Parses image and then uses quircs to identify QR codes
+*/
 async fn load_qr(
     decoder: &mut quircs::Quirc,
-    file: web_sys::File,
-) -> Result<
-    impl std::iter::Iterator<Item = Result<String, Box<dyn std::error::Error>>> + '_,
-    Box<dyn std::error::Error>,
-> {
+    file: gloo::file::File,
+) -> Result<Vec<Result<String, Box<dyn std::error::Error>>>, Box<dyn std::error::Error>> {
     let img = load_image(file).await.map_err(|e| format!("{:?}", e))?;
     log::info!("Loaded image");
 
-    let codes = decoder.identify(img.width() as usize, img.height() as usize, &img);
+    let quircs_codes = decoder.identify(img.width() as usize, img.height() as usize, &img);
 
-    Ok(codes.map(|code| {
+    let quircs_codes = quircs_codes.map(|code| {
         let code = code?;
+        log::info!(
+            "Code corners: {:?} size: {:?} cell_bitmap: {:?}",
+            code.corners,
+            code.size,
+            code.cell_bitmap
+        );
         let decoded = code.decode()?;
         let payload = decoded.payload;
         let msg = std::str::from_utf8(&payload)?;
-        log::info!("{}", &msg);
+        log::info!("quircs {}", &msg);
         Ok(msg.to_owned())
-    }))
+    });
 
-    /* let decoder = bardecoder::default_decoder();
-
-
-
-
-    let results = decoder.decode(&img);
-    for result in results {
-        if let Ok(data) = result{
-            web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!("Data {}", data)));
-            web_sys::window().unwrap().alert_with_message(&format!("Data: {:?}", data)).unwrap();
-        }
-    }*/
-
-    /*let mut img = rqrr::PreparedImage::prepare_from_greyscale(
+    let mut img = rqrr::PreparedImage::prepare_from_greyscale(
         img.width() as usize,
         img.height() as usize,
         |x, y| img.get_pixel(x as u32, y as u32).0[0],
     );
     let grids = img.detect_grids();
+    let rqrr_codes = grids.iter().map(|grid| {
+        let (meta, content) = grid.decode()?;
+        log::info!("rqrr Code metadata: {:?}, content: {}", meta, content);
+        Ok::<_, Box<dyn std::error::Error>>(content)
+    });
 
-    web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&format!(
-        "Found {} grids",
-        grids.len()
-    )));
-    for grid in grids.iter() {
-        let msg = match grid.decode() {
-            Ok((_metadata, data)) => format!("Data {}", data),
-            Err(err) => format!("Error {}", err),
-        };
+    let mut unique_codes = std::collections::HashSet::new();
+    let codes = quircs_codes
+        .chain(rqrr_codes)
+        .filter(|code| {
+            if let Ok(code) = code {
+                !unique_codes.insert(code.clone())
+            } else {
+                true
+            }
+        })
+        .collect();
 
-        web_sys::console::log_1(&wasm_bindgen::JsValue::from_str(&msg));
-        web_sys::window().unwrap().alert_with_message(&msg).unwrap();
-    }*/
+    Ok(codes)
+}
+
+#[cfg(test)]
+mod tests {
+
+    wasm_bindgen_test_configure!(run_in_browser);
+    use crate::*;
+    use wasm_bindgen_test::*;
+
+    async fn test_load_qr(image_data: &[u8], name: &str, desired: &[Result<String, String>]) {
+        let mut decoder = quircs::Quirc::default();
+        let file = gloo::file::File::new(name, image_data);
+        let vals: Vec<_> = load_qr(&mut decoder, file)
+            .await
+            .unwrap()
+            .into_iter()
+            .map(|val| val.map_err(|e| e.to_string()))
+            .collect();
+        assert_eq!(&vals, desired);
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_1() {
+        let image_data = &include_bytes!("../test_images/IMG_20220303_131339.jpg")[..];
+        let name = "../test_images/IMG_20220303_131339.jpg";
+        let desired = &[Ok("1041758308".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_2() {
+        let image_data = &include_bytes!("../test_images/IMG_20220311_173540.jpg")[..];
+        let name = "../test_images/IMG_20220311_173540.jpg";
+        let desired = &[Ok("3653067026".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_3() {
+        let image_data = &include_bytes!("../test_images/IMG_20220303_130946.jpg")[..];
+        let name = "../test_images/IMG_20220303_130946.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_4() {
+        let image_data = &include_bytes!("../test_images/IMG_20220317_140822.jpg")[..];
+        let name = "../test_images/IMG_20220317_140822.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_5() {
+        let image_data = &include_bytes!("../test_images/IMG_20220303_131146.jpg")[..];
+        let name = "../test_images/IMG_20220303_131146.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_6() {
+        let image_data = &include_bytes!("../test_images/IMG_20220317_141253.jpg")[..];
+        let name = "../test_images/IMG_20220317_141253.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
+
+    #[wasm_bindgen_test]
+    pub async fn load_qr_image_7() {
+        let image_data = &include_bytes!("../test_images/IMG_20220228_230520.jpg")[..];
+        let name = "../test_images/IMG_20220228_230520.jpg";
+        let desired = &[Ok("EXAMPLE".to_string())];
+        test_load_qr(image_data, name, desired).await;
+    }
 }

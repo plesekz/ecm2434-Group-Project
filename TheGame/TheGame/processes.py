@@ -1,20 +1,33 @@
 from logging import exception
 from operator import truediv
+from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
 from Login.models import Player
 from Resources.processes import removeResourceFromUser, addResourceToUser, getResourceByName
-from .models import pStat
+from .models import Champion
 from Login.processes import getUserFromCookie
 from Login.models import Player
 from Resources.models import PlayerResource, Resource
 
 def getUserFromName(request):
+    """ returns a users stat block,
+    you should probably use getChampion instead
+    """
     user = getUserFromCookie(request)
-    userStats = pStat.objects.get(player=user)
+    userStats = Champion.objects.get(player=user)
     return userStats
 
+def getChampion(player : Player) -> Champion:
+    if not (champs := Champion.objects.filter(player=player)).exists():
+        return None
+
+    return champs[0]
+
+
 def spendResource(request, rNeeded, amount):
+    """ spends a requested amount of a resource from a user
+    """
     try:
         removeResourceFromUser(getUserFromCookie(request), getResourceByName(rNeeded), amount)
         return True
@@ -23,6 +36,8 @@ def spendResource(request, rNeeded, amount):
         return False
 
 def buyPHealth(request):
+    """ makes a purchase of pHealth from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -35,18 +50,23 @@ def buyPHealth(request):
     return response
 
 def buyPToughness(request):
+    """ makes a purchase of pToughness from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5):
-        userStats = getUserFromName(request)
-        userStats.pToughness += 1
-        userStats.save()
+
+    addResourceToUser(getUserFromCookie(request), getResourceByName('wood'), 5)
+    userStats = getUserFromName(request)
+    userStats.pToughness += 1
+    userStats.save()    
 
     return response
 
 def buyPEvasion(request):
+    """ makes a purchase of pEvasion from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -59,6 +79,8 @@ def buyPEvasion(request):
     return response
 
 def buyDamage(request):
+    """ makes a purchase of damage from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -71,6 +93,8 @@ def buyDamage(request):
     return response
 
 def buyAccuracy(request):
+    """ makes a purchase of accuracy from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -83,6 +107,8 @@ def buyAccuracy(request):
     return response
 
 def buyAttackSpeed(request):
+    """ makes a purchase of attackSpeed from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -95,6 +121,8 @@ def buyAttackSpeed(request):
     return response
 
 def buyAHealth(request):
+    """ makes a purchase of aHealth from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -107,6 +135,8 @@ def buyAHealth(request):
     return response
 
 def buyAToughness(request):
+    """ makes a purchase of aToughness from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -119,6 +149,8 @@ def buyAToughness(request):
     return response
 
 def buyAEvasion(request):
+    """ makes a purchase of aEvasion from the user
+    """
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
@@ -129,3 +161,38 @@ def buyAEvasion(request):
         userStats.save()
 
     return response
+
+
+def getAllBosses() -> "list[Champion]":
+
+    if not (bosses := Champion.objects.filter(player=None)):
+        return None
+
+    bossList = []
+
+    for b in bosses:
+        bossList.append(b)
+
+    return bossList
+
+def addBossToSystem(request : HttpRequest):
+    if not request.method == "POST":
+        return HttpResponse("failed to perform operation")
+
+    statInfo = request.POST;
+
+    Champion.objects.create(
+        player=None,
+        name = statInfo['name'],
+        pHealth =  statInfo['pHealth'],
+        pToughness = statInfo['pToughness'],
+        pEvasion = statInfo['pEvasion'],
+        damage = statInfo['damage'],
+        accuracy = statInfo['accuracy'],
+        attackSpeed = statInfo['attackSpeed'],
+        aHealth = statInfo['aHealth'],
+        aToughness = statInfo['aToughness'],
+        aEvasion = statInfo['aEvasion'],
+    )
+
+    return HttpResponseRedirect('addBosses')
