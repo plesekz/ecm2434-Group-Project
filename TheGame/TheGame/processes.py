@@ -373,7 +373,43 @@ def getAllBaseItemsAndWeapons() -> "list[Item]":
 
     query = Q(instance_of=BaseItem) | Q(instance_of=BaseWeapon)
 
-    if not (items := Item.objects.filter(query)).exist():
+    if (items := Item.objects.filter(query)) == None:
+        return None
+
+    itemList = []
+    for i in items:
+        itemList.append(i)
+
+    return itemList
+
+def getAllBaseItems() -> "list[Item]":
+    """ function that returns a list of all base items
+
+    returns:
+        list of all base items in the system
+    """
+
+    query = Q(instance_of=BaseItem)
+
+    if (items := Item.objects.filter(query)) == None:
+        return None
+
+    itemList = []
+    for i in items:
+        itemList.append(i)
+
+    return itemList
+
+def getAllBaseItems() -> "list[Item]":
+    """ function that returns a list of all base weapons
+
+    returns:
+        list of all base weapons in the system
+    """
+
+    query = Q(instance_of=BaseWeapon)
+
+    if (items := Item.objects.filter(query)) == None:
         return None
 
     itemList = []
