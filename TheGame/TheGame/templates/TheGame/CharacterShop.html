@@ -19,7 +19,7 @@
             <div class="container">
                 <div class="row justify-content-around stat-highlight">
                     <h1>Shop</h1>
-                    <ul">
+                    <ul>
                         {%for i in allItems%}
                         <form action="{% url 'buyItem' %}" method="post">
                             {% csrf_token %}
