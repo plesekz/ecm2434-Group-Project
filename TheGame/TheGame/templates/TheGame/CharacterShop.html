@@ -21,7 +21,7 @@
                     <h1>Shop</h1>
                     {%for i in allItems%}
                         <input type="hidden" name="itemPk" value={{i.pk}} />
-                        <button class="col-sm-3 top-bar-button" type="submit">
+                        <button class="col-sm-3 top-bar-button" type="submit" onclick="submitData('{{i.pk}}')">
                             <p>{{i.name}}</p>
                             <p>{{i|safe}}</p>
                             <p>{{i.price}}</p>
@@ -48,8 +48,9 @@
     </div>
 
     <script>
-        function onBuyButtonClick() {
-            window.location.href = "battle"
+        function submitData(pk)
+        {
+            console.log(pk);
         }
     </script>
 
