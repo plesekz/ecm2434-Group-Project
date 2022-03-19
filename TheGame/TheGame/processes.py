@@ -445,3 +445,10 @@ def createNewBaseItemFromHTMLRequest(request):
         )
 
     return HttpResponseRedirect('addItems')
+
+def getItemFromPK(pk : int) -> Item:
+
+    if item := Item.objects.get(pk=pk):
+        return item
+
+    return None
