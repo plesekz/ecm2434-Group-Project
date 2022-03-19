@@ -139,7 +139,7 @@ def buyPControl(request):
     return response
 
 def buyItem(request):
-    """ makes a purchase of athlectics from the user
+    """ makes a purchase of an item for the user
     """
 
     data = request.body.decode('utf-8') # decode the body to a string
@@ -156,8 +156,7 @@ def buyItem(request):
     if spendResource(request,  'wood', item.price):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
-        userChamp.auxItem1 = item
-        userChamp.save()
+        addItemToChampion(item, userChamp)
 
     return response
 
