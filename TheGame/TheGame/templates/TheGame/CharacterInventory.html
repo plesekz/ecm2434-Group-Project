@@ -8,24 +8,25 @@
 {% block bodyBlock %}
 <div class="container-floating" style="color: white;">
     <div class="row">
-        <div class="col-md order-md-1 order-1">
-            <div class="container stat-highlight">
+        <div class="col-md-3 order-md-3 container">
+            <div class="stat-highlight">
                 <h1>Character Image</h1>
 
             </div>
         </div>
-        <div class="col-6 col-md order order-3 order-md-2">
-            <div class="container stat-highlight">
+        <div class="col-md-6 order-md-3 container">
+            <div class="row stat-highlight">
                 <h1>Inventory</h1>
                 {%for i in items%}
-                <li>
-                    {{i.0}}: {{i.1}}
-                </li>
+                    <button class="col-sm-4 top-bar-button" type="submit">
+                        <p>{{i.name}}</p>
+                        <p>{{i|safe}}</p>
+                    </button>
                 {%endfor%}
             </div>
         </div>
-        <div class="col-6 col-md order-2 order-md-3">
-            <div class="container-floating stat-highlight">
+        <div class="col-md-3 order-md-3 container">
+            <div class="stat-highlight">
                 <ul>
                     <h3>Stats:</h3>
                     <li>
