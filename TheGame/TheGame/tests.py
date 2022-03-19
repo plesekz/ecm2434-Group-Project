@@ -192,7 +192,7 @@ class ItemTestCase(TestCase):
             baseItem, 5 , 2
         )
 
-        specItem = SpecificItem.objects.get(pk=2)
+        specItem = SpecificItem.objects.get(name="ring")
 
         self.assertEqual(specItem.name, "ring")
         self.assertEqual(specItem.level, 5)
@@ -200,7 +200,14 @@ class ItemTestCase(TestCase):
 
         # make sure that you can give this item to a champion
 
-        addItemToChampion(specItem, getChampion(self.pClient))
+        mychamp = getChampion(self.pClient)
+
+        addItemToChampion(specItem, mychamp)
+
+        ci = ChampionItems.objects.get(pk=1)
+
+        self.assertEqual(ci.item , specItem)
+        self.assertEqual(ci.champion, mychamp)
 
 
     def testAddingWeapons(self):
@@ -213,6 +220,7 @@ class ItemTestCase(TestCase):
             damageInstances = 3,
             range = 2,
             association = "c",
+            ap_cost = 6,
         )
 
         baseWeapon = BaseWeapon.objects.get(pk=1)
@@ -220,6 +228,27 @@ class ItemTestCase(TestCase):
         self.assertEquals(baseWeapon.name, "sword")
 
         # now check that we can add specific weapons and give them to champion
+
+        specWeapon = createNewSpecificWeapon(
+            baseWeapon, 5 , 2
+        )
+
+        specItem = SpecificWeapon.objects.get(name="sword")
+
+        self.assertEqual(specItem.name, "sword")
+        self.assertEqual(specItem.level, 5)
+        self.assertEqual(specItem.glory, 2)
+
+        # make sure that you can give this weapon to a champion
+
+        mychamp = getChampion(self.pClient)
+
+        addItemToChampion(specWeapon, mychamp)
+
+        ci = ChampionItems.objects.get(pk=1)
+
+        self.assertEqual(ci.item , specWeapon)
+        self.assertEqual(ci.champion, mychamp)
 
 
 

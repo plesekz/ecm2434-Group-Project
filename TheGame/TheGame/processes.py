@@ -201,7 +201,7 @@ def createNewSpecificItem(baseItem : BaseItem, startingLevel : int, startingGlor
 
 
 def createNewBaseWeapon(name : str, price : int, type : str,
-    damageNumber : int, damageInstances : int, range : int, association : chr) -> BaseWeapon:
+    damageNumber : int, damageInstances : int, range : int, association : chr, ap_cost : int) -> BaseWeapon:
 
     """ this function will create a new BaseWeapon in the database,
     Args:
@@ -230,7 +230,8 @@ def createNewBaseWeapon(name : str, price : int, type : str,
         damageInstances = damageInstances,
         damageNumber = damageNumber,
         range = range,
-        associated = association
+        associated = association,
+        ap_cost = ap_cost
     )
 
     return bw
@@ -253,9 +254,10 @@ def createNewSpecificWeapon(baseWeapon : BaseItem, startingLevel : int, starting
         type = baseWeapon.type,
 
         damageNumber = baseWeapon.damageNumber,
-        damageInstance = baseWeapon.damageInstances,
+        damageInstances = baseWeapon.damageInstances,
         range = baseWeapon.range,
         associated = baseWeapon.associated,
+        ap_cost = baseWeapon.ap_cost,
 
         level = startingLevel,
         glory = startingGlory,

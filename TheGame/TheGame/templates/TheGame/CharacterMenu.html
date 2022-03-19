@@ -19,60 +19,27 @@
                         <h3>Character</h3>
                     </li>
                     <li>
-                        <form action="{% url 'buyphealth' %}">
+                        <form action="{% url 'buyPHealth' %}">
                             {% csrf_token %}
                             <button class="btn buyButton" type="submit">Buy Health</button>
                         </form>
                     </li>
                     <li>
-                        <form action="{% url 'buyptoughness' %}">
+                        <form action="{% url 'buyPAthletics' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Toughness</button>
+                            <button class="btn buyButton" type="submit">Buy Athletics</button>
                         </form>
                     </li>
                     <li>
-                        <form action="{% url 'buypevasion' %}">
+                        <form action="{% url 'buyPBrain' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Evasion</button>
+                            <button class="btn buyButton" type="submit">Buy Brains</button>
                         </form>
                     </li>
                     <li>
-                        <form action="{% url 'buydamage' %}">
+                        <form action="{% url 'buyPControl' %}">
                             {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Damage</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="{% url 'buyaccuracy' %}">
-                            {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Accuracy</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="{% url 'buyattackspeed' %}">
-                            {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Attack Speed</button>
-                        </form>
-                    </li>
-                    <li>
-                        <h3>Armour</h3>
-                    </li>
-                    <li>
-                        <form action="{% url 'buyahealth' %}">
-                            {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Armour Health</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="{% url 'buyatoughness' %}">
-                            {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Armour Toughness</button>
-                        </form>
-                    </li>
-                    <li>
-                        <form action="{% url 'buyaevasion' %}">
-                            {% csrf_token %}
-                            <button class="btn buyButton" type="submit">Buy Armour Evasion</button>
+                            <button class="btn buyButton" type="submit">Buy Control</button>
                         </form>
                     </li>
                 </ul>
@@ -83,13 +50,16 @@
                 <ul>
                     <h3>Stats:</h3>
                     <li>
-                        Health: {{stats.pHealth}}
+                        Health: {{champion.pHealth}}
                     </li>
                     <li>
-                        Toughness: {{stats.pToughness}}
+                        Athletics: {{champion.pAthletics}}
                     </li>
                     <li>
-                        Evasion: {{stats.pEvasion}}
+                        Brains: {{champion.pBrain}}
+                    </li>
+                    <li>
+                        Control: {{champion.pControl}}
                     </li>
                 </ul>
             </div>

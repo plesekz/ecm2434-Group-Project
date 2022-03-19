@@ -13,7 +13,7 @@ def homePageView(request : HttpRequest) -> HttpResponse:
       
     try:
         user = getUserFromCookie(request)
-        stats = getUserFromName(request)
+        champion = getChampion(user)
         resources = getAllUserResources(user)
     except Exception as e:
         print(e)
@@ -22,7 +22,7 @@ def homePageView(request : HttpRequest) -> HttpResponse:
     template = loader.get_template('TheGame/HomePage.html')
     context = {
         "user" : user,
-        "stats": stats,
+        "champion": champion,
         "resources": resources
     }
 
@@ -46,15 +46,7 @@ def characterMenu(request : HttpRequest) -> HttpResponse:
 
     context = {
         "username" : user.username,
-        "pHealth" : champion.pHealth,
-        "pToughness" : champion.pToughness,
-        "pEvasion" : champion.pEvasion,
-        "damage" : champion.damage, #item stats would replace this when item database is created
-        "accuracy" : champion.accuracy,
-        "attackSpeed" : champion.attackSpeed,
-        "aHealth" : champion.aHealth, #armour stats would replace this when armour database is created
-        "aToughness" : champion.aToughness,
-        "aEvasion" : champion.aEvasion,
+        "champion" : champion,
         "resources" : resources,
     }
 
@@ -73,13 +65,16 @@ def battleSelectView(request : HttpRequest) -> HttpResponse:
     if not (champ := getChampion(user)):
         return HttpResponseRedirect('createChampion')
 
-    user = getUserFromCookie(request)
+    resources = getAllUserResources(user)
+
+    bosses = getAllBosses()
     
     template = loader.get_template('TheGame/battleSelect.html')
     context = {
         "user" : user,
-        "stats" : stats,
+        "champion" : champ,
         "resources" : resources,
+        "bosses" : bosses
     }
 
     output = template.render(context, request)
