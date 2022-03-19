@@ -153,9 +153,6 @@ def buyItem(request):
     response = redirect("characterShop")
 
     item = getItemFromPK(itemPK)
-    user = getUserFromCookie(request)
-    userChamp = getChampion(user)
-    addItemToChampion(createNewSpecificItem(item, 0, 0), userChamp)
     if spendResource(request, 'wood', item.price):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)

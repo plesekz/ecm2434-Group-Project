@@ -20,7 +20,7 @@ class BaseItem(Item):
     specialAbilities = models.CharField(max_length=50)
 
     def __str__(self):
-        return "BaseItem: " + self.name
+        return f"Armour Value: {self.armourValue}<br>Vitality Boost: {self.vitalityBoost}<br>Ability: {self.specialAbilities}"
 
 class SpecificItem(BaseItem):
     # contains defaults for items
@@ -28,7 +28,7 @@ class SpecificItem(BaseItem):
     glory = models.IntegerField()
 
     def __str__(self):
-        return "SpecificItem: " + self.name + ", lvl: " + str(self.level)
+        return f"Armour Value: {self.armourValue}<br>Vitality Boost: {self.vitalityBoost}<br>Ability: {self.specialAbilities}<br>Level: {self.level}<br>Glory: {self.glory}"
 
 class BaseWeapon(Item):
     damageNumber = models.IntegerField()
@@ -45,7 +45,7 @@ class SpecificWeapon(BaseWeapon):
     glory = models.IntegerField()
 
     def __str__(self):
-        return f"Damage: {self.damageNumber}<br>Speed: {self.damageNumber}<br>Range: {self.damageNumber}<br>AP Cost: {self.ap_cost}<br>Level: {self.level}"
+        return f"Damage: {self.damageNumber}<br>Speed: {self.damageNumber}<br>Range: {self.damageNumber}<br>AP Cost: {self.ap_cost}<br>Level: {self.level}<br>Glory: {self.glory}"
 
 class Champion(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)

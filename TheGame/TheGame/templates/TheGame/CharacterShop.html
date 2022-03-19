@@ -8,12 +8,12 @@
 {% block bodyBlock %}
 <div class="container-floating" style="color: white;">
     <div class="row">
-        <div class="col-md-4 container">
+        <div class="col-md-3 container">
             <div class="stat-highlight">
                 <h1>Character Image</h1>
             </div>
         </div>
-        <div class="col-md-4 container">
+        <div class="col-md-6 container">
             <div class="row stat-highlight">
                 <h1>Shop</h1>
                 {%for i in allItems%}
@@ -25,14 +25,12 @@
                 {%endfor%}
             </div>
         </div>
-        <div class="col-md-4 container">
+        <div class="col-md-3 container">
             <div class="stat-highlight">
                 <ul>
                     <h3>Resources:</h3>
                     {%for r in resources%}
-                    <li>
-                        {{r.0}}: {{r.1}}
-                    </li>
+                        <p>{{r.0}}: {{r.1}}<br></p>
                     {%endfor%}
                 </ul>
             </div>
