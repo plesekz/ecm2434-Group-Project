@@ -54,20 +54,15 @@ def addBossToSystem(request : HttpRequest):
     if not request.method == "POST":
         return HttpResponse("failed to perform operation")
 
-    statInfo = request.POST;
+    statInfo = request.POST
 
     Champion.objects.create(
         player=None,
         name = statInfo['name'],
         pHealth =  statInfo['pHealth'],
-        pToughness = statInfo['pToughness'],
-        pEvasion = statInfo['pEvasion'],
-        damage = statInfo['damage'],
-        accuracy = statInfo['accuracy'],
-        attackSpeed = statInfo['attackSpeed'],
-        aHealth = statInfo['aHealth'],
-        aToughness = statInfo['aToughness'],
-        aEvasion = statInfo['aEvasion'],
+        pAthletics = statInfo['pAthletics'],
+        pBrain = statInfo['pBrain'],
+        pControl = statInfo['pControl'],
     )
 
     return HttpResponseRedirect('addBosses')
