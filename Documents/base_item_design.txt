@@ -1,0 +1,35 @@
+# Items
+## Content
+	- Salvaged Armour
+	- Shiv
+	- Makeshift rifle
+	- Self-taught psionics
+
+## Salvaged Armour
+
+	10 Armour
+	0 Vit boost
+	special ability = ""
+
+## Shiv
+
+	15 dmg
+	1 dmg instance
+	Range 1
+	associated = "A"
+	ap cost = 2
+
+## Makeshift rifle
+
+	12 dmg
+	2 dmg instance
+	Range 10
+	Associated = "C"
+	ap cost = 2
+
+## Self-taught psionics
+
+	5 dmg
+	5 dmg instance
+	Range 5
+	Associated = "B"
