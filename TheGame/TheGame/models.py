@@ -106,3 +106,7 @@ class ChampionItems(models.Model):
 
     def __str__(self):
         return str(self.champion) + " " + str(self.item)
+    champion = models.ForeignKey(Champion, on_delete=models.CASCADE, null=True)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE, null=True)
+    amount = models.IntegerField()
+    itemLevel = models.IntegerField()

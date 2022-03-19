@@ -52,3 +52,5 @@ class LoginTestCase(TestCase):
         self.assertEquals(
             user.userID,
             client.cookies.get('TheGameSessionID').value)
+        self.assertEquals(user.userID, client.cookies.get(
+            'TheGameSessionID').value)

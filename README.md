@@ -32,3 +32,11 @@ Change directory to `./TheGame` then run `python3 manage.py runserver`
 Not yet complete
 
 Collect statics using `python3 manage.py collectstatic`
+
+Change directory to `./TheGame` then run `python3 manage.py runserver`
+
+### Using External Server
+
+Not yet complete
+
+Collect statics using `python3 manage.py collectstatic`

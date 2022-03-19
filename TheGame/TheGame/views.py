@@ -24,6 +24,7 @@ def homePageView(request: HttpRequest) -> HttpResponse:
     context = {
         "user": user,
         "champion": champion,
+        "stats": stats,
         "resources": resources
     }
 
@@ -49,6 +50,17 @@ def characterMenu(request: HttpRequest) -> HttpResponse:
     context = {
         "username": user.username,
         "champion": champion,
+        "pHealth": champion.pHealth,
+        "pToughness": champion.pToughness,
+        "pEvasion": champion.pEvasion,
+        # item stats would replace this when item database is created
+        "damage": champion.damage,
+        "accuracy": champion.accuracy,
+        "attackSpeed": champion.attackSpeed,
+        # armour stats would replace this when armour database is created
+        "aHealth": champion.aHealth,
+        "aToughness": champion.aToughness,
+        "aEvasion": champion.aEvasion,
         "resources": resources,
     }
 
@@ -129,7 +141,9 @@ def battleSelectView(request: HttpRequest) -> HttpResponse:
         "user": user,
         "champion": champ,
         "resources": resources,
-        "bosses": bosses
+        "bosses": bosses,
+        "stats": stats,
+        "resources": resources,
     }
 
     output = template.render(context, request)

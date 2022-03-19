@@ -7,10 +7,10 @@ import math
 
 
 def take_turn(player, target):
-    for i in range(0, player.num):
+    for i in range(player.num):
         # take a shot
         roll = randint(1, 100)
-        if ((player.acc - target.ev) >= roll):
+        if (player.acc - target.ev) >= roll:
             # hit
             target.hp -= math.ceil((player.dmg / (target.tg / 100)))
         return (
@@ -18,9 +18,7 @@ def take_turn(player, target):
 
 
 def check_if_dead(player):
-    if (player.hp <= 0):
-        return True
-    return False
+    return player.hp <= 0
 
 
 def getLocalPlayer(request):
@@ -62,7 +60,7 @@ def battle(p1, p2):
 
     # decides who goes first randomly
     # 50% chance p1 goes first, 50% chance p2 goes first
-    if (p1.num > p2.num):  # I made it so the player with faster attack speed goes first
+    if p1.num > p2.num:  # I made it so the player with faster attack speed goes first
         # player 1's turn
         if check_if_dead(p1):
             log[0] = False
@@ -80,7 +78,7 @@ def battle(p1, p2):
         log[1] += take_turn(p1, p2)
 
     # loop forever, breaks out when a player is dead
-    while(True):
+    while True:
         # player 2's turn
         if check_if_dead(p2):
             log[0] = True
