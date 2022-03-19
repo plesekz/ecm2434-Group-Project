@@ -64,9 +64,7 @@
                 console.log(xhr.responseText);
             }};
 
-            let data = `{
-                "itemPk": ${pk}
-            }`;
+            let data = `{"itemPk": ${pk}}`;
 
             xhr.send(data);
 

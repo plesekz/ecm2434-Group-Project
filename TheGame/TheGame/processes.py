@@ -1,3 +1,4 @@
+import json
 from logging import exception
 from operator import truediv
 from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedirect
@@ -132,11 +133,18 @@ def buyPControl(request):
 def buyItem(request):
     """ makes a purchase of athlectics from the user
     """
+
+    data = request.body.decode('utf-8') # decode the body to a string
+    print(data)
+    requestJson = json.loads(data) # load json from string data
+    itemPK = requestJson['itemPk']
+
     if not request.method == "POST":
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterShop")
-    item = getItemFromPK(request.POST['itemPk'])
+
+    item = getItemFromPK(itemPK)
     if spendResource(request,  'wood', item.price):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
