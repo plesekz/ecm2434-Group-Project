@@ -154,7 +154,7 @@ def buyItem(request):
     item = getItemFromPK(itemPK)
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
-    addItemToChampion(createNewSpecificWeapon(item, 0, 0), userChamp)
+    addItemToChampion(createNewSpecificItem(item, 0, 0), userChamp)
     if spendResource(request, 'wood', item.price):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
