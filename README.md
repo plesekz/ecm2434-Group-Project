@@ -1,7 +1,6 @@
 # ecm2434-Group-Project
 
 ## Dependencies
-
 ### Required to Run
 - django: Used for the webserver `pip3 install django`
 - polymorphic: Used for improved django models `pip3 install django-polymorphic`
@@ -21,8 +20,6 @@ Currently precompiled wasm and js files are included in git, so it will work by 
 
 ### To test
 
-To test
-
 `wasm-pack test --firefox --chrome --headless ./TheGame/qr-wasm`
 
 ## Use
@@ -35,6 +32,3 @@ Change directory to `./TheGame` then run `python3 manage.py runserver`
 Not yet complete
 
 Collect statics using `python3 manage.py collectstatic`
-
-
-To run change directory to `./TheGame` then run `python3 manage.py runserver`
