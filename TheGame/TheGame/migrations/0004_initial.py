@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Player',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('pHealth', models.PositiveIntegerField(default=0)),
                 ('pToughness', models.PositiveIntegerField(default=0)),
                 ('pEvasion', models.PositiveIntegerField(default=0)),
