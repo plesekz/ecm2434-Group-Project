@@ -143,7 +143,6 @@ def buyItem(request):
     """
 
     data = request.body.decode('utf-8') # decode the body to a string
-    print(data)
     requestJson = json.loads(data) # load json from string data
     itemPK = requestJson['itemPk']
 
