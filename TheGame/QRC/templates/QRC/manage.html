@@ -37,20 +37,6 @@
         }
         const csrftoken = getCookie('csrftoken');
 
-        //func to handle logging out
-        function logout() {
-            let xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    // successful execution
-                    reload();
-                }
-            }
-            xhttp.open("GET", "/login/logout", true);
-            xhttp.send();
-            //needs to call the logout endpoint in the login module and destroy the session cookie
-        }
-
         //func to handle cancelling a specific QR code
         function cancel(intID) {
             //needs to call the /deleteRes endoint passing the argument as Int(5)
@@ -131,14 +117,6 @@
 
         //event bindings
     </script>
-    <header>
-        <div class="navbar navbar-dark bg-dark shadow-sm">
-            <div class="container">
-                <img /> <!-- Logo -->
-                <button class="btn btn-danger" onlick="logout()">Log-out</button>
-            </div>
-        </div>
-    </header>
     <main><!-- class="bg-dark text-white"-->
         <div class="py-5 pb-3 text-left">
             <div class="container">
