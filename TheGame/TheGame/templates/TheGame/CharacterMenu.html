@@ -22,31 +22,38 @@
                         <h3>Character</h3>
                     </li>
                     <li>
-                        <form action="{% url 'buyPHealth' %}">
+                        <form action="{% url 'buyPHealth' %}" method="post">
                             {% csrf_token %}
                             <button class="btn buyButton" type="submit">Buy Health</button>
                         </form>
                     </li>
                     <li>
-                        <form action="{% url 'buyPAthletics' %}">
+                        <form action="{% url 'buyPAthletics' %}" method="post">
                             {% csrf_token %}
                             <button class="btn buyButton" type="submit">Buy Athletics</button>
                         </form>
                     </li>
                     <li>
-                        <form action="{% url 'buyPBrain' %}">
+                        <form action="{% url 'buyPBrain' %}" method="post">
                             {% csrf_token %}
                             <button class="btn buyButton" type="submit">Buy Brains</button>
                         </form>
                     </li>
                     <li>
-                        <form action="{% url 'buyPControl' %}">
+                        <form action="{% url 'buyPControl' %}" method="post">
                             {% csrf_token %}
                             <button class="btn buyButton" type="submit">Buy Control</button>
                         </form>
                     </li>
                 </ul>
             </div>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
         </div>
         <div class="col-6 col-md order-2 order-md-3">
             <div class="container-floating stat-highlight">
