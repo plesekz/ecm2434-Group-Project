@@ -21,7 +21,7 @@
                     <h1>Shop</h1>
                     {%for i in allItems%}
                         <input type="hidden" name="itemPk" value={{i.pk}} />
-                        <button class="col-sm-3 top-bar-button" type="submit" onclick="submitData('{{i.pk}}')">
+                        <button class="col-sm-3 top-bar-button" type="submit" onclick="submitData({{i.pk}})">
                             <p>{{i.name}}</p>
                             <p>{{i|safe}}</p>
                             <p>{{i.price}}</p>
@@ -51,12 +51,14 @@
         function submitData(pk)
         {
             let url = "/buyItem/"
+            const csrftoken = getCookie('csrftoken');
 
             let xhr = new XMLHttpRequest();
             xhr.open("POST", url);
 
             xhr.setRequestHeader("Accept", "application/json");
             xhr.setRequestHeader("Content-Type", "application/json");
+            xhttp.setRequestHeader("X-CSRFToken", csrftoken);
 
             xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
