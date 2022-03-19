@@ -94,7 +94,9 @@
                             {% if not message.message == 'xA' %}
                                 {% if not message.message == 'xB' %}
                                     {% if not message.message == 'xC' %}
-                                        <li>{{ message }}</li>
+                                        {% if not message.message == 'Not enough resources' %}
+                                            <li>{{ message }}</li>
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
