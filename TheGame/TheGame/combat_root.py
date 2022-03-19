@@ -5,8 +5,7 @@ from GameState import GameState
 from random import seed, randint
 from action import Action
 
-
-def battle(attacker: Champion, defender: Champion) -> List:
+def battle (attacker : Champion, defender : Champion) -> List:
     seed()
 
     pAtt = preprocess(attacker)
@@ -19,11 +18,11 @@ def battle(attacker: Champion, defender: Champion) -> List:
 
     # resolution
 
-    if(pAtt.attH > 0):
+    if(pAtt.attH>0):
         attacker.pHealth = pAtt.attH
     else:
         attacker.pHealth = 1
-    if(pDef.attH > 0):
+    if(pDef.attH>0):
         defender.pHealth = pDef.attH
     else:
         defender.pHealth = 1
@@ -31,45 +30,42 @@ def battle(attacker: Champion, defender: Champion) -> List:
     # return
     return actions
 
-
-def fight(pAtt: Unit, pDef: Unit):
+def fight(pAtt: Unit, pDef : Unit):
     actions = []
     GS = GameState(10)
 
     if(pDef.glory > pAtt.glory):
-        for action in turn(pDef, pAtt, GS):
+        for action in turn(pDef,pAtt,GS):
             actions.append(action)
     else:
         if(pDef.glory == pAtt.glory):
-            if(randint(0, 1) > 0):
-                for action in turn(pDef, pAtt, GS):
+            if(randint(0,1)>0):
+                for action in turn(pDef,pAtt,GS):
                     actions.append(action)
-
+    
     while(True):
-        if(pAtt.attH <= 0):
+        if(pAtt.attH<=0):
             break
-        for action in turn(pAtt, pDef, GS):
+        for action in turn(pAtt,pDef,GS):
             actions.append(action)
-        if(pDef.attH <= 0):
+        if(pDef.attH<=0):
             break
-        for action in turn(pDef, pAtt, GS):
+        for action in turn(pDef,pAtt,GS):
             actions.append(action)
 
     return actions
 
-
-def decide(active: Unit, other: Unit, GS: GameState):
+def decide(active : Unit, other : Unit, GS : GameState):
     a = None
-    if(active.weapon.range > GS.distance):
-        a = Action("move_closer", 1)
+    if(active.weapon.range>GS.distance):
+        a = Action("move_closer",1)
         return a
-
-    a = Action("attack", active.weapon.ap_cost)
+    
+    a = Action("attack",active.weapon.ap_cost)
 
     return a
 
-
-def turn(active: Unit, other: Unit, GS: GameState) -> List:
+def turn(active : Unit, other : Unit, GS: GameState) -> List:
     finished = False
     actions = []
     active.newTurn()
@@ -90,19 +86,17 @@ def turn(active: Unit, other: Unit, GS: GameState) -> List:
                 finished = True
         actions.append(action)
     return actions
-
-
-def attack(attacker: Unit, weapon: SpecificWeapon,
-           target: Unit, GS: GameState):
+    
+def attack(attacker : Unit, weapon : SpecificWeapon,target : Unit, GS : GameState):
     hits = 0
     a = Action("attack", weapon.ap_cost)
-    if(GS.distance > weapon.range):
-
-        return a.attackResolved([Damage(0, 0)])
+    if(GS.distance>weapon.range):
+        
+        return a.attackResolved([Damage(0,0)])
 
     for _ in range(attacker.getAtt(weapon.associated)):
-        if(randint(0, 1) > 0):
-            hits += 1
+        if(randint(0,1)>0):
+            hits+=1
     if(hits >= target.attA):
         dmgs = []
         for _ in range(weapon.damageInstances):
@@ -110,13 +104,13 @@ def attack(attacker: Unit, weapon: SpecificWeapon,
             dmgs.append(dmg)
     return a.attackResolved(dmgs)
 
-
-def preprocess(character: Champion) -> Unit:
+def preprocess(character : Champion) -> Unit:
     a = character.pAthletics
     b = character.pBrain
     c = character.pControl
     h = character.pHealth
 
+    
     shield = processShield(character)
     armour = processArmour(character)
     glory = processGlory(character)
@@ -127,17 +121,11 @@ def preprocess(character: Champion) -> Unit:
 
     return u
 
-# implement compiling character's shield, armour and glory from their
-# items here
-
-
-def processShield(character: Champion) -> int:
+# implement compiling character's shield, armour and glory from their items here
+    
+def processShield(character : Champion) -> int:
     pass
-
-
-def processArmour(character: Champion) -> int:
+def processArmour(character : Champion) -> int:
     pass
-
-
-def processGlory(character: Champion) -> int:
+def processGlory(character : Champion) -> int:
     pass

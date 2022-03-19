@@ -14,55 +14,31 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='champion',
             name='armour',
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name='armour',
-                to='TheGame.specificitem'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='armour', to='TheGame.specificitem'),
         ),
         migrations.AlterField(
             model_name='champion',
             name='auxItem1',
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name='aux1',
-                to='TheGame.specificitem'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='aux1', to='TheGame.specificitem'),
         ),
         migrations.AlterField(
             model_name='champion',
             name='auxItem2',
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name='aux2',
-                to='TheGame.specificitem'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='aux2', to='TheGame.specificitem'),
         ),
         migrations.AlterField(
             model_name='champion',
             name='auxItem3',
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name='aux3',
-                to='TheGame.specificitem'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='aux3', to='TheGame.specificitem'),
         ),
         migrations.AlterField(
             model_name='champion',
             name='primaryWeapon',
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name='pWeapon',
-                to='TheGame.specificweapon'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='pWeapon', to='TheGame.specificweapon'),
         ),
         migrations.AlterField(
             model_name='champion',
             name='secondaryWeapon',
-            field=models.ForeignKey(
-                null=True,
-                on_delete=django.db.models.deletion.CASCADE,
-                related_name='sWeapon',
-                to='TheGame.specificweapon'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='sWeapon', to='TheGame.specificweapon'),
         ),
     ]

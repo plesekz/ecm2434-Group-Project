@@ -22,10 +22,7 @@ urlpatterns = [
     path('', views.loginPage, name="login"),
     path('register/', views.registerPage, name="register"),
     path('ValidateLogin/', processes.validateLogIn, name="validateLogin"),
-    path(
-        'ValidateRegister/',
-        processes.validateRegister,
-        name="validateRegister"),
-    path('getUser/', processes.getUserPkFromCookie, name="getUserPkFromCookie"),
+    path('ValidateRegister/', processes.validateRegister, name="validateRegister"),
+    path('getUser/' , processes.getUserPkFromCookie, name="getUserPkFromCookie"),
     path('logout/', processes.logoutUser, name="logout")
 ]

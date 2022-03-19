@@ -40,8 +40,5 @@ urlpatterns = [
     path('addBosses/', addNewBossView, name='addNewBoss'),
     path('newBossValidation', processes.addBossToSystem),
     path('addItems/', addNewBaseItemView, name="addNewItem"),
-    path(
-        'validateItem',
-        processes.createNewBaseItemFromHTMLRequest,
-        name='validateItem'),
+    path('validateItem', processes.createNewBaseItemFromHTMLRequest, name='validateItem'),
 ]

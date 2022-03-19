@@ -22,3 +22,4 @@ class QRResource(models.Model):
 
     def __str__(self):
         return str(self.QRID) + str(self.resource)
+     

@@ -5,7 +5,6 @@ from Login.models import Player
 from django.contrib import messages
 from django.shortcuts import redirect
 
-
 def indexPage(request):
     template = loader.get_template("Login/index.html")
 
@@ -14,7 +13,6 @@ def indexPage(request):
     output = template.render(context, request)
 
     return HttpResponse(output)
-
 
 def loginPage(request):
     template = loader.get_template("Login/loginPage.html")
@@ -28,7 +26,6 @@ def loginPage(request):
     output = template.render(context, request)
 
     return HttpResponse(output)
-
 
 def registerPage(request):
     template = loader.get_template("Login/registerPage.html")
