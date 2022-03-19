@@ -192,7 +192,7 @@ def createNewBaseItem(name : str, price : int, type : str,
 
     # create the base item in the database
 
-    if baseItem := BaseItem.objects.filter(name=name).exists():
+    if (baseItem := BaseItem.objects.filter(name=name)).exists():
         return baseItem[0]
 
 
