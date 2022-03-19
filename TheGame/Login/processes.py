@@ -80,7 +80,7 @@ def logoutUser(request):
 
 
 def bake_cookie(usrname):
-    cookie = secrets.token_urlsafe(64)
+    cookie = secrets.token_urlsafe(48)
     return cookie
 
 
