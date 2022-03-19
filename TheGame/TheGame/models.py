@@ -38,7 +38,7 @@ class BaseWeapon(Item):
     ap_cost = models.IntegerField()
 
     def __str__(self):
-        return "BaseWeapon: " + self.name
+        return f"Damage: {self.damageNumber}\nSpeed: {self.damageNumber}\nRange: {self.damageNumber}"
 
 class SpecificWeapon(BaseWeapon):
     level = models.IntegerField()

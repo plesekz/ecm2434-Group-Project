@@ -20,11 +20,10 @@
                 <div class="row justify-content-around">
                     <ul style="list-style-type: none;">
                         {%for i in allItems%}
-                        <li>
-                            <button class="col-sm-4 top-bar-button" onclick="onInventoryButtonClick()">
-                                <h1>{{i.name}}</h1>
-                            </button>
-                        </li>
+                        <button class="col-sm-3 top-bar-button" onclick="onInventoryButtonClick()">
+                            <p>{{i.name}}</p>
+                            <p>{{i}}</p>
+                        </button>
                         {%endfor%}
                     </ul>
                 </div>
