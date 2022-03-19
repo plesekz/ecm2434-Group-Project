@@ -35,7 +35,6 @@ def spendResource(request, rNeeded, amount):
         removeResourceFromUser(getUserFromCookie(request), getResourceByName(rNeeded), amount)
         return True
     except Exception as e:
-        print(e)
         messages.error(request, ('Not enough resources'))
         return False
 
