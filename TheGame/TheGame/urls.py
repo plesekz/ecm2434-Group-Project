@@ -37,5 +37,7 @@ urlpatterns = [
     path('battleSelect/', battleSelectView, name="battleSelect"),
     path('createChampion/', createChampionView, name='createChampion'),
     path('addBosses/', addNewBossView, name='addNewBoss'),
-    path('newBossValidation', processes.addBossToSystem)
+    path('newBossValidation', processes.addBossToSystem),
+    path('addItems/', addNewBaseItemView, name="addNewItem"),
+    path('validateItem', processes.createNewBaseItemFromHTMLRequest, name='validateItem'),
 ]

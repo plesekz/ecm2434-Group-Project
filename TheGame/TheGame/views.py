@@ -149,3 +149,17 @@ def addNewBossView(request):
     output = template.render(context, request)
 
     return HttpResponse(output)
+
+def addNewBaseItemView(request):
+    """ returns html for the page for adding new items
+    """
+
+    template = loader.get_template('TheGame/addNewItemTemplate.html')
+
+    context = {
+
+    }
+
+    output = template.render(context, request)
+
+    return HttpResponse(output)

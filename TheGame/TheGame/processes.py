@@ -3,6 +3,7 @@ from operator import truediv
 from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
+from grpc import StatusCode
 from Login.models import Player
 from Resources.processes import removeResourceFromUser, addResourceToUser, getResourceByName
 from .models import Champion
@@ -400,7 +401,7 @@ def getAllBaseItems() -> "list[Item]":
 
     return itemList
 
-def getAllBaseItems() -> "list[Item]":
+def getAllBaseWeapons() -> "list[Item]":
     """ function that returns a list of all base weapons
 
     returns:
@@ -417,3 +418,32 @@ def getAllBaseItems() -> "list[Item]":
         itemList.append(i)
 
     return itemList
+
+def createNewBaseItemFromHTMLRequest(request):
+    
+    data = request.POST
+
+    if data['itemType'] == "item":
+        createNewBaseItem(
+            name = data['name'],
+            price = data['price'],
+            type = data['type'],
+            armourValue= data['armourValue'],
+            vitalityBoost= data['vitalityBoost'],
+            specialAbilities= data['specialAbilities']
+        )
+    elif data['itemType']:
+        createNewBaseWeapon(
+            name = data['name'],
+            price = data['price'],
+            type = data['type'],
+            damageNumber= data['damageNumber'],
+            damageInstances= data['damageInstances'],
+            range= data['range'],
+            association= data['association'],
+            ap_cost= data['ap_cost']
+        )
+    else:
+        return HttpResponse(StatusCode=501)
+
+    return HttpResponseRedirect('addItems')
