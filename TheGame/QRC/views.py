@@ -6,6 +6,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.template import loader
 import json
+import qrcode
+import os
 
 
 def createRes(request : HttpRequest) -> HttpResponse:
@@ -31,7 +33,27 @@ def createRes(request : HttpRequest) -> HttpResponse:
     if (qrcs := QRC.objects.filter(QRID=qrid)).exists():
         qrc = qrcs[0]
     else:
-        qrc = QRC.objects.create(QRID=int(json_data['codeID']), latitude=float(json_data['latitude']), longitude=float(json_data['longitude']))
+        #generate a new qr code
+        data = json_data['codeID']
+
+        qr = qrcode.QRCode(
+            box_size=15,
+            border=5
+        )
+
+        qr.add_data(data)
+        qr.make(fit=True)
+        
+        qrImage = qr.make_image(fill="black", back_color="white")
+        filepath =  f"QRC/qrImages/{json_data['codeID']}.png"
+        qrImage.save("QRC/static/" + filepath)
+
+        qrc = QRC.objects.create(
+            QRID=int(json_data['codeID']),
+            latitude=float(json_data['latitude']),
+            longitude=float(json_data['longitude']),
+            image = filepath
+        )
     
     # if that resource is already on that qr then update else create a new entry
     if (qrr := QRResource.objects.filter(QRID=qrc, resource=res)).exists():
@@ -59,6 +81,8 @@ def deleteRes(request : HttpRequest) -> HttpResponse:
     qrCode = QRC.objects.get(QRID=qrid)
     if not (qrresources := QRResource.objects.filter(QRID=qrCode)).exists():
         QRC.objects.get(QRID=qrid).delete()
+        # delete image
+        os.remove(f"static/QRC/qrImages/{qrid}.png")
         return HttpResponse(status=201) # A QRResource with the given UID doesn't exist so already 'deleted'
     for qrres in qrresources:
         qrres.delete()
@@ -95,6 +119,7 @@ def retrieveRes(request : HttpRequest) -> HttpResponse:
     except Exception as e:
         print(e)
         return HttpResponse(status=502) # Failed to add resource to user
+    return HttpResponseRedirect('/')
     return HttpResponse(json.dumps(output), status=200)
 
 
@@ -139,7 +164,9 @@ def QR_management(request : HttpRequest) -> HttpResponse:
                 'name': QRCode.QRID,
                 'lat': QRCode.latitude,
                 'lon': QRCode.longitude,
-                'resources': QRResource.objects.filter(QRID=QRCode)
+                'resources': QRResource.objects.filter(QRID=QRCode),
+                'imagePath': QRCode.image,
+                'staticPath': "QRC/qrImages/"
             }
         ) 
     list_of_resources = Resource.objects.all()
