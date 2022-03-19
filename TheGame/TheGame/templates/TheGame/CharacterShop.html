@@ -21,22 +21,14 @@
                     <ul style="list-style-type: none;">
                         {%for i in allItems%}
                         <li>
-                            {{i.0}}: {{i.1}}
                             <button class="col-sm-4 top-bar-button" onclick="onInventoryButtonClick()">
-                                <h1>Inventory</h1>
+                                <h1>{{i.name}}</h1>
                             </button>
                         </li>
                         {%endfor%}
                     </ul>
                 </div>
             </div>
-            {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    <li>{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
         </div>
         <div class="col-6 col-md order-2 order-md-3">
             <div class="container-floating stat-highlight">
