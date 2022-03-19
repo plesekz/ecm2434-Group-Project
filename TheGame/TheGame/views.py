@@ -156,7 +156,7 @@ def addNewBaseItemView(request):
 
     template = loader.get_template('TheGame/addNewItemTemplate.html')
 
-    items = getAllBaseItems()
+    items = getAllBaseItemsAndWeapons()
 
     context = {
         "items": items
