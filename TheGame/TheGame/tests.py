@@ -1,6 +1,5 @@
 from django.test import TestCase, Client
 from TheGame.models import Champion
-from TheGame.models import pStat
 # this function gets the users stats
 from TheGame.processes import getUserFromName
 from Login.models import Player
@@ -118,86 +117,6 @@ class TheGameTestCase(TestCase):
         # make sure damage has increased by one
         self.assertEquals(startDamage + 1, endDamage)
 
-    def test_buy_accuracy(self):
-
-        # get the accuracy before the transaction
-        stats = pStat.objects.get(player=self.pClient)
-        startAccuracy = stats.accuracy
-        # buy accuracy
-        res = self.client.post("/buyaccuracy/")
-        assert res.status_code < 400
-        # get the accuracy after the transaction
-        self.pClient = Player.objects.get(username="testUsername")
-        stats = pStat.objects.get(player=self.pClient)
-
-        endAccuracy = stats.accuracy
-        # make sure accuracy has increased by one
-        self.assertEquals(startAccuracy + 1, endAccuracy)
-
-    def test_buy_attackspeed(self):
-
-        # get the attackspeed before the transaction
-        stats = pStat.objects.get(player=self.pClient)
-        startAttackSpeed = stats.attackSpeed
-        # buy attackspeed
-        res = self.client.post("/buyattackspeed/")
-        assert res.status_code < 400
-        # get the attackspeed after the transaction
-        self.pClient = Player.objects.get(username="testUsername")
-        stats = pStat.objects.get(player=self.pClient)
-
-        endAttackSpeed = stats.attackSpeed
-        # make sure attackspeed has increased by one
-        self.assertEquals(startAttackSpeed + 1, endAttackSpeed)
-
-    def test_buy_ahealth(self):
-
-        # get the health before the transaction
-        stats = pStat.objects.get(player=self.pClient)
-        startHealth = stats.aHealth
-        # buy health
-        res = self.client.post("/buyahealth/")
-        assert res.status_code < 400
-        # get the health after the transaction
-        self.pClient = Player.objects.get(username="testUsername")
-        stats = pStat.objects.get(player=self.pClient)
-
-        endHealth = stats.aHealth
-        # make sure health has increased by one
-        self.assertEquals(startHealth + 1, endHealth)
-
-    def test_buy_atoughness(self):
-
-        # get the toughness before the transaction
-        stats = pStat.objects.get(player=self.pClient)
-        startTougness = stats.aToughness
-        # buy toughness
-        res = self.client.post("/buyatoughness/")
-        assert res.status_code < 400
-        # get the toughness after the transaction
-        self.pClient = Player.objects.get(username="testUsername")
-        stats = pStat.objects.get(player=self.pClient)
-
-        endToughness = stats.aToughness
-        # make sure toughness has increased by one
-        self.assertEquals(startTougness + 1, endToughness)
-
-    def test_buy_aevasion(self):
-
-        # get the evasion before the transaction
-        stats = pStat.objects.get(player=self.pClient)
-        startEvasion = stats.aEvasion
-        # buy evasion
-        res = self.client.post("/buyaevasion/")
-        assert res.status_code < 400
-        # get the evasion after the transaction
-        self.pClient = Player.objects.get(username="testUsername")
-        stats = pStat.objects.get(player=self.pClient)
-
-        endEvasion = stats.aEvasion
-        # make sure evasion has increased by one
-        self.assertEquals(startEvasion + 1, endEvasion)
-
     def test_not_enough_resources(self):
 
         # get the current health
@@ -308,7 +227,7 @@ class ItemTestCase(TestCase):
 
         # now check that we can add specific weapons and give them to champion
 
-        specWeapon = createNewSpecificWeapon(
+        specWeapon = createNewSpecificItem(
             baseWeapon, 5, 2
         )
 

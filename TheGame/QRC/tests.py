@@ -17,43 +17,8 @@ class QrTestCase(TestCase):
 
     def setUp(self):
 
-        # set up a qr code that we can use
-        self.qr1 = QRC.objects.create(
-            QRID=1234,
-            latitude=12.4567,
-            longitude=23.5678,
-        )
+        # create a client that we can use for testing
 
-        # set up some resources
-        self.res1 = Resource.objects.create(
-            name="wood"
-        )
-
-        self.res2 = Resource.objects.create(
-            name="stone"
-        )
-
-        # set up a qr code to test deleting
-        self.qrToDelete = QRC.objects.create(
-            QRID=9876,
-            latitude=12.4567,
-            longitude=23.5678,
-        )
-
-        # give the qr code some resources to delete
-        QRResource.objects.create(
-            QRID=self.qrToDelete,
-            amount=12,
-            resource=self.res1,
-        )
-
-        QRResource.objects.create(
-            QRID=self.qrToDelete,
-            amount=121,
-            resource=self.res1,
-        )
-
-        # create a client to log in to the system
         self.client = Client()
 
         # register the client
@@ -77,6 +42,25 @@ class QrTestCase(TestCase):
                                )
 
         self.client = res.client
+
+        # set up a qr code that we can use
+        self.qr1 = QRC.objects.create(
+            QRID=1234,
+            latitude=12.4567,
+            longitude=23.5678,
+        )
+
+        # set up some resources
+        self.res1 = Resource.objects.create(
+            name="wood"
+        )
+
+        self.res2 = Resource.objects.create(
+            name="stone"
+        )
+
+        # give the qr code some resources to delete
+
 
     def test_qrc_constraints(self):
         """ tests to make sure you cant make invlaid qr codes
@@ -188,24 +172,33 @@ class QrTestCase(TestCase):
         """ function to test deleting resources
         """
 
+        #create a qr to delete
+
+        res = self.client.post("/qr/createRes",
+                                json.dumps({
+                                    'codeID': '56743',
+                                    'latitude': '34.5442',
+                                    'longitude': '42.2563',
+                                    'res1Type': '1',
+                                    'resource1Amount': '65'
+                                }),
+                                content_type='application/json'
+
+                                )
+
         res = self.client.post('/qr/deleteRes',
-                               json.dumps(9876),
+                               json.dumps(56743),
                                content_type='application/json'
                                )
 
         # qr should now have no resources
 
-        assert not QRResource.objects.filter(QRID_id=9876).exists()
+        assert not QRResource.objects.filter(QRID_id=56743).exists()
 
         # now we send the same request and it should delete the qr code from the system
         # as there are no associated resources
 
-        res = self.client.post('/qr/deleteRes',
-                               json.dumps(9876),
-                               content_type='application/json'
-                               )
-
-        assert not QRResource.objects.filter(QRID=9876).exists()
+        assert not QRResource.objects.filter(QRID=56743).exists()
 
     def test_retrieve_resource(self):
         """ function to test that a user can retrieve the resources of a given qr code
