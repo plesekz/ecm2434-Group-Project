@@ -2,7 +2,7 @@ from django.template import loader
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
-from TheGame.processes import getAllBosses, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons
+from TheGame.processes import getAllBaseItems, getAllBosses, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons
 from Resources.processes import getAllUserResources
 
 def homePageView(request : HttpRequest) -> HttpResponse:
@@ -156,8 +156,10 @@ def addNewBaseItemView(request):
 
     template = loader.get_template('TheGame/addNewItemTemplate.html')
 
-    context = {
+    items = getAllBaseItems()
 
+    context = {
+        "items": items
     }
 
     output = template.render(context, request)

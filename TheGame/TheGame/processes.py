@@ -442,7 +442,5 @@ def createNewBaseItemFromHTMLRequest(request):
             association= data['association'],
             ap_cost= data['ap_cost']
         )
-    else:
-        return HttpResponse(StatusCode=501)
 
     return HttpResponseRedirect('addItems')
