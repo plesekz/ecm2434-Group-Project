@@ -143,7 +143,6 @@ def buyItem(request):
     """
 
     data = request.body.decode('utf-8') # decode the body to a string
-    print(data)
     requestJson = json.loads(data) # load json from string data
     itemPK = requestJson['itemPk']
 
@@ -153,6 +152,7 @@ def buyItem(request):
     response = redirect("characterShop")
 
     item = getItemFromPK(itemPK)
+
     if spendResource(request,  'wood', item.price):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
