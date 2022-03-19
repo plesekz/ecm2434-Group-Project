@@ -91,11 +91,13 @@ def characterShop(request : HttpRequest) -> HttpResponse:
     template = loader.get_template('TheGame/CharacterShop.html')
 
     allItems = getAllBaseItemsAndWeapons()
+    resources = getAllUserResources(user)
 
     context = {
         "username" : user.username,
         "champion" : champion,
         "allItems" : allItems,
+        "resources" : resources,
     }
 
     output = template.render(context, request)
