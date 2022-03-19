@@ -71,7 +71,7 @@ def logoutUser(request):
     return response
 
 def bake_cookie(usrname):
-    cookie = secrets.token_urlsafe(64)
+    cookie = secrets.token_urlsafe(48)
     return cookie
 
 def is_game_master(cookie):
