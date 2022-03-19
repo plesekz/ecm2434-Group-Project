@@ -20,9 +20,11 @@ Currently precompiled wasm and js files are included in git, so it will work by 
 
 ### To test
 
+
 `wasm-pack test --firefox --chrome --headless ./TheGame/qr-wasm`
 
 ## Use
+<<<<<<< HEAD
 ### Using DJango runserver
 
 Change directory to `./TheGame` then run `python3 manage.py runserver`
@@ -40,3 +42,6 @@ Change directory to `./TheGame` then run `python3 manage.py runserver`
 Not yet complete
 
 Collect statics using `python3 manage.py collectstatic`
+=======
+
+To run change directory to `./TheGame` then run `python3 manage.py runserver`
