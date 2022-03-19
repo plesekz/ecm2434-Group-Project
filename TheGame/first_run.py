@@ -6,4 +6,14 @@ createNewBaseWeapon("Shiv",0,"weapon",15,1,1,"A",2)
 createNewBaseWeapon("Makeshift rifle", 0,"weapon",12,2,10,"C",2)
 createNewBaseWeapon("Self-taught psionics", 0, "weapon",5,5,5,"B",2)
 
-Resource.
+Resource.objects.create(
+    name = "Circuitry"
+)
+
+Resource.objects.create(
+    name = "books"
+)
+
+Resource.objects.create(
+    name = "machine parts"
+)
