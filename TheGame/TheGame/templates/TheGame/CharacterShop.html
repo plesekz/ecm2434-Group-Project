@@ -8,30 +8,34 @@
 {% block bodyBlock %}
 <div class="container-floating" style="color: white;">
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="container">
                 <div class="stat-highlight">
                     <h1>Character Image</h1>
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="container">
                 <div class="row justify-content-around stat-highlight">
                     <h1>Shop</h1>
                     <ul">
                         {%for i in allItems%}
-                        <button class="col-sm-3 top-bar-button" onclick="onInventoryButtonClick()">
-                            <p>{{i.name}}</p>
-                            <p>{{i|safe}}</p>
-                            <p>{{i.price}}</p>
-                        </button>
+                        <form action="{% url 'buyItem' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="itemPk" value={{i.pk}} />
+                            <button class="col-sm-3 top-bar-button" type="submit">
+                                <p>{{i.name}}</p>
+                                <p>{{i|safe}}</p>
+                                <p>{{i.price}}</p>
+                            </button>
+                        </form>
                         {%endfor%}
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <div class="container">
                 <div class="stat-highlight">
                     <ul>
@@ -47,6 +51,12 @@
         </div>
     </div>
     </div>
+
+    <script>
+        function onBuyButtonClick() {
+            window.location.href = "battle"
+        }
+    </script>
 
   {% endblock%}
 </html>
