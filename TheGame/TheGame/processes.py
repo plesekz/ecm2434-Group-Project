@@ -439,7 +439,7 @@ def createNewBaseItemFromHTMLRequest(request):
             damageNumber= data['damageNumber'],
             damageInstances= data['damageInstances'],
             range= data['range'],
-            associated= data['associated'],
+            association = data['associated'],
             ap_cost= data['ap_cost']
         )
 
