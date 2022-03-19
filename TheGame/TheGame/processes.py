@@ -250,9 +250,9 @@ def createNewSpecificItem(baseItem : BaseItem, startingLevel : int, startingGlor
 
         level = startingLevel,
         glory = startingGlory,
-    )
+        )
 
-    return sw
+        return sw
 
 
 def createNewBaseWeapon(name : str, price : int, type : str,
