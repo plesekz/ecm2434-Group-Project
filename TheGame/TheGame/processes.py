@@ -129,6 +129,22 @@ def buyPControl(request):
 
     return response
 
+def buyItem(request):
+    """ makes a purchase of athlectics from the user
+    """
+    if not request.method == "POST":
+        messages.error(request, ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+    response = redirect("characterMenu")
+    item = request.itemPk
+    if spendResource(request,  'wood', item.price):
+        user = getUserFromCookie(request)
+        userChamp = getChampion(user)
+        userChamp.pAthletics += 1
+        userChamp.save()
+
+    return response
+
 #
 #   THESE ARE THE FUNCTIONS THAT WILL DEAL WITH CREATING AND REMOVING ITEMS
 #
