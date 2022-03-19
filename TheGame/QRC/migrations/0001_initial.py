@@ -16,7 +16,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='QRC',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('QRID', models.PositiveIntegerField()),
                 ('latitude', models.DecimalField(decimal_places=4, max_digits=6)),
                 ('longitude', models.DecimalField(decimal_places=4, max_digits=6)),
@@ -25,10 +26,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='QRResource',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('amount', models.PositiveIntegerField()),
-                ('QRID', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='QRC.qrc')),
-                ('resource', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='Resources.resource')),
+                ('QRID', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='QRC.qrc')),
+                ('resource', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='Resources.resource')),
             ],
         ),
     ]

@@ -8,7 +8,7 @@ from django.template import loader
 import json
 
 
-def createRes(request : HttpRequest) -> HttpResponse:
+def createRes(request: HttpRequest) -> HttpResponse:
     """ function that takes a http request with json body and creates a qr code with an associated resource\n
     Args:
         request(HttpRequest): POST request containing json body with details about a new qrCode
@@ -18,35 +18,42 @@ def createRes(request : HttpRequest) -> HttpResponse:
         500: resource does not exist
     """
 
-    data = request.body.decode('utf-8') # decode the body to a string
-    json_data = json.loads(data) # load json from string data
+    data = request.body.decode('utf-8')  # decode the body to a string
+    json_data = json.loads(data)  # load json from string data
 
     qrid = json_data['codeID']
 
     # make sure the resource exists
-    try : res = Resource.objects.get(pk=int(json_data['res1Type']))
-    except Resource.DoesNotExist : return HttpResponse(status=500)
+    try:
+        res = Resource.objects.get(pk=int(json_data['res1Type']))
+    except Resource.DoesNotExist:
+        return HttpResponse(status=500)
 
     # if qr code exists then use that one else create a new one
     if (qrcs := QRC.objects.filter(QRID=qrid)).exists():
         qrc = qrcs[0]
     else:
-        qrc = QRC.objects.create(QRID=int(json_data['codeID']), latitude=float(json_data['latitude']), longitude=float(json_data['longitude']))
-    
-    # if that resource is already on that qr then update else create a new entry
+        qrc = QRC.objects.create(
+            QRID=int(
+                json_data['codeID']), latitude=float(
+                json_data['latitude']), longitude=float(
+                json_data['longitude']))
+
+    # if that resource is already on that qr then update else create a new
+    # entry
     if (qrr := QRResource.objects.filter(QRID=qrc, resource=res)).exists():
         qrr[0].amount = int(json_data['resource1Amount'])
     else:
-        qrr = QRResource.objects.create(QRID=qrc, resource=res, amount=int(json_data['resource1Amount']))
+        qrr = QRResource.objects.create(
+            QRID=qrc, resource=res, amount=int(
+                json_data['resource1Amount']))
 
     qrc.save()
     qrr.save()
     return HttpResponse(status=200)
-    
 
 
-
-def deleteRes(request : HttpRequest) -> HttpResponse:
+def deleteRes(request: HttpRequest) -> HttpResponse:
     """ function that recieves an http request containing the QRID of a qr code and removes that qr code from the system\n
     Args:
         request(HttpRequest): POST request containing a QRID in the body
@@ -59,13 +66,14 @@ def deleteRes(request : HttpRequest) -> HttpResponse:
     qrCode = QRC.objects.get(QRID=qrid)
     if not (qrresources := QRResource.objects.filter(QRID=qrCode)).exists():
         QRC.objects.get(QRID=qrid).delete()
-        return HttpResponse(status=201) # A QRResource with the given UID doesn't exist so already 'deleted'
+        # A QRResource with the given UID doesn't exist so already 'deleted'
+        return HttpResponse(status=201)
     for qrres in qrresources:
         qrres.delete()
     return HttpResponse(status=200)
 
 
-def retrieveRes(request : HttpRequest) -> HttpResponse:
+def retrieveRes(request: HttpRequest) -> HttpResponse:
     """function that takes HttpRequest with qr code and adds associated resources to user\n
     Args:
         request(HttpRequest): GET request with QRID in the url
@@ -84,7 +92,8 @@ def retrieveRes(request : HttpRequest) -> HttpResponse:
         return HttpResponse(status=501)
 
     if not (qrResources := QRResource.objects.filter(QRID=qrCode)).exists():
-        return HttpResponse(status=501) # A QRResource with the given UID doesn't exist
+        # A QRResource with the given UID doesn't exist
+        return HttpResponse(status=501)
 
     user = getUserFromCookie(request)
     output = []
@@ -94,11 +103,11 @@ def retrieveRes(request : HttpRequest) -> HttpResponse:
             output.append([str(qrResource.resource), qrResource.amount])
     except Exception as e:
         print(e)
-        return HttpResponse(status=502) # Failed to add resource to user
+        return HttpResponse(status=502)  # Failed to add resource to user
     return HttpResponse(json.dumps(output), status=200)
 
 
-def listRes(request : HttpRequest) -> HttpResponse:
+def listRes(request: HttpRequest) -> HttpResponse:
     """function that returns json objects of all qr codes and their associated resources\n
     Args:
         request(HttpRequest): httpRequest
@@ -125,7 +134,8 @@ def listRes(request : HttpRequest) -> HttpResponse:
 
 # Create your views here.
 
-def QR_management(request : HttpRequest) -> HttpResponse:
+
+def QR_management(request: HttpRequest) -> HttpResponse:
     """ function that returns rendered temlpate for QR management page\n
     Args:
         request(HttpRequest): HttpRequest
@@ -141,15 +151,16 @@ def QR_management(request : HttpRequest) -> HttpResponse:
                 'lon': QRCode.longitude,
                 'resources': QRResource.objects.filter(QRID=QRCode)
             }
-        ) 
+        )
     list_of_resources = Resource.objects.all()
     dict = {
-        "active_QR_codes_list" : codes,
-        "list_of_resources" : list_of_resources
+        "active_QR_codes_list": codes,
+        "list_of_resources": list_of_resources
     }
     return render(request, 'QRC/manage.html', dict)
 
-def qr_landing(request : HttpRequest) -> HttpResponse:
+
+def qr_landing(request: HttpRequest) -> HttpResponse:
     """ function that returns rendered template for qr landing page
     Args:
         request(HttpRequest): httpRequest

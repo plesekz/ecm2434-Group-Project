@@ -12,15 +12,16 @@ import json
 
 # Create your tests here.
 
+
 class QrTestCase(TestCase):
 
     def setUp(self):
 
-        #set up a qr code that we can use
+        # set up a qr code that we can use
         self.qr1 = QRC.objects.create(
-            QRID = 1234,
-            latitude = 12.4567,
-            longitude = 23.5678,
+            QRID=1234,
+            latitude=12.4567,
+            longitude=23.5678,
         )
 
         # set up some resources
@@ -34,9 +35,9 @@ class QrTestCase(TestCase):
 
         # set up a qr code to test deleting
         self.qrToDelete = QRC.objects.create(
-            QRID = 9876,
-            latitude = 12.4567,
-            longitude = 23.5678,
+            QRID=9876,
+            latitude=12.4567,
+            longitude=23.5678,
         )
 
         # give the qr code some resources to delete
@@ -55,29 +56,27 @@ class QrTestCase(TestCase):
         # create a client to log in to the system
         self.client = Client()
 
-        #register the client
+        # register the client
         res = self.client.post('/login/ValidateRegister/',
-            {
-                'email': "test@email.com",
-                'username': 'testUsername',
-                'password': 'testPassword',
-                'confirmPassword': 'testPassword'
-            }
-        )
+                               {
+                                   'email': "test@email.com",
+                                   'username': 'testUsername',
+                                   'password': 'testPassword',
+                                   'confirmPassword': 'testPassword'
+                               }
+                               )
         self.client = res.client
 
         # log in the client
 
         res = self.client.post('/login/ValidateLogin/',
-            {
-                'email': 'test@email.com',
-                'password': 'testPassword'
-            }
-        )
+                               {
+                                   'email': 'test@email.com',
+                                   'password': 'testPassword'
+                               }
+                               )
 
         self.client = res.client
-        
-
 
     def test_qrc_constraints(self):
         """ tests to make sure you cant make invlaid qr codes
@@ -85,34 +84,34 @@ class QrTestCase(TestCase):
         # test invalid QRID
         try:
             newQrCode = QRC.objects.create(
-                QRID = -7654321,
-                latitude = 21.3467,
-                longitude = 14.6753,
+                QRID=-7654321,
+                latitude=21.3467,
+                longitude=14.6753,
             )
             assert False
-        except:
+        except BaseException:
             assert True
-        
+
         # test invalid latitude
         try:
             newQrCode = QRC.objects.create(
-                QRID = 7654321,
-                latitude = 212.3467653,
-                longitude = 14.6753,
+                QRID=7654321,
+                latitude=212.3467653,
+                longitude=14.6753,
             )
             assert False
-        except:
+        except BaseException:
             assert True
-        
+
         # test invalid longitude
         try:
             newQrCode = QRC.objects.create(
-                QRID = 7654321,
-                latitude = 21.3467,
-                longitude = 14.6753,
+                QRID=7654321,
+                latitude=21.3467,
+                longitude=14.6753,
             )
             assert False
-        except:
+        except BaseException:
             assert True
 
     def test_creating_qr_resource_link(self):
@@ -124,18 +123,18 @@ class QrTestCase(TestCase):
 
         QRResource.objects.create(
             QRID=self.qr1,
-            resource = self.res1,
-            amount = 12,
+            resource=self.res1,
+            amount=12,
         )
-        
+
         QRResource.objects.create(
             QRID=self.qr1,
-            resource = self.res2,
-            amount = 5,
+            resource=self.res2,
+            amount=5,
         )
 
         # check that the resources have been assigned properly
-        
+
         # check that the amount of resources associated with
         # the qr code is correct
         qrr_set = self.qr1.qrresource_set.all()
@@ -148,7 +147,7 @@ class QrTestCase(TestCase):
         )
 
         self.assertEquals(qrr.amount, 12)
-        
+
         qrr = QRResource.objects.get(
             QRID=self.qr1, resource=self.res2,
         )
@@ -163,26 +162,26 @@ class QrTestCase(TestCase):
 
         # request to make a qr code and add 65 wood to it
         res = c.post("/qr/createRes",
-            json.dumps({
-                'codeID': '56743',
-                'latitude': '34.5442',
-                'longitude': '42.2563',
-                'res1Type': '1',
-                'resource1Amount': '65'
-            }),
-            content_type='application/json'
-            
-        )
+                     json.dumps({
+                         'codeID': '56743',
+                         'latitude': '34.5442',
+                         'longitude': '42.2563',
+                         'res1Type': '1',
+                         'resource1Amount': '65'
+                     }),
+                     content_type='application/json'
+
+                     )
 
         # this should have made and entry in the qrResource database
         # that has the qrCode and the resource linked together
 
         try:
-            #get the qrCode
+            # get the qrCode
             qrc = QRC.objects.get(QRID=56743)
             qrr = QRResource.objects.get(QRID=qrc, resource_id=1)
             assert True
-        except:
+        except BaseException:
             assert False
 
     def test_delete_resource(self):
@@ -190,9 +189,9 @@ class QrTestCase(TestCase):
         """
 
         res = self.client.post('/qr/deleteRes',
-            json.dumps(9876),
-            content_type='application/json'
-        )
+                               json.dumps(9876),
+                               content_type='application/json'
+                               )
 
         # qr should now have no resources
 
@@ -202,12 +201,11 @@ class QrTestCase(TestCase):
         # as there are no associated resources
 
         res = self.client.post('/qr/deleteRes',
-            json.dumps(9876),
-            content_type='application/json'
-        )
+                               json.dumps(9876),
+                               content_type='application/json'
+                               )
 
         assert not QRResource.objects.filter(QRID=9876).exists()
-
 
     def test_retrieve_resource(self):
         """ function to test that a user can retrieve the resources of a given qr code
@@ -216,11 +214,11 @@ class QrTestCase(TestCase):
 
         # create a new qr and give it resource 1
         qr = QRC.objects.create(
-            QRID = 5678,
-            latitude = 12.4567,
-            longitude = 23.5678,
+            QRID=5678,
+            latitude=12.4567,
+            longitude=23.5678,
         )
-        
+
         QRResource.objects.create(
             QRID=qr,
             resource=self.res1,
@@ -235,14 +233,14 @@ class QrTestCase(TestCase):
 
         assert res.status_code < 400
 
-        #check that the user has got the 200 wood
+        # check that the user has got the 200 wood
 
         p = Player.objects.get(username="testUsername")
 
-        assert PlayerResource.objects.filter(player=p, resource=self.res1).exists()
+        assert PlayerResource.objects.filter(
+            player=p, resource=self.res1).exists()
 
         assert (self.res1, 200) in getAllUserResources(p)
-
 
     def test_list_resource(self):
         """ function to test if resources are listed correctly
