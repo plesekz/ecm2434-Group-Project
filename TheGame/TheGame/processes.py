@@ -9,7 +9,6 @@ from .models import Champion
 from Login.processes import getUserFromCookie
 from Login.models import Player
 from Resources.models import PlayerResource, Resource
-
 from TheGame.models import *
 
 def getUserFromName(request):
