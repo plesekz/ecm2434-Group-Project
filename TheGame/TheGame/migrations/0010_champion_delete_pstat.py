@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Champion',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50, null=True)),
                 ('pHealth', models.PositiveIntegerField(default=100)),
                 ('pToughness', models.PositiveIntegerField(default=1)),
@@ -26,7 +27,8 @@ class Migration(migrations.Migration):
                 ('aHealth', models.PositiveIntegerField(default=0)),
                 ('aToughness', models.PositiveIntegerField(default=0)),
                 ('aEvasion', models.PositiveIntegerField(default=0)),
-                ('player', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Login.player')),
+                ('player', models.ForeignKey(
+                    null=True, on_delete=django.db.models.deletion.CASCADE, to='Login.player')),
             ],
         ),
         migrations.DeleteModel(

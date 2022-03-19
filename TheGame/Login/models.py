@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Player(models.Model):
     userID = models.CharField(max_length=64)
     role = models.CharField(max_length=16)

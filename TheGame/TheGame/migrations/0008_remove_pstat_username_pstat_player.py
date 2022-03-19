@@ -19,7 +19,8 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='pstat',
             name='player',
-            field=models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, to='Login.player'),
+            field=models.ForeignKey(
+                default=0, on_delete=django.db.models.deletion.CASCADE, to='Login.player'),
             preserve_default=False,
         ),
     ]

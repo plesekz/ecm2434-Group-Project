@@ -9,18 +9,22 @@ from django.contrib import messages
 from django.db.models import Q
 import hashlib
 
+
 def validateLogIn(request):
     if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
+        messages.error(
+            request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     _email = request.POST['email']
     _username = request.POST['email']
     _password = hashlib.sha256(request.POST['password'].encode()).hexdigest()
     response = redirect("login")
 
-    if Player.objects.filter(email=_email).exists() or Player.objects.filter(username=_username).exists():
+    if Player.objects.filter(email=_email).exists(
+    ) or Player.objects.filter(username=_username).exists():
         try:
-            query = ((Q(username=_username) | Q(email=_email)) & Q(password=_password))
+            query = ((Q(username=_username) | Q(email=_email))
+                     & Q(password=_password))
             user = Player.objects.get(query)
             if user is not None:
                 messages.success(request, ('Logged in'))
@@ -36,11 +40,13 @@ def validateLogIn(request):
 
     return response
 
+
 def validateRegister(request):
     response = redirect("register")
     if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
-        #return "failed to process, please use POST method"
+        messages.error(
+            request, ('Something went wrong, please try again later'))
+        # return "failed to process, please use POST method"
         return response
 
     _email = request.POST['email']
@@ -54,8 +60,9 @@ def validateRegister(request):
         return response
 
     cookie = bake_cookie(_username)
-    form = Player(email=_email, username=_username, password=_password, userID=cookie, role='user')
-    championForm = Champion(player = form, name = _username)
+    form = Player(email=_email, username=_username,
+                  password=_password, userID=cookie, role='user')
+    championForm = Champion(player=form, name=_username)
 
     response.set_cookie('TheGameSessionID', cookie)
 
@@ -65,14 +72,17 @@ def validateRegister(request):
     messages.success(request, ('Successfully registered'))
     return response
 
+
 def logoutUser(request):
     response = HttpResponseRedirect('/login')
     response.delete_cookie('TheGameSessionID')
     return response
 
+
 def bake_cookie(usrname):
     cookie = secrets.token_urlsafe(64)
     return cookie
+
 
 def is_game_master(cookie):
     try:
@@ -83,11 +93,13 @@ def is_game_master(cookie):
     except Exception as e:
         return False
 
+
 def getUserPkFromCookie(request):
     cookie = request.COOKIES.get('TheGameSessionID')
     query = Q(userID=cookie)
     user = Player.objects.get(query)
     return user.pk
+
 
 def getUserFromCookie(request):
     cookie = request.COOKIES.get('TheGameSessionID')

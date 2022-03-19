@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from TheGame.models import pStat
-from TheGame.processes import getUserFromName #this function gets the users stats
+# this function gets the users stats
+from TheGame.processes import getUserFromName
 from Login.models import Player
 from Resources.processes import addResourceToUser
 from Resources.models import PlayerResource, Resource
@@ -14,28 +15,28 @@ class TheGameTestCase(TestCase):
             email="placeholder@email.com",
             password="passWrd",
         )
-        
+
         # create a client to use in the tests
         self.client = Client()
 
         res = self.client.post('/login/ValidateRegister/',
-            {
-                'email': "test@email.com",
-                'username': 'testUsername',
-                'password': 'testPassword',
-                'confirmPassword': 'testPassword'
-            }
-        )
+                               {
+                                   'email': "test@email.com",
+                                   'username': 'testUsername',
+                                   'password': 'testPassword',
+                                   'confirmPassword': 'testPassword'
+                               }
+                               )
         self.client = res.client
 
         # log in the client
 
         res = self.client.post('/login/ValidateLogin/',
-            {
-                'email': 'test@email.com',
-                'password': 'testPassword'
-            }
-        )
+                               {
+                                   'email': 'test@email.com',
+                                   'password': 'testPassword'
+                               }
+                               )
 
         self.client = res.client
         # get the object for the player that the client is logged in as
@@ -43,21 +44,19 @@ class TheGameTestCase(TestCase):
 
         # create some resources
         self.res1 = Resource.objects.create(name="wood")
-        self.res2 = Resource.objects.create(name="stone")        
+        self.res2 = Resource.objects.create(name="stone")
         self.res3 = Resource.objects.create(name="iron")
         # give the player resources to spend on the upgrades
         addResourceToUser(self.pClient, self.res1, 100)
         addResourceToUser(self.pClient, self.res2, 100)
         addResourceToUser(self.pClient, self.res3, 100)
-        
-
 
     def test_buy_phealth(self):
 
         # get the health before the transaction
         stats = pStat.objects.get(player=self.pClient)
         startHealth = stats.pHealth
-        #buy health
+        # buy health
         res = self.client.post("/buyphealth/")
         assert res.status_code < 400
         # get the health after the transaction
@@ -68,13 +67,12 @@ class TheGameTestCase(TestCase):
         # make sure health has increased by one
         self.assertEquals(startHealth + 1, endHealth)
 
-
     def test_buy_ptoughness(self):
 
         # get the toughness before the transaction
         stats = pStat.objects.get(player=self.pClient)
         startTougness = stats.pToughness
-        #buy toughness
+        # buy toughness
         res = self.client.post("/buyptoughness/")
         assert res.status_code < 400
         # get the toughness after the transaction
@@ -90,7 +88,7 @@ class TheGameTestCase(TestCase):
         # get the evasion before the transaction
         stats = pStat.objects.get(player=self.pClient)
         startEvasion = stats.pEvasion
-        #buy evasion
+        # buy evasion
         res = self.client.post("/buypevasion/")
         assert res.status_code < 400
         # get the evasion after the transaction
@@ -106,7 +104,7 @@ class TheGameTestCase(TestCase):
         # get the damage before the transaction
         stats = pStat.objects.get(player=self.pClient)
         startDamage = stats.damage
-        #buy damage
+        # buy damage
         res = self.client.post("/buydamage/")
         assert res.status_code < 400
         # get the damage after the transaction
@@ -122,7 +120,7 @@ class TheGameTestCase(TestCase):
         # get the accuracy before the transaction
         stats = pStat.objects.get(player=self.pClient)
         startAccuracy = stats.accuracy
-        #buy accuracy
+        # buy accuracy
         res = self.client.post("/buyaccuracy/")
         assert res.status_code < 400
         # get the accuracy after the transaction
@@ -138,7 +136,7 @@ class TheGameTestCase(TestCase):
         # get the attackspeed before the transaction
         stats = pStat.objects.get(player=self.pClient)
         startAttackSpeed = stats.attackSpeed
-        #buy attackspeed
+        # buy attackspeed
         res = self.client.post("/buyattackspeed/")
         assert res.status_code < 400
         # get the attackspeed after the transaction
@@ -154,7 +152,7 @@ class TheGameTestCase(TestCase):
         # get the health before the transaction
         stats = pStat.objects.get(player=self.pClient)
         startHealth = stats.aHealth
-        #buy health
+        # buy health
         res = self.client.post("/buyahealth/")
         assert res.status_code < 400
         # get the health after the transaction
@@ -170,7 +168,7 @@ class TheGameTestCase(TestCase):
         # get the toughness before the transaction
         stats = pStat.objects.get(player=self.pClient)
         startTougness = stats.aToughness
-        #buy toughness
+        # buy toughness
         res = self.client.post("/buyatoughness/")
         assert res.status_code < 400
         # get the toughness after the transaction
@@ -186,7 +184,7 @@ class TheGameTestCase(TestCase):
         # get the evasion before the transaction
         stats = pStat.objects.get(player=self.pClient)
         startEvasion = stats.aEvasion
-        #buy evasion
+        # buy evasion
         res = self.client.post("/buyaevasion/")
         assert res.status_code < 400
         # get the evasion after the transaction
@@ -212,9 +210,10 @@ class TheGameTestCase(TestCase):
         stats = pStat.objects.get(player=self.pClient)
         endHealth = stats.pHealth
 
-        # make sure that the health is only +100 beacuse thats how much wood they were given
+        # make sure that the health is only +100 beacuse thats how much wood
+        # they were given
         self.assertEquals(startHealth + 100, endHealth)
         # check that they have no wood
-        playerRes = PlayerResource.objects.get(player=self.pClient, resource=self.res1)
+        playerRes = PlayerResource.objects.get(
+            player=self.pClient, resource=self.res1)
         self.assertEquals(playerRes.amount, 0)
-        
