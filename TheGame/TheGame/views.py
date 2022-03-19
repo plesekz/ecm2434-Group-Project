@@ -24,7 +24,6 @@ def homePageView(request: HttpRequest) -> HttpResponse:
     context = {
         "user": user,
         "champion": champion,
-        "stats": stats,
         "resources": resources
     }
 
