@@ -136,8 +136,8 @@ def buyItem(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    item = getItemFromPK(request.itemPk)
-    if spendResource(request, 'wood', item.price):
+    item = getItemFromPK(request.POST['itemPk'])
+    if spendResource(request,  'wood', item.price):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.auxItem1 = item
