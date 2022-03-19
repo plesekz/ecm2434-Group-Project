@@ -259,6 +259,24 @@ def createNewSpecificWeapon(baseWeapon : BaseItem, startingLevel : int, starting
 
     return sw
 
+def getBaseItemFromName(name : str) -> Item:
+    """ function that will return the base item model from its name
+    this can be used to get a weapon or item
+
+    Args:
+        name(str): the name of the item that you want
+
+    returns:
+        Item: this will be an instance of BaseItem or BaseWeapon depending on the item
+        returns None if the item doesnt exist
+    """
+
+    # get the item
+    if item := Item.get(instance_of=BaseItem, name=name):
+        return item
+
+    return None
+
 def addItemToChampion(item : Item, champion : Champion):
     if not (isinstance(item, SpecificItem) or isinstance(item, SpecificWeapon)):
         raise Exception("item must be a specific item or weapon")
