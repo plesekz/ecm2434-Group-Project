@@ -274,7 +274,7 @@ def createNewBaseWeapon(name : str, price : int, type : str,
 
     # create the base weapon instance
 
-    if bw := BaseWeapon.objects.filter(name=name).exists():
+    if (bw := BaseWeapon.objects.filter(name=name)).exists():
         return bw[0]
 
     bw = BaseWeapon.objects.create(
