@@ -9,6 +9,7 @@ from .models import Champion
 from Login.processes import getUserFromCookie
 from Login.models import Player
 from Resources.models import PlayerResource, Resource
+from django.db.models import Q
 from TheGame.models import *
 
 def getUserFromName(request):
@@ -362,3 +363,21 @@ def removeBaseItemOrWeapon(item : Item):
         i.remove()
 
     item.remove()
+
+def getAllBaseItemsAndWeapons() -> "list[Item]":
+    """ function that returns a list of all base items and weapons
+
+    returns:
+        list of all base items and weapons in the system
+    """
+
+    query = Q(instance_of=BaseItem) | Q(instance_of=BaseWeapon)
+
+    if not (items := Item.objects.filter(query)).exist():
+        return None
+
+    itemList = []
+    for i in items:
+        itemList.append(i)
+
+    return itemList
