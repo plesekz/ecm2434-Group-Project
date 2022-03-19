@@ -32,6 +32,7 @@ urlpatterns = [
     path('buyPAthletics/', processes.buyPAthletics, name="buyPAthletics"),
     path('buyPBrain/', processes.buyPBrain, name="buyPBrain"),
     path('buyPControl/', processes.buyPControl, name="buyPControl"),
+    path('buyItem/', processes.buyItem, name="buyItem"),
     path('battleSelect/battle', battle.callBattle, name="battleSelect/battle"),
     path('login/', include("Login.urls")),
     path('battleSelect/', battleSelectView, name="battleSelect"),

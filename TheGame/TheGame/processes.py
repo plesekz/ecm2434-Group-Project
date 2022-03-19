@@ -152,11 +152,11 @@ def buyItem(request):
         messages.error(request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    item = request.itemPk
+    item = getItemFromPK(request.itemPk)
     if spendResource(request,  'wood', item.price):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
-        userChamp.pAthletics += 1
+        userChamp.auxItem1 = item
         userChamp.save()
 
     return response
@@ -165,6 +165,12 @@ def buyItem(request):
 #   THESE ARE THE FUNCTIONS THAT WILL DEAL WITH CREATING AND REMOVING ITEMS
 #
 
+def getItemFromPK(pk : int) -> Item:
+
+    if item := Item.objects.get(pk=pk):
+        return item
+
+    return None
 
 def createNewBaseItem(name: str, price: int, type: str,
                       armourValue: int, vitalityBoost: int, specialAbilities: str) -> BaseItem:
