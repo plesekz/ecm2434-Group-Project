@@ -158,7 +158,7 @@ def buyItem(request):
     if spendResource(request, 'wood', item.price):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
-        addItemToChampion(item, userChamp)
+        addItemToChampion(createNewSpecificItem(item, 0, 0), userChamp)
 
     return response
 

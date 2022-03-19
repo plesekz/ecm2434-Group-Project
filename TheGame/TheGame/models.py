@@ -45,7 +45,7 @@ class SpecificWeapon(BaseWeapon):
     glory = models.IntegerField()
 
     def __str__(self):
-        return "SpecificWeapon: " + self.name + ", lvl: " + str(self.level)
+        return f"Damage: {self.damageNumber}<br>Speed: {self.damageNumber}<br>Range: {self.damageNumber}<br>AP Cost: {self.ap_cost}<br>Level: {self.level}"
 
 class Champion(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
