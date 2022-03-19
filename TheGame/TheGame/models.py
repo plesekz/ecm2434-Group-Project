@@ -7,7 +7,7 @@ from polymorphic.models import PolymorphicModel
 
 class Item(PolymorphicModel):
     name = models.CharField(max_length=50)
-    price = models.CharField(max_length=50)
+    price = models.IntegerField()
     type = models.CharField(max_length=50)
 
     def __str__(self):

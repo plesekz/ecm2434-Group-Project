@@ -35,6 +35,7 @@ def spendResource(request, rNeeded, amount):
         removeResourceFromUser(getUserFromCookie(request), getResourceByName(rNeeded), amount)
         return True
     except Exception as e:
+        print(e)
         messages.error(request, ('Not enough resources'))
         return False
 
@@ -192,7 +193,9 @@ def createNewBaseItem(name : str, price : int, type : str,
 
     # create the base item in the database
 
-    if (baseItem := BaseItem.objects.filter(name=name)).exists():
+    query = ~Q(instance_of=SpecificItem) & Q(name=name)
+
+    if (baseItem := BaseItem.objects.filter(query)).exists():
         return baseItem[0]
 
 
@@ -274,7 +277,9 @@ def createNewBaseWeapon(name : str, price : int, type : str,
 
     # create the base weapon instance
 
-    if (bw := BaseWeapon.objects.filter(name=name)).exists():
+    query = ~Q(instance_of=SpecificWeapon) & Q(name=name)
+
+    if (bw := BaseWeapon.objects.filter(query)).exists():
         return bw[0]
 
     bw = BaseWeapon.objects.create(
