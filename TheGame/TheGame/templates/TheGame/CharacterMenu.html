@@ -26,31 +26,79 @@
                             {% csrf_token %}
                             <button class="btn buyButton" type="submit">Buy Health</button>
                         </form>
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.message == 'xH' %}
+                                <div class = "alert alert-danger alert-dismissible fade show">
+                                    Not enough resources to buy Health.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </li>
                     <li>
                         <form action="{% url 'buyPAthletics' %}" method="post">
                             {% csrf_token %}
                             <button class="btn buyButton" type="submit">Buy Athletics</button>
                         </form>
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.message == 'xA' %}
+                                <div class = "alert alert-danger alert-dismissible fade show">
+                                    Not enough resources to buy Athletics.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </li>
                     <li>
                         <form action="{% url 'buyPBrain' %}" method="post">
                             {% csrf_token %}
                             <button class="btn buyButton" type="submit">Buy Brains</button>
                         </form>
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.message == 'xB' %}
+                                <div class = "alert alert-danger alert-dismissible fade show">
+                                    Not enough resources to buy Brain.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </li>
                     <li>
                         <form action="{% url 'buyPControl' %}" method="post">
                             {% csrf_token %}
                             <button class="btn buyButton" type="submit">Buy Control</button>
                         </form>
+                        {% if messages %}
+                            {% for message in messages %}
+                                {% if message.message == 'xC' %}
+                                <div class = "alert alert-danger alert-dismissible fade show">
+                                    Not enough resources to buy Control.
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
                     </li>
                 </ul>
             </div>
             {% if messages %}
                 <ul class="messages">
                     {% for message in messages %}
-                    <li>{{ message }}</li>
+                        {% if not message.message == 'xH' %}
+                            {% if not message.message == 'xA' %}
+                                {% if not message.message == 'xB' %}
+                                    {% if not message.message == 'xC' %}
+                                        <li>{{ message }}</li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                     {% endfor %}
                 </ul>
             {% endif %}

@@ -81,6 +81,8 @@ def buyPHealth(request):
         userChamp = getChampion(user)
         userChamp.pHealth += 1
         userChamp.save()
+    else:
+        messages.error(request, ('xH'))
 
     return response
 
@@ -97,6 +99,8 @@ def buyPAthletics(request):
         userChamp = getChampion(user)
         userChamp.pAthletics += 1
         userChamp.save()
+    else:
+        messages.error(request, ('xA'))
 
     return response
 
@@ -112,6 +116,8 @@ def buyPBrain(request):
         userChamp = getChampion(user)
         userChamp.pBrain += 1
         userChamp.save()
+    else:
+        messages.error(request, ('xB'))
 
     return response
 
@@ -127,6 +133,8 @@ def buyPControl(request):
         userChamp = getChampion(user)
         userChamp.pControl += 1
         userChamp.save()
+    else:
+        messages.error(request, ('xC'))
 
     return response
 
