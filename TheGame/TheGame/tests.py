@@ -247,3 +247,39 @@ class ItemTestCase(TestCase):
 
         self.assertEqual(ci.item, specWeapon)
         self.assertEqual(ci.champion, mychamp)
+
+        # make sure you cannot give a base item to a champion
+
+        try:
+            addItemToChampion(baseWeapon, mychamp)
+            assert False
+        except Exception:
+            assert True
+
+        # test the getter functions
+
+        items = getChampionsItemsAndWeapons(mychamp)
+
+        self.assertEqual(items[0], specWeapon)
+
+        # test that we can get all the base items without getting the other ones
+
+        baseItemsList = getAllBaseItemsAndWeapons() #should return a list of only the base weapon that was added
+
+        # there should only be one base item because the other one is a specific item
+        # this item should be the base weapon that we created
+        self.assertEquals(len(baseItemsList), 1)
+        self.assertEquals(baseItemsList[0], baseWeapon)
+
+        # check that the returning functions will return the same thing
+        # they should be the same because we have only added a weapon
+
+        self.assertEqual(
+            getChampionsWeapons(mychamp), getChampionsItemsAndWeapons(mychamp)
+        )
+
+        # make sure that we get an empty list if we have no items
+
+        self.assertEqual(
+            getChampionsItems(mychamp), None
+        )

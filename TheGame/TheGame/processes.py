@@ -532,14 +532,17 @@ def getChampionsItems(champion: Champion) -> "list[Item]":
     """
 
     if not (champItems := ChampionItems.objects.filter(
-            champion=champion).exists()):
+            champion=champion)).exists():
         return None
 
     itemList = []
 
     for ci in champItems:
-        if isinstance(ci, SpecificItem):
+        if isinstance(ci.item, SpecificItem):
             itemList.append(ci.item)
+
+    if itemList == []:
+        return None
 
     return itemList
 
@@ -554,14 +557,17 @@ def getChampionsWeapons(champion: Champion) -> "list[Item]":
     """
 
     if not (champItems := ChampionItems.objects.filter(
-            champion=champion).exists()):
+            champion=champion)).exists():
         return None
 
     itemList = []
 
     for ci in champItems:
-        if isinstance(ci, SpecificWeapon):
+        if isinstance(ci.item, BaseWeapon):
             itemList.append(ci.item)
+
+    if itemList == []:
+        return None
 
     return itemList
 
@@ -571,7 +577,7 @@ def removeBaseItemOrWeapon(item: Item):
     any specific instances of that item
     """
 
-    if not (isinstance(item, BaseItem) or isinstance(item, BaseWeapon)):
+    if isinstance(item, SpecificItem) or isinstance(item, SpecificWeapon):
         raise Exception("item was not a base item or weapon")
 
     instances = SpecificItem.objects.filter(name=item.name)
