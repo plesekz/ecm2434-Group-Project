@@ -5,18 +5,22 @@
 sets up the different sprites
 character is the bounding box, the default position is entirely within it
 -->*/
+#arena {
+    position: relative;
+    background-color: gold;
+}
 
 #leftCharacter {
     width: 384px;
     height: 768px;
-    position: relative; 
+    position: absolute; 
 }
 #lArm {
     width: 768px;
     height: 768px;
     position: absolute;
     z-index:-1;
-    background:url(sprites/psionic/arm.png);
+    background:url(sprites/hacker/arm.png);
 }
 #lWeapon {
     width: 768px;
@@ -29,7 +33,7 @@ character is the bounding box, the default position is entirely within it
     height: 768px;
     position: absolute;
     z-index:-4;
-    background:url(sprites/psionic/body.png);
+    background:url(sprites/hacker/body.png);
 }
 #lArmour {
     width: 384px;
@@ -38,18 +42,66 @@ character is the bounding box, the default position is entirely within it
     z-index:-3;
 }
 
+#rightCharacter {
+    width: 384px;
+    height: 768px;
+    position: absolute;
+}
+#rArm {
+    width: 768px;
+    height: 768px;
+    position: absolute;
+    z-index:-1;
+    background:url(sprites/hacker/arm.png);
+    transform: scaleX(-1);
+}
+#rWeapon {
+    width: 768px;
+    height: 768px;
+    position: absolute;
+    z-index:-2;
+    transform: scaleX(-1);
+}
+#rBody {
+    width: 384px;
+    height: 768px;
+    position: absolute;
+    z-index:-4;
+    background:url(sprites/hacker/body.png);
+    transform: scaleX(-1);
+}
+#rArmour {
+    width: 384px;
+    height: 768px;
+    position: absolute;
+    z-index:-3;
+    transform: scaleX(-1);
+}
+
 </style>
 <body>
     <p>
         <!--buttons, for testing-->
         <button onclick="setup()">Setup</button> 
         <button onclick="leftAttack()">leftAttack</button>
+        <button onclick="rightAttack()">rightAttack</button>
     </p>
-    <div id ="leftCharacter">
-        <div id ="lBody"></div>
-        <div id ="lArmour"></div>
-        <div id ="lWeapon"></div>
-        <div id ="lArm"></div>
+    <div></div>
+    <!-- health bars -->
+    <div id="arena">
+        <div id ="leftCharacter">
+            <div id ="lBody"></div>
+            <div id ="lArmour"></div>
+            <div id ="lWeapon"></div>
+            <div id ="lArm"></div>
+        </div>
+    
+        <div id ="rightCharacter">
+            <div id ="rBody"></div>
+            <div id ="rArmour"></div>
+            <div id ="rWeapon"></div>
+            <div id ="rArm"></div>
+        </div>
     </div>
     
     <script>
@@ -62,8 +114,13 @@ character is the bounding box, the default position is entirely within it
         
         function setup() {
             //variables 
+            var battle = document.getElementById("arena");
             var lcharacter = document.getElementById("leftCharacter");
-            var larm = document.getElementById("lArm");
+            var larm = document.getElementById("lArm"); 
+            var rcharacter = document.getElementById("rightCharacter");
+            var rarm = document.getElementById("rArm");
+            
+            battle.style.top = '30px';
             
             //for each part, it is placed in the default position           
             lcharacter.style.top = '0px';
@@ -71,6 +128,14 @@ character is the bounding box, the default position is entirely within it
             larm.style.top = '-160px'; 
             larm.style.left = '-208px';
             larm.style.transform = 'rotate(60deg)';
+            
+            rcharacter.style.top = '0px';
+            rcharacter.style.right = '0px';
+            rarm.style.top = '-160px'; 
+            rarm.style.left = '-176px';
+            rarm.style.transform = 'scaleX(-1) rotate(60deg)';
+            
+            
         }
         
         
@@ -131,16 +196,18 @@ character is the bounding box, the default position is entirely within it
                 pos-=4;
                 character.style.left = pos + 'px';
                 await sleep(5);
-            }
+             
             
             animating = false;
+            
+            return true;
         }
         async function rightAttack() {
         
             //variables
-            var character = document.getElementById("leftCharacter");
-            var arm = document.getElementById("lArm");
-            var weapon = document.getElementById("lWeapon");
+            var character = document.getElementById("rightCharacter");
+            var arm = document.getElementById("rArm");
+            var weapon = document.getElementById("rWeapon");
             pos = 0;
             deg = 60;
             
@@ -152,7 +219,7 @@ character is the bounding box, the default position is entirely within it
             //move forward
             while (pos < 320) {
                 pos+=4;
-                character.style.left = pos + 'px';
+                character.style.right = pos + 'px';
                 await sleep(5);
             }
             
@@ -162,7 +229,7 @@ character is the bounding box, the default position is entirely within it
                     deg = -39;
                 }
                 deg-=1;
-                arm.style.transform = 'rotate(' + deg + 'deg)';
+                arm.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
                 await sleep(5);
             }
             
@@ -172,7 +239,7 @@ character is the bounding box, the default position is entirely within it
                     deg = 88;
                 }
                 deg+=2;
-                arm.style.transform = 'rotate(' + deg + 'deg)';
+                arm.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
                 await sleep(5);
             }
             
@@ -182,18 +249,20 @@ character is the bounding box, the default position is entirely within it
                     deg = 59;
                 }
                 deg-=1;
-                arm.style.transform = 'rotate(' + deg + 'deg)';
+                arm.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
                 await sleep(5);
             }
             
             //move back
             while (pos > 0) {
                 pos-=4;
-                character.style.left = pos + 'px';
+                character.style.right = pos + 'px';
                 await sleep(5);
             }
             
             animating = false;
+            
+            return true;
         }
 
         
