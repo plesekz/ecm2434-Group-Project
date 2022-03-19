@@ -431,6 +431,7 @@ def createNewBaseItemFromHTMLRequest(request):
             vitalityBoost= data['vitalityBoost'],
             specialAbilities= data['specialAbilities']
         )
+        
     elif data['itemType']:
         createNewBaseWeapon(
             name = data['name'],
