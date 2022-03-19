@@ -137,7 +137,7 @@ def buyItem(request):
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
     item = getItemFromPK(request.itemPk)
-    if spendResource(request,  'wood', item.price):
+    if spendResource(request, 'wood', item.price):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.auxItem1 = item
@@ -155,7 +155,7 @@ def getItemFromPK(pk : int) -> Item:
         return item
 
     return None
-    
+
 def createNewBaseItem(name : str, price : int, type : str,
     armourValue : int, vitalityBoost : int, specialAbilities : str) -> BaseItem:
 
