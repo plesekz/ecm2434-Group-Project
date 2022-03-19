@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'QRC',
+    'QRC',
     'TheGame',
     'Login',
     'Resources',
@@ -134,12 +134,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # add media roots
 
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 # get the hostname
 try:
     HOSTNAME = socket.gethostname()
-except:
+except BaseException:
     HOSTNAME = 'localhost'
-

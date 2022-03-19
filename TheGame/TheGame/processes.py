@@ -13,6 +13,7 @@ from Resources.models import PlayerResource, Resource
 from django.db.models import Q
 from TheGame.models import *
 
+
 def getUserFromName(request):
     """ returns a users stat block,
     you should probably use getChampion instead
@@ -21,7 +22,8 @@ def getUserFromName(request):
     userStats = Champion.objects.get(player=user)
     return userStats
 
-def getChampion(player : Player) -> Champion:
+
+def getChampion(player: Player) -> Champion:
     if not (champs := Champion.objects.filter(player=player)).exists():
         return None
 
@@ -32,7 +34,10 @@ def spendResource(request, rNeeded, amount):
     """ spends a requested amount of a resource from a user
     """
     try:
-        removeResourceFromUser(getUserFromCookie(request), getResourceByName(rNeeded), amount)
+        removeResourceFromUser(
+            getUserFromCookie(request),
+            getResourceByName(rNeeded),
+            amount)
         return True
     except Exception as e:
         messages.error(request, ('Not enough resources'))
@@ -51,7 +56,8 @@ def getAllBosses() -> "list[Champion]":
 
     return bossList
 
-def addBossToSystem(request : HttpRequest):
+
+def addBossToSystem(request: HttpRequest):
     if not request.method == "POST":
         return HttpResponse("failed to perform operation")
 
@@ -59,11 +65,11 @@ def addBossToSystem(request : HttpRequest):
 
     Champion.objects.create(
         player=None,
-        name = statInfo['name'],
-        pHealth =  statInfo['pHealth'],
-        pAthletics = statInfo['pAthletics'],
-        pBrain = statInfo['pBrain'],
-        pControl = statInfo['pControl'],
+        name=statInfo['name'],
+        pHealth=statInfo['pHealth'],
+        pAthletics=statInfo['pAthletics'],
+        pBrain=statInfo['pBrain'],
+        pControl=statInfo['pControl'],
     )
 
     return HttpResponseRedirect('addBosses')
@@ -73,10 +79,12 @@ def buyPHealth(request):
     """ makes a purchase of aEvasion from the user
     """
     if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
+    if spendResource(request, 'wood', 1):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.pHealth += 1
@@ -91,10 +99,12 @@ def buyPAthletics(request):
     """ makes a purchase of athlectics from the user
     """
     if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
+    if spendResource(request, 'wood', 1):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.pAthletics += 1
@@ -104,14 +114,17 @@ def buyPAthletics(request):
 
     return response
 
+
 def buyPBrain(request):
     """ makes a purchase of brains from the user
     """
     if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
+    if spendResource(request, 'wood', 1):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.pBrain += 1
@@ -121,14 +134,17 @@ def buyPBrain(request):
 
     return response
 
+
 def buyPControl(request):
     """ makes a purchase of control from the user
     """
     if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request,  'wood', 1):
+    if spendResource(request, 'wood', 1):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.pControl += 1
@@ -138,16 +154,19 @@ def buyPControl(request):
 
     return response
 
+
 def buyItem(request):
     """ makes a purchase of an item for the user
     """
 
-    data = request.body.decode('utf-8') # decode the body to a string
-    requestJson = json.loads(data) # load json from string data
+    data = request.body.decode('utf-8')  # decode the body to a string
+    requestJson = json.loads(data)  # load json from string data
     itemPK = requestJson['itemPk']
 
     if not request.method == "POST":
-        messages.error(request, ('Something went wrong, please try again later'))
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterShop")
 
@@ -163,16 +182,17 @@ def buyItem(request):
 #   THESE ARE THE FUNCTIONS THAT WILL DEAL WITH CREATING AND REMOVING ITEMS
 #
 
-def getItemFromPK(pk : int) -> Item:
+
+def getItemFromPK(pk: int) -> Item:
 
     if item := Item.objects.get(pk=pk):
         return item
 
     return None
 
-def createNewBaseItem(name : str, price : int, type : str,
-    armourValue : int, vitalityBoost : int, specialAbilities : str) -> BaseItem:
 
+def createNewBaseItem(name: str, price: int, type: str,
+                      armourValue: int, vitalityBoost: int, specialAbilities: str) -> BaseItem:
     """ this function will create a new BaseItem in the database,
     Args:
         name(Str): name of the item
@@ -194,19 +214,20 @@ def createNewBaseItem(name : str, price : int, type : str,
     if (baseItem := BaseItem.objects.filter(query)).exists():
         return baseItem[0]
 
-
     baseItem = BaseItem.objects.create(
-        name = name,
-        price = price,
-        type = type,
-        armourValue = armourValue,
-        vitalityBoost = vitalityBoost,
-        specialAbilities = specialAbilities,
+        name=name,
+        price=price,
+        type=type,
+        armourValue=armourValue,
+        vitalityBoost=vitalityBoost,
+        specialAbilities=specialAbilities,
     )
 
     return baseItem
 
-def createNewSpecificItem(baseItem : BaseItem, startingLevel : int, startingGlory : int) -> SpecificItem:
+
+def createNewSpecificItem(
+        baseItem: BaseItem, startingLevel: int, startingGlory: int) -> SpecificItem:
     """ function to create a new specific item from a base item
     Args:
         baseItem(BaseItem): the item base to use
@@ -221,42 +242,41 @@ def createNewSpecificItem(baseItem : BaseItem, startingLevel : int, startingGlor
 
     if isinstance(baseItem, BaseItem):
         si = SpecificItem.objects.create(
-            name = baseItem.name,
-            price = baseItem.price,
-            type = baseItem.type,
+            name=baseItem.name,
+            price=baseItem.price,
+            type=baseItem.type,
 
-            armourValue = baseItem.armourValue,
-            vitalityBoost = baseItem.vitalityBoost,
-            specialAbilities = baseItem.specialAbilities,
+            armourValue=baseItem.armourValue,
+            vitalityBoost=baseItem.vitalityBoost,
+            specialAbilities=baseItem.specialAbilities,
 
-            level = startingLevel,
-            glory = startingGlory,
+            level=startingLevel,
+            glory=startingGlory,
         )
 
         return si
 
     elif isinstance(baseItem, BaseWeapon):
         sw = SpecificWeapon.objects.create(
-        name = baseItem.name,
-        price = baseItem.price,
-        type = baseItem.type,
+            name=baseItem.name,
+            price=baseItem.price,
+            type=baseItem.type,
 
-        damageNumber = baseItem.damageNumber,
-        damageInstances = baseItem.damageInstances,
-        range = baseItem.range,
-        associated = baseItem.associated,
-        ap_cost = baseItem.ap_cost,
+            damageNumber=baseItem.damageNumber,
+            damageInstances=baseItem.damageInstances,
+            range=baseItem.range,
+            associated=baseItem.associated,
+            ap_cost=baseItem.ap_cost,
 
-        level = startingLevel,
-        glory = startingGlory,
+            level=startingLevel,
+            glory=startingGlory,
         )
 
         return sw
 
 
-def createNewBaseWeapon(name : str, price : int, type : str,
-    damageNumber : int, damageInstances : int, range : int, association : chr, ap_cost : int) -> BaseWeapon:
-
+def createNewBaseWeapon(name: str, price: int, type: str,
+                        damageNumber: int, damageInstances: int, range: int, association: chr, ap_cost: int) -> BaseWeapon:
     """ this function will create a new BaseWeapon in the database,
     Args:
         name(Str): name of the item
@@ -279,20 +299,21 @@ def createNewBaseWeapon(name : str, price : int, type : str,
         return bw[0]
 
     bw = BaseWeapon.objects.create(
-        name = name,
-        price = price,
-        type = type,
+        name=name,
+        price=price,
+        type=type,
 
-        damageInstances = damageInstances,
-        damageNumber = damageNumber,
-        range = range,
-        associated = association,
-        ap_cost = ap_cost
+        damageInstances=damageInstances,
+        damageNumber=damageNumber,
+        range=range,
+        associated=association,
+        ap_cost=ap_cost
     )
 
     return bw
 
-def getBaseItemFromName(name : str) -> Item:
+
+def getBaseItemFromName(name: str) -> Item:
     """ function that will return the base item model from its name
     this can be used to get a weapon or item
 
@@ -310,8 +331,10 @@ def getBaseItemFromName(name : str) -> Item:
 
     return None
 
-def addItemToChampion(item : Item, champion : Champion):
-    if not (isinstance(item, SpecificItem) or isinstance(item, SpecificWeapon)):
+
+def addItemToChampion(item: Item, champion: Champion):
+    if not (isinstance(item, SpecificItem)
+            or isinstance(item, SpecificWeapon)):
         raise Exception("item must be a specific item or weapon")
 
     if ChampionItems.objects.filter(champion=champion, item=item).exists():
@@ -322,7 +345,8 @@ def addItemToChampion(item : Item, champion : Champion):
         item=item,
     )
 
-def getChampionsItemsAndWeapons(champion : Champion) -> "list[Item]":
+
+def getChampionsItemsAndWeapons(champion: Champion) -> "list[Item]":
     """ function that returns a list of all the items and weapons in a champions possession
     Args:
         champion(Champion): the champion that you want to get the items for
@@ -331,7 +355,8 @@ def getChampionsItemsAndWeapons(champion : Champion) -> "list[Item]":
         a list of all the items and weapons that that champion has
     """
 
-    if not (champItems := ChampionItems.objects.filter(champion=champion)).exists():
+    if not (champItems := ChampionItems.objects.filter(
+            champion=champion)).exists():
         return None
 
     itemList = []
@@ -341,7 +366,8 @@ def getChampionsItemsAndWeapons(champion : Champion) -> "list[Item]":
 
     return itemList
 
-def getChampionsItems(champion : Champion) -> "list[Item]":
+
+def getChampionsItems(champion: Champion) -> "list[Item]":
     """ function that returns a list of all the items in a champions possession
     Args:
         champion(Champion): the champion that you want to get the items for
@@ -350,7 +376,8 @@ def getChampionsItems(champion : Champion) -> "list[Item]":
         a list of all the items that that champion has
     """
 
-    if not (champItems := ChampionItems.objects.filter(champion=champion).exists()):
+    if not (champItems := ChampionItems.objects.filter(
+            champion=champion).exists()):
         return None
 
     itemList = []
@@ -361,7 +388,8 @@ def getChampionsItems(champion : Champion) -> "list[Item]":
 
     return itemList
 
-def getChampionsWeapons(champion : Champion) -> "list[Item]":
+
+def getChampionsWeapons(champion: Champion) -> "list[Item]":
     """ function that returns a list of all the weapons in a champions possession
     Args:
         champion(Champion): the champion that you want to get the items for
@@ -370,7 +398,8 @@ def getChampionsWeapons(champion : Champion) -> "list[Item]":
         a list of all the weapons that that champion has
     """
 
-    if not (champItems := ChampionItems.objects.filter(champion=champion).exists()):
+    if not (champItems := ChampionItems.objects.filter(
+            champion=champion).exists()):
         return None
 
     itemList = []
@@ -381,7 +410,8 @@ def getChampionsWeapons(champion : Champion) -> "list[Item]":
 
     return itemList
 
-def removeBaseItemOrWeapon(item : Item):
+
+def removeBaseItemOrWeapon(item: Item):
     """ function that will remove all the item in the database, note that this will also remove
     any specific instances of that item
     """
@@ -396,6 +426,7 @@ def removeBaseItemOrWeapon(item : Item):
 
     item.remove()
 
+
 def getAllBaseItemsAndWeapons() -> "list[Item]":
     """ function that returns a list of all base items and weapons
 
@@ -405,7 +436,7 @@ def getAllBaseItemsAndWeapons() -> "list[Item]":
 
     query = ~Q(instance_of=SpecificItem) & ~Q(instance_of=SpecificWeapon)
 
-    if (items := Item.objects.filter(query)) == None:
+    if (items := Item.objects.filter(query)) is None:
         return None
 
     itemList = []
@@ -413,6 +444,7 @@ def getAllBaseItemsAndWeapons() -> "list[Item]":
         itemList.append(i)
 
     return itemList
+
 
 def getAllBaseItems() -> "list[Item]":
     """ function that returns a list of all base items
@@ -423,7 +455,7 @@ def getAllBaseItems() -> "list[Item]":
 
     query = ~Q(instance_of=SpecificItem)
 
-    if (items := BaseItem.objects.filter(query)) == None:
+    if (items := BaseItem.objects.filter(query)) is None:
         return None
 
     itemList = []
@@ -431,6 +463,7 @@ def getAllBaseItems() -> "list[Item]":
         itemList.append(i)
 
     return itemList
+
 
 def getAllBaseWeapons() -> "list[Item]":
     """ function that returns a list of all base weapons
@@ -441,7 +474,7 @@ def getAllBaseWeapons() -> "list[Item]":
 
     query = ~Q(instance_of=SpecificWeapon)
 
-    if (items := BaseWeapon.objects.filter(query)) == None:
+    if (items := BaseWeapon.objects.filter(query)) is None:
         return None
 
     itemList = []
@@ -450,35 +483,37 @@ def getAllBaseWeapons() -> "list[Item]":
 
     return itemList
 
+
 def createNewBaseItemFromHTMLRequest(request):
-    
+
     data = request.POST
 
     if data['itemType'] == "item":
         createNewBaseItem(
-            name = data['name'],
-            price = data['price'],
-            type = data['type'],
-            armourValue= data['armourValue'],
-            vitalityBoost= data['vitalityBoost'],
-            specialAbilities= data['specialAbilities']
+            name=data['name'],
+            price=data['price'],
+            type=data['type'],
+            armourValue=data['armourValue'],
+            vitalityBoost=data['vitalityBoost'],
+            specialAbilities=data['specialAbilities']
         )
 
     elif data['itemType']:
         createNewBaseWeapon(
-            name = data['name'],
-            price = data['price'],
-            type = data['type'],
-            damageNumber= data['damageNumber'],
-            damageInstances= data['damageInstances'],
-            range= data['range'],
-            association = data['associated'],
-            ap_cost= data['ap_cost']
+            name=data['name'],
+            price=data['price'],
+            type=data['type'],
+            damageNumber=data['damageNumber'],
+            damageInstances=data['damageInstances'],
+            range=data['range'],
+            association=data['associated'],
+            ap_cost=data['ap_cost']
         )
 
     return HttpResponseRedirect('addItems')
 
-def getItemFromPK(pk : int) -> Item:
+
+def getItemFromPK(pk: int) -> Item:
 
     if item := Item.objects.get(pk=pk):
         return item

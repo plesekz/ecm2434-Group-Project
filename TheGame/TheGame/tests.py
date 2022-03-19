@@ -1,6 +1,7 @@
 from django.test import TestCase, Client
 from TheGame.models import Champion
-from TheGame.processes import getUserFromName #this function gets the users stats
+# this function gets the users stats
+from TheGame.processes import getUserFromName
 from Login.models import Player
 from Resources.processes import addResourceToUser
 from Resources.models import PlayerResource, Resource
@@ -16,28 +17,28 @@ class TheGameTestCase(TestCase):
             email="placeholder@email.com",
             password="passWrd",
         )
-        
+
         # create a client to use in the tests
         self.client = Client()
 
         res = self.client.post('/login/ValidateRegister/',
-            {
-                'email': "test@email.com",
-                'username': 'testUsername',
-                'password': 'testPassword',
-                'confirmPassword': 'testPassword'
-            }
-        )
+                               {
+                                   'email': "test@email.com",
+                                   'username': 'testUsername',
+                                   'password': 'testPassword',
+                                   'confirmPassword': 'testPassword'
+                               }
+                               )
         self.client = res.client
 
         # log in the client
 
         res = self.client.post('/login/ValidateLogin/',
-            {
-                'email': 'test@email.com',
-                'password': 'testPassword'
-            }
-        )
+                               {
+                                   'email': 'test@email.com',
+                                   'password': 'testPassword'
+                               }
+                               )
 
         self.client = res.client
         # get the object for the player that the client is logged in as
@@ -45,21 +46,19 @@ class TheGameTestCase(TestCase):
 
         # create some resources
         self.res1 = Resource.objects.create(name="wood")
-        self.res2 = Resource.objects.create(name="stone")        
+        self.res2 = Resource.objects.create(name="stone")
         self.res3 = Resource.objects.create(name="iron")
         # give the player resources to spend on the upgrades
         addResourceToUser(self.pClient, self.res1, 100)
         addResourceToUser(self.pClient, self.res2, 100)
         addResourceToUser(self.pClient, self.res3, 100)
-        
-
 
     def test_buy_phealth(self):
 
         # get the health before the transaction
         stats = Champion.objects.get(player=self.pClient)
         startHealth = stats.pHealth
-        #buy health
+        # buy health
         res = self.client.post("/buyPHealth/")
         assert res.status_code < 400
         # get the health after the transaction
@@ -70,13 +69,12 @@ class TheGameTestCase(TestCase):
         # make sure health has increased by one
         self.assertEquals(startHealth + 1, endHealth)
 
-
     def test_buy_pAthletics(self):
 
         # get the toughness before the transaction
         stats = Champion.objects.get(player=self.pClient)
         startTougness = stats.pAthletics
-        #buy toughness
+        # buy toughness
         res = self.client.post("/buyPAthletics/")
         assert res.status_code < 400
         # get the toughness after the transaction
@@ -92,7 +90,7 @@ class TheGameTestCase(TestCase):
         # get the evasion before the transaction
         stats = Champion.objects.get(player=self.pClient)
         startEvasion = stats.pBrain
-        #buy evasion
+        # buy evasion
         res = self.client.post("/buyPBrain/")
         assert res.status_code < 400
         # get the evasion after the transaction
@@ -108,7 +106,7 @@ class TheGameTestCase(TestCase):
         # get the damage before the transaction
         stats = Champion.objects.get(player=self.pClient)
         startDamage = stats.pControl
-        #buy damage
+        # buy damage
         res = self.client.post("/buyPControl/")
         assert res.status_code < 400
         # get the damage after the transaction
@@ -118,7 +116,6 @@ class TheGameTestCase(TestCase):
         endDamage = stats.pControl
         # make sure damage has increased by one
         self.assertEquals(startDamage + 1, endDamage)
-
 
     def test_not_enough_resources(self):
 
@@ -135,12 +132,14 @@ class TheGameTestCase(TestCase):
         stats = Champion.objects.get(player=self.pClient)
         endHealth = stats.pHealth
 
-        # make sure that the health is only +100 beacuse thats how much wood they were given
+        # make sure that the health is only +100 beacuse thats how much wood
+        # they were given
         self.assertEquals(startHealth + 100, endHealth)
         # check that they have no wood
-        playerRes = PlayerResource.objects.get(player=self.pClient, resource=self.res1)
+        playerRes = PlayerResource.objects.get(
+            player=self.pClient, resource=self.res1)
         self.assertEquals(playerRes.amount, 0)
-        
+
 
 class ItemTestCase(TestCase):
     def setUp(self):
@@ -149,23 +148,23 @@ class ItemTestCase(TestCase):
         self.client = Client()
 
         res = self.client.post('/login/ValidateRegister/',
-            {
-                'email': "test@email.com",
-                'username': 'testUsername',
-                'password': 'testPassword',
-                'confirmPassword': 'testPassword'
-            }
-        )
+                               {
+                                   'email': "test@email.com",
+                                   'username': 'testUsername',
+                                   'password': 'testPassword',
+                                   'confirmPassword': 'testPassword'
+                               }
+                               )
         self.client = res.client
 
         # log in the client
 
         res = self.client.post('/login/ValidateLogin/',
-            {
-                'email': 'test@email.com',
-                'password': 'testPassword'
-            }
-        )
+                               {
+                                   'email': 'test@email.com',
+                                   'password': 'testPassword'
+                               }
+                               )
 
         self.client = res.client
 
@@ -175,21 +174,21 @@ class ItemTestCase(TestCase):
         # test to make sure adding items works
         createNewBaseItem(
             name="ring",
-            price = 5,
-            type = "accessory",
-            armourValue= 15,
-            vitalityBoost= 50,
-            specialAbilities= "sleeping"
+            price=5,
+            type="accessory",
+            armourValue=15,
+            vitalityBoost=50,
+            specialAbilities="sleeping"
         )
 
         baseItem = BaseItem.objects.get(name="ring")
 
         self.assertEquals(baseItem.name, "ring")
 
-        #test that we can add new specific items and give them to champions
+        # test that we can add new specific items and give them to champions
 
         createNewSpecificItem(
-            baseItem, 5 , 2
+            baseItem, 5, 2
         )
 
         specItem = SpecificItem.objects.get(name="ring")
@@ -206,21 +205,20 @@ class ItemTestCase(TestCase):
 
         ci = ChampionItems.objects.get(pk=1)
 
-        self.assertEqual(ci.item , specItem)
+        self.assertEqual(ci.item, specItem)
         self.assertEqual(ci.champion, mychamp)
-
 
     def testAddingWeapons(self):
         # test creating a new base weapon
         createNewBaseWeapon(
             name="sword",
-            price = 10,
-            type = "shortsword",
-            damageNumber = 15,
-            damageInstances = 3,
-            range = 2,
-            association = "c",
-            ap_cost = 6,
+            price=10,
+            type="shortsword",
+            damageNumber=15,
+            damageInstances=3,
+            range=2,
+            association="c",
+            ap_cost=6,
         )
 
         baseWeapon = BaseWeapon.objects.get(pk=1)
@@ -230,7 +228,7 @@ class ItemTestCase(TestCase):
         # now check that we can add specific weapons and give them to champion
 
         specWeapon = createNewSpecificWeapon(
-            baseWeapon, 5 , 2
+            baseWeapon, 5, 2
         )
 
         specItem = SpecificWeapon.objects.get(name="sword")
@@ -247,10 +245,5 @@ class ItemTestCase(TestCase):
 
         ci = ChampionItems.objects.get(pk=1)
 
-        self.assertEqual(ci.item , specWeapon)
+        self.assertEqual(ci.item, specWeapon)
         self.assertEqual(ci.champion, mychamp)
-
-
-
-
-

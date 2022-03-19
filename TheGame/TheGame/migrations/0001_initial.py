@@ -17,23 +17,33 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Champion',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50, null=True)),
                 ('pHealth', models.PositiveIntegerField(default=100)),
                 ('pAthletics', models.PositiveIntegerField(default=1)),
                 ('pBrain', models.PositiveIntegerField(default=1)),
                 ('pControl', models.PositiveIntegerField(default=1)),
-                ('player', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='Login.player')),
+                ('player',
+                 models.ForeignKey(null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   to='Login.player')),
             ],
         ),
         migrations.CreateModel(
             name='Item',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=50)),
                 ('price', models.CharField(max_length=50)),
                 ('type', models.CharField(max_length=50)),
-                ('polymorphic_ctype', models.ForeignKey(editable=False, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='polymorphic_%(app_label)s.%(class)s_set+', to='contenttypes.contenttype')),
+                ('polymorphic_ctype',
+                 models.ForeignKey(editable=False,
+                                   null=True,
+                                   on_delete=django.db.models.deletion.CASCADE,
+                                   related_name='polymorphic_%(app_label)s.%(class)s_set+',
+                                   to='contenttypes.contenttype')),
             ],
             options={
                 'abstract': False,
@@ -43,7 +53,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BaseItem',
             fields=[
-                ('item_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='TheGame.item')),
+                ('item_ptr',
+                 models.OneToOneField(auto_created=True,
+                                      on_delete=django.db.models.deletion.CASCADE,
+                                      parent_link=True,
+                                      primary_key=True,
+                                      serialize=False,
+                                      to='TheGame.item')),
                 ('armourValue', models.IntegerField()),
                 ('vitalityBoost', models.IntegerField()),
                 ('specialAbilities', models.CharField(max_length=50)),
@@ -57,7 +73,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BaseWeapon',
             fields=[
-                ('item_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='TheGame.item')),
+                ('item_ptr',
+                 models.OneToOneField(auto_created=True,
+                                      on_delete=django.db.models.deletion.CASCADE,
+                                      parent_link=True,
+                                      primary_key=True,
+                                      serialize=False,
+                                      to='TheGame.item')),
                 ('damageNumber', models.IntegerField()),
                 ('damageInstances', models.IntegerField()),
                 ('range', models.IntegerField()),
@@ -73,15 +95,24 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ChampionItems',
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('champion', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='TheGame.champion')),
-                ('item', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='TheGame.item')),
+                ('id', models.BigAutoField(auto_created=True,
+                 primary_key=True, serialize=False, verbose_name='ID')),
+                ('champion', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='TheGame.champion')),
+                ('item', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE, to='TheGame.item')),
             ],
         ),
         migrations.CreateModel(
             name='SpecificItem',
             fields=[
-                ('baseitem_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='TheGame.baseitem')),
+                ('baseitem_ptr',
+                 models.OneToOneField(auto_created=True,
+                                      on_delete=django.db.models.deletion.CASCADE,
+                                      parent_link=True,
+                                      primary_key=True,
+                                      serialize=False,
+                                      to='TheGame.baseitem')),
                 ('level', models.IntegerField()),
                 ('glory', models.IntegerField()),
             ],
@@ -94,7 +125,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SpecificWeapon',
             fields=[
-                ('baseweapon_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='TheGame.baseweapon')),
+                ('baseweapon_ptr',
+                 models.OneToOneField(auto_created=True,
+                                      on_delete=django.db.models.deletion.CASCADE,
+                                      parent_link=True,
+                                      primary_key=True,
+                                      serialize=False,
+                                      to='TheGame.baseweapon')),
                 ('level', models.IntegerField()),
                 ('glory', models.IntegerField()),
             ],
@@ -107,31 +144,55 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='champion',
             name='armour',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='armour', to='TheGame.specificitem'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='armour',
+                to='TheGame.specificitem'),
         ),
         migrations.AddField(
             model_name='champion',
             name='auxItem1',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='aux1', to='TheGame.specificitem'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='aux1',
+                to='TheGame.specificitem'),
         ),
         migrations.AddField(
             model_name='champion',
             name='auxItem2',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='aux2', to='TheGame.specificitem'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='aux2',
+                to='TheGame.specificitem'),
         ),
         migrations.AddField(
             model_name='champion',
             name='auxItem3',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='aux3', to='TheGame.specificitem'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='aux3',
+                to='TheGame.specificitem'),
         ),
         migrations.AddField(
             model_name='champion',
             name='primaryWeapon',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='pWeapon', to='TheGame.specificweapon'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='pWeapon',
+                to='TheGame.specificweapon'),
         ),
         migrations.AddField(
             model_name='champion',
             name='secondaryWeapon',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='sWeapon', to='TheGame.specificweapon'),
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='sWeapon',
+                to='TheGame.specificweapon'),
         ),
     ]
