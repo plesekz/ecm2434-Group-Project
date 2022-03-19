@@ -11,9 +11,9 @@ Resource.objects.create(
 )
 
 Resource.objects.create(
-    name = "books"
+    name = "Books"
 )
 
 Resource.objects.create(
-    name = "machine parts"
+    name = "Machine parts"
 )
