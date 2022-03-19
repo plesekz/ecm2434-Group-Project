@@ -20,7 +20,6 @@
                 <div class="row stat-highlight">
                     <h1>Shop</h1>
                     {%for i in allItems%}
-                        <input type="hidden" name="itemPk" value={{i.pk}} />
                         <button class="col-sm-3 top-bar-button" type="submit" onclick="submitData('{{i.pk}}')">
                             <p>{{i.name}}</p>
                             <p>{{i|safe}}</p>
