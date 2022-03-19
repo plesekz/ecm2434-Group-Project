@@ -2,7 +2,7 @@ from django.template import loader
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
-from TheGame.processes import getAllBosses, getUserFromName, getChampion, getChampionsItemsAndWeapons
+from TheGame.processes import getAllBosses, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons
 from Resources.processes import getAllUserResources
 
 def homePageView(request : HttpRequest) -> HttpResponse:
@@ -66,12 +66,36 @@ def characterInventory(request : HttpRequest) -> HttpResponse:
 
     template = loader.get_template('TheGame/CharacterInventory.html')
 
-    items = getChampionsItemsAndWeapons(user)
+    items = getChampionsItemsAndWeapons(champion)
 
     context = {
         "username" : user.username,
         "champion" : champion,
         "items" : items,
+    }
+
+    output = template.render(context, request)
+
+    return HttpResponse(output)
+
+def characterShop(request : HttpRequest) -> HttpResponse:
+    """ creates response for the character menu
+    """
+    if request.COOKIES.get('TheGameSessionID') == None:
+        return HttpResponseRedirect('login')
+
+    user = getUserFromCookie(request)
+    if not (champion := getChampion(user)):
+        return HttpResponseRedirect('createChampion')
+
+    template = loader.get_template('TheGame/CharacterShop.html')
+
+    allItems = getAllBaseItemsAndWeapons()
+
+    context = {
+        "username" : user.username,
+        "champion" : champion,
+        "allItems" : allItems,
     }
 
     output = template.render(context, request)

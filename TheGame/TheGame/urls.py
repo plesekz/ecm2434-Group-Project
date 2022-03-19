@@ -27,6 +27,7 @@ urlpatterns = [
     path('', homePageView, name="homePage"),
     path('characterMenu/', characterMenu, name="characterMenu"),
     path('characterInventory/', characterInventory, name="characterInventory"),
+    path('characterShop/', characterShop, name="characterShop"),
     path('buyPHealth/', processes.buyPHealth, name="buyPHealth"),
     path('buyPAthletics/', processes.buyPAthletics, name="buyPAthletics"),
     path('buyPBrain/', processes.buyPBrain, name="buyPBrain"),
