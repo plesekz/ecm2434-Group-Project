@@ -3,7 +3,6 @@ from operator import truediv
 from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
-from grpc import StatusCode
 from Login.models import Player
 from Resources.processes import removeResourceFromUser, addResourceToUser, getResourceByName
 from .models import Champion
@@ -443,7 +442,5 @@ def createNewBaseItemFromHTMLRequest(request):
             association= data['association'],
             ap_cost= data['ap_cost']
         )
-    else:
-        return HttpResponse(StatusCode=501)
 
     return HttpResponseRedirect('addItems')
