@@ -51,6 +51,7 @@
         {
             let url = "/buyItem/"
             const csrftoken = getCookie('csrftoken');
+            const sessionID = getCookie('TheGameSessionID')
 
             let xhr = new XMLHttpRequest();
             xhr.open("POST", url);
@@ -58,6 +59,7 @@
             xhr.setRequestHeader("Accept", "application/json");
             xhr.setRequestHeader("Content-Type", "application/json");
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            xhr.setRequestHeader("TheGameSessionID", sessionID);
 
             xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {

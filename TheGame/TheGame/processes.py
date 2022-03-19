@@ -217,20 +217,40 @@ def createNewSpecificItem(baseItem : BaseItem, startingLevel : int, startingGlor
     """
 
     # create the specific item based on the base item
-    si = SpecificItem.objects.create(
+
+    if isinstance(baseItem, BaseItem):
+        si = SpecificItem.objects.create(
+            name = baseItem.name,
+            price = baseItem.price,
+            type = baseItem.type,
+
+            armourValue = baseItem.armourValue,
+            vitalityBoost = baseItem.vitalityBoost,
+            specialAbilities = baseItem.specialAbilities,
+
+            level = startingLevel,
+            glory = startingGlory,
+        )
+
+        return si
+
+    elif isinstance(baseItem, BaseWeapon):
+        sw = SpecificWeapon.objects.create(
         name = baseItem.name,
         price = baseItem.price,
         type = baseItem.type,
 
-        armourValue = baseItem.armourValue,
-        vitalityBoost = baseItem.vitalityBoost,
-        specialAbilities = baseItem.specialAbilities,
+        damageNumber = baseItem.damageNumber,
+        damageInstances = baseItem.damageInstances,
+        range = baseItem.range,
+        associated = baseItem.associated,
+        ap_cost = baseItem.ap_cost,
 
         level = startingLevel,
         glory = startingGlory,
     )
 
-    return si
+    return sw
 
 
 def createNewBaseWeapon(name : str, price : int, type : str,
@@ -268,35 +288,6 @@ def createNewBaseWeapon(name : str, price : int, type : str,
     )
 
     return bw
-
-def createNewSpecificWeapon(baseWeapon : BaseItem, startingLevel : int, startingGlory : int) -> SpecificWeapon:
-    """ function to create a new specific weapon from a base weapon
-    Args:
-        baseWeapon(BaseWeapon): the weapon base to use
-        startingLevel(int): the level that this specific weapon will be created at
-        startingGlory(int): the glory level that this specific weapon will be created at
-
-    returns:
-        the Specific weapon that was created
-    """
-
-    # create the specific item based on the base item
-    sw = SpecificWeapon.objects.create(
-        name = baseWeapon.name,
-        price = baseWeapon.price,
-        type = baseWeapon.type,
-
-        damageNumber = baseWeapon.damageNumber,
-        damageInstances = baseWeapon.damageInstances,
-        range = baseWeapon.range,
-        associated = baseWeapon.associated,
-        ap_cost = baseWeapon.ap_cost,
-
-        level = startingLevel,
-        glory = startingGlory,
-    )
-
-    return sw
 
 def getBaseItemFromName(name : str) -> Item:
     """ function that will return the base item model from its name
@@ -337,7 +328,7 @@ def getChampionsItemsAndWeapons(champion : Champion) -> "list[Item]":
         a list of all the items and weapons that that champion has
     """
 
-    if not (champItems := ChampionItems.objects.filter(champion=champion).exists()):
+    if not (champItems := ChampionItems.objects.filter(champion=champion)).exists():
         return None
 
     itemList = []
@@ -409,7 +400,7 @@ def getAllBaseItemsAndWeapons() -> "list[Item]":
         list of all base items and weapons in the system
     """
 
-    query = Q(instance_of=BaseItem) | Q(instance_of=BaseWeapon)
+    query = ~Q(instance_of=SpecificItem) | ~Q(instance_of=SpecificWeapon)
 
     if (items := Item.objects.filter(query)) == None:
         return None
