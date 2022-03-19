@@ -32,6 +32,7 @@ urlpatterns = [
     path('buyPAthletics/', processes.buyPAthletics, name="buyPAthletics"),
     path('buyPBrain/', processes.buyPBrain, name="buyPBrain"),
     path('buyPControl/', processes.buyPControl, name="buyPControl"),
+    path('buyItem/', processes.buyItem, name="buyItem"),
     path('battleSelect/battle', battle.callBattle, name="battleSelect/battle"),
     path('login/', include("Login.urls")),
     path('battleSelect/', battleSelectView, name="battleSelect"),
@@ -39,8 +40,5 @@ urlpatterns = [
     path('addBosses/', addNewBossView, name='addNewBoss'),
     path('newBossValidation', processes.addBossToSystem),
     path('addItems/', addNewBaseItemView, name="addNewItem"),
-    path(
-        'validateItem',
-        processes.createNewBaseItemFromHTMLRequest,
-        name='validateItem'),
+    path('validateItem', processes.createNewBaseItemFromHTMLRequest, name='validateItem'),
 ]

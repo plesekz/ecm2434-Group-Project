@@ -428,10 +428,6 @@ async fn load_image(file: gloo::file::File) -> Result<image::GrayImage, JsValue>
         lib_load_image(file).await
     }
 
-    /*if img.height() > 1000 {
-        img = img.thumbnail(1000, 1000);
-    }*/
-
     //Ok(img)
 }
 
