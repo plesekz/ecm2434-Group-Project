@@ -26,6 +26,7 @@ urlpatterns = [
     path('qr/', include("QRC.urls")),
     path('', homePageView, name="homePage"),
     path('characterMenu/', characterMenu, name="characterMenu"),
+    path('characterInventory/', characterInventory, name="characterInventory"),
     path('buyPHealth/', processes.buyPHealth, name="buyPHealth"),
     path('buyPAthletics/', processes.buyPAthletics, name="buyPAthletics"),
     path('buyPBrain/', processes.buyPBrain, name="buyPBrain"),
