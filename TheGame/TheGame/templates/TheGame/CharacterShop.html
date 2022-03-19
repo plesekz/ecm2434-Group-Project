@@ -57,12 +57,6 @@
             if (xhr.readyState === 4) {
                 console.log(xhr.responseText);
             }};
-
-            xhr.open("POST", yourUrl, true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({
-                value: value
-            }));
             xhr.send(JSON.stringify({"itemPk": pk}));
 
             console.log(pk);
