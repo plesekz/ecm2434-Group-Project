@@ -6,116 +6,197 @@ sets up the different sprites
 character is the bounding box, the default position is entirely within it
 -->*/
 
-#character {
+#leftCharacter {
     width: 384px;
     height: 768px;
-    position: relative;
+    position: relative; 
 }
-#body {
-    width: 384px;
-    height: 768px;
-    position: absolute;
-    z-index:-2;
-    background:url(sprites/body.png);
-}
-#arm {
+#lArm {
     width: 768px;
     height: 768px;
     position: absolute;
     z-index:-1;
-    background:url(sprites/arm.png);
+    background:url(sprites/psionic/arm.png);
 }
-
-
+#lWeapon {
+    width: 768px;
+    height: 768px;
+    position: absolute;
+    z-index:-2;
+}
+#lBody {
+    width: 384px;
+    height: 768px;
+    position: absolute;
+    z-index:-4;
+    background:url(sprites/psionic/body.png);
+}
+#lArmour {
+    width: 384px;
+    height: 768px;
+    position: absolute;
+    z-index:-3;
+}
 
 </style>
 <body>
     <p>
         <!--buttons, for testing-->
         <button onclick="setup()">Setup</button> 
-        <button onclick="attack()">Attack</button> 
-        <button onclick="rotateArm(45)">Rotate arm</button> 
+        <button onclick="leftAttack()">leftAttack</button>
     </p>
-    <div id ="character">
-        <div id ="body"></div>
-        <div id ="arm"></div>
+    <div id ="leftCharacter">
+        <div id ="lBody"></div>
+        <div id ="lArmour"></div>
+        <div id ="lWeapon"></div>
+        <div id ="lArm"></div>
     </div>
     
     <script>
-        var id = null;
+        var animating = false;
+        
+        function sleep (time) {
+            return new Promise((resolve) => setTimeout(resolve, time));
+        }
+
         
         function setup() {
             //variables 
-            var body = document.getElementById("body");
-            var arm = document.getElementById("arm");
+            var lcharacter = document.getElementById("leftCharacter");
+            var larm = document.getElementById("lArm");
             
             //for each part, it is placed in the default position           
-            
-            arm.style.top = '-160px'; 
-            arm.style.left = '-208px';
-            arm.style.transform = 'rotate(60deg)';
+            lcharacter.style.top = '0px';
+            lcharacter.style.left = '0px';
+            larm.style.top = '-160px'; 
+            larm.style.left = '-208px';
+            larm.style.transform = 'rotate(60deg)';
         }
         
-        function attack() {
+        
+         
+        async function leftAttack() {
+        
             //variables
-            var character = document.getElementById("character");
-            var arm = document.getElementById("arm");
-            var body = document.getElementById("body");
+            var character = document.getElementById("leftCharacter");
+            var arm = document.getElementById("lArm");
+            var weapon = document.getElementById("lWeapon");
             pos = 0;
-            deg = 0;
+            deg = 60;
+            
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
             
             //move forward
-            clearInterval(id);
-            id = setInterval(moveForward, 1);
-            function moveForward() {
-                if (pos > 320) {
-                    clearInterval(id);
-                }
-                else {
-                    pos+=4;
-                    character.style.left = pos + 'px';
-                    //arm.style.left = (+pos - 208) + 'px';
-                    //body.start.left = (+pos) + 'px';
-                }
+            while (pos < 320) {
+                pos+=4;
+                character.style.left = pos + 'px';
+                await sleep(5);
             }
             
+            //ready swing
+            while (deg > -40) {
+                if (deg < -40) {
+                    deg = -39;
+                }
+                deg-=1;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(5);
+            }
             
-            //swing            
+            //swing
+            while (deg < 90) {
+                if (deg > 90) {
+                    deg = 88;
+                }
+                deg+=2;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(5);
+            }
+            
+            //return arm to position
+            while (deg > 60) {
+                if (deg < 60) {
+                    deg = 59;
+                }
+                deg-=1;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(5);
+            }
             
             //move back
-            /*
-            not sure why this doesn't work when uncommented
-            clearInterval(id);
-            id = setInterval(moveBackwards, 1);
-            function moveBackwards() {
-                if (pos <= 0) {
-                    clearInterval(id);
-                }
-                else {
-                    pos-=4;
-                    character.style.left = pos + 'px';
-                    //arm.style.left = (+pos - 208) + 'px';
-                    //body.start.left = (+pos) + 'px';
-                }
+            while (pos > 0) {
+                pos-=4;
+                character.style.left = pos + 'px';
+                await sleep(5);
             }
-            */
             
-            ////temporary
-            //deg = 0;
-            //clearInterval(id);
-            //id = setInterval(frame, 10);
-            //function frame() {
-            //    if (deg > 360) {
-            //        deg = 0;
-            //        clearInterval(id);
-            //    }
-            //    else {
-            //        deg++; 
-            //    }
-            //    arm.style.transform = 'rotate(' + deg + 'deg)';
-            //}
+            animating = false;
+        }
+        async function rightAttack() {
+        
+            //variables
+            var character = document.getElementById("leftCharacter");
+            var arm = document.getElementById("lArm");
+            var weapon = document.getElementById("lWeapon");
+            pos = 0;
+            deg = 60;
+            
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
+            //move forward
+            while (pos < 320) {
+                pos+=4;
+                character.style.left = pos + 'px';
+                await sleep(5);
+            }
+            
+            //ready swing
+            while (deg > -40) {
+                if (deg < -40) {
+                    deg = -39;
+                }
+                deg-=1;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(5);
+            }
+            
+            //swing
+            while (deg < 90) {
+                if (deg > 90) {
+                    deg = 88;
+                }
+                deg+=2;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(5);
+            }
+            
+            //return arm to position
+            while (deg > 60) {
+                if (deg < 60) {
+                    deg = 59;
+                }
+                deg-=1;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(5);
+            }
+            
+            //move back
+            while (pos > 0) {
+                pos-=4;
+                character.style.left = pos + 'px';
+                await sleep(5);
+            }
+            
+            animating = false;
         }
 
+        
         
         setup(); //runs setup after the page has loaded, so the character is in default position
     </script>
