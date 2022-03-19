@@ -40,6 +40,8 @@
         //func to handle cancelling a specific QR code
         function cancel(intID) {
             //needs to call the /deleteRes endoint passing the argument as Int(5)
+
+            document.getElementById(intID).hidden = true;
             let xhttp = new XMLHttpRequest();
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
@@ -62,6 +64,7 @@
             xhttp.setRequestHeader("X-CSRFToken", csrftoken);
 
             xhttp.send(intID);
+
         }
 
         //funct to handle submitting
@@ -129,7 +132,7 @@
                 <!-- active QR codes -->
                 {% if active_QR_codes_list %}
                 {% for code in active_QR_codes_list %}
-                <div class="col w-25">
+                <div id={{code.name}} class="col w-25">
                     <h4 class="text-center"> {{ code.name }} </h4>
                     <div class="row mb-3">
                         <!-- QR code and cancel button -->
