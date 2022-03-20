@@ -141,7 +141,7 @@
 
             xhr.onreadystatechange = function() {
                 if (this.readyState == 4){
-                    document.location.reload()
+                    window.location.href = window.location.href;
                 }
             }
 
