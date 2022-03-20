@@ -29,6 +29,7 @@ class Item(PolymorphicModel):
 class BaseItem(Item):
     armourValue = models.IntegerField()
     vitalityBoost = models.IntegerField()
+    shieldValue = models.IntegerField()
 
     specialAbilities = models.CharField(max_length=50)
 

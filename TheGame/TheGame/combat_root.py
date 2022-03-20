@@ -4,6 +4,7 @@ from unit import Unit, Damage
 from GameState import GameState
 from random import seed, randint
 from action import Action
+from processes import getArmour, getGlory, getShields
 
 
 def battle(attacker: Champion, defender: Champion) -> List:
@@ -132,12 +133,12 @@ def preprocess(character: Champion) -> Unit:
 
 
 def processShield(character: Champion) -> int:
-    pass
+    return getShields(champion=character)
 
 
 def processArmour(character: Champion) -> int:
-    pass
+    return getArmour(champion=character)
 
 
 def processGlory(character: Champion) -> int:
-    pass
+    return getGlory(champion=character)

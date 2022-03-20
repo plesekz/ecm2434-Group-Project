@@ -1,12 +1,12 @@
 import json
 from logging import exception
-from operator import truediv
+from operator import getitem, truediv
 from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
 from Login.models import Player
 from Resources.processes import *
-from .models import Champion
+from .models import Champion, Item
 from Login.processes import getUserFromCookie
 from Login.models import Player
 from Resources.models import PlayerResource, Resource
@@ -906,3 +906,71 @@ def applyStatPack(item: Item, statPack: Item):
         raise Exception("must use a stat pack of correct type of the statpack to apply to item")
     
     raise Exception("failed to apply statPack to item")
+
+
+def getShields(champion : Champion):
+    i = getItemFromPK(champion.armour)
+    shield = 0
+    if i:
+        shield = shield + i.shieldValue
+    i = getItemFromPK(champion.auxItem1)
+    if i:
+        shield = shield + i.shieldValue
+    i = getItemFromPK(champion.auxItem2)
+    if i:
+        shield = shield + i.shieldValue
+    i = getItemFromPK(champion.auxItem3)
+    if i:
+        shield = shield + i.shieldValue
+    return shield
+
+def getArmour(champion : Champion):
+    i = getItemFromPK(champion.armour)
+    armr = 0
+    if i:
+        armr = armr + i.armourValue
+    i = getItemFromPK(champion.auxItem1)
+    if i:
+        armr = armr + i.armourValue
+    i = getItemFromPK(champion.auxItem2)
+    if i:
+        armr = armr + i.armourValue
+    i = getItemFromPK(champion.auxItem3)
+    if i:
+        armr = armr + i.armourValue
+    return armr
+
+def getVitBoost(champion: Champion):
+    i = getItemFromPK(champion.armour)
+    vit = 0
+    if i:
+        vit = vit + i.vitalityBoost
+    i = getItemFromPK(champion.auxItem1)
+    if i:
+        vit = vit + i.vitalityBoost
+    i = getItemFromPK(champion.auxItem2)
+    if i:
+        vit = vit + i.vitalityBoost
+    i = getItemFromPK(champion.auxItem3)
+    if i:
+        vit = vit + i.vitalityBoost
+    return vit
+
+def getGlory(champion: Champion):
+    i = getItemFromPK(champion.armour)
+    glr = 0
+    if i:
+        glr = glr + i.vitalityBoost
+    i = getItemFromPK(champion.auxItem1)
+    if i:
+        glr = glr + i.vitalityBoost
+    i = getItemFromPK(champion.auxItem2)
+    if i:
+        glr = glr + i.vitalityBoost
+    i = getItemFromPK(champion.auxItem3)
+    if i:
+        glr = glr + i.vitalityBoost
+    i = getItemFromPK(champion.primaryWeapon)
+    if i:
+        glr = glr + i.vitalityBoost
+    return glr
