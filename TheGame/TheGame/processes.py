@@ -463,7 +463,8 @@ def getItemFromPK(pk: int) -> Item:
 
 
 def createNewBaseItem(name: str, type: str,
-                      armourValue: int, vitalityBoost: int, specialAbilities: str,
+                      armourValue: int, vitalityBoost: int, shieldValue:int,
+                      specialAbilities: str,
                       priceRes1: Resource, price1: int,
                       priceRes2: Resource = None, price2: int = None,
                       priceRes3: Resource = None, price3: int = None) -> BaseItem:
@@ -499,6 +500,7 @@ def createNewBaseItem(name: str, type: str,
         type=type,
         armourValue=armourValue,
         vitalityBoost=vitalityBoost,
+        shieldValue=shieldValue,
         specialAbilities=specialAbilities,
     )
 
@@ -533,6 +535,7 @@ def createNewSpecificItem(
 
             armourValue=baseItem.armourValue,
             vitalityBoost=baseItem.vitalityBoost,
+            shieldValue=baseItem.shieldValue,
             specialAbilities=baseItem.specialAbilities,
 
             level=startingLevel,
@@ -887,6 +890,7 @@ def applyStatPack(item: Item, statPack: Item):
         
         item.armourValue += statPack.armourValue
         item.vitalityBoost += statPack.vitalityBoost
+        item.sheidlValue += statPack.shieldValue
         item.level += statPack.level
         item.save()
         return True

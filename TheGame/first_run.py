@@ -13,8 +13,8 @@ machine_parts = Resource.objects.create(
     name="Machine parts"
 )
 
-createNewBaseItem("Salvaged armour", "armour", 10, 0, "", circuitry, 10)
+createNewBaseItem("Salvaged armour", "armour", 10, 0, 0, "", circuitry, 10)
 createNewBaseWeapon("Shiv", "weapon", 15, 1, 1, "A", 2, books, 2)
 createNewBaseWeapon("Makeshift rifle", "weapon", 12, 2, 10, "C", 2, machine_parts, 2, books, 1)
 createNewBaseWeapon("Self-taught psionics", "weapon", 5, 5, 5, "B", 2, machine_parts, 5)
-createNewBaseItem("Large Armour Upgrade Pack", "statPack", 50, 5, "", machine_parts, 15)
+createNewBaseItem("Large Armour Upgrade Pack", "statPack", 50, 5, 0, "", machine_parts, 15)
