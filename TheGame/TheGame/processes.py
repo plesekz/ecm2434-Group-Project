@@ -386,6 +386,8 @@ def equipItem(request):
         userChamp.auxItem2 = item
     elif not userChamp.auxItem3:
         userChamp.auxItem3 = item
+
+    userChamp.save()
         
 
     return response
