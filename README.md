@@ -24,7 +24,10 @@ Currently precompiled wasm and js files are included in git, so it will work by 
 `wasm-pack test --firefox --chrome --headless ./TheGame/qr-wasm`
 
 ## Use
-<<<<<<< HEAD
+### First run
+Create database by running `python3 manage.py migrate`
+Initialise defaults by running `python3 manage.py shell -c "import first_run"`
+
 ### Using DJango runserver
 
 Change directory to `./TheGame` then run `python3 manage.py runserver`
@@ -36,12 +39,3 @@ Not yet complete
 Collect statics using `python3 manage.py collectstatic`
 
 Change directory to `./TheGame` then run `python3 manage.py runserver`
-
-### Using External Server
-
-Not yet complete
-
-Collect statics using `python3 manage.py collectstatic`
-=======
-
-To run change directory to `./TheGame` then run `python3 manage.py runserver`

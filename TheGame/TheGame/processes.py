@@ -372,9 +372,11 @@ def equipItem(request):
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
     # To be contuinued....
-
     # replace the foriegn keys in the champions places with the item that was bought
     # this will have to have logic for when all slots are full
+
+    if item.type == "statPack":
+        return response
 
     if isinstance(item, SpecificWeapon):
         userChamp.primaryWeapon = item
