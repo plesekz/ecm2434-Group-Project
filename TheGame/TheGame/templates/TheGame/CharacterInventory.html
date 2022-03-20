@@ -11,28 +11,37 @@
         <div class="col-md-3 order-md-3 container">
             <div class="stat-highlight">
                 <h1>Character Image</h1>
-
-            </div>
-            <div>
-                <div class="col">
-                    {{equip.weapon.name}}
-                    {{equip.weapon|safe}}
-                </div>
-                <div class="col">
-                    {{equip.armour.name}}
-                    {{equip.armour|safe}}
-                </div>
-                <div class="col">
-                    {{equip.aux1.name}}
-                    {{equip.aux1|safe}}
-                </div>
-                <div class="col">
-                    {{equip.aux2.name}}
-                    {{equip.aux2|safe}}
-                </div>
-                <div class="col">
-                    {{equip.aux3.name}}
-                    {{equip.aux3|safe}}
+                <div class="row">
+                    {% if equip.weapon %}
+                    <div class="col">
+                        {{equip.weapon.name}}
+                        {{equip.weapon|safe}}
+                    </div>
+                    {% endif %}
+                    {% if equip.weapon %}
+                    <div class="col">
+                        {{equip.armour.name}}
+                        {{equip.armour|safe}}
+                    </div>
+                    {% endif %}
+                    {% if equip.weapon %}
+                    <div class="col">
+                        {{equip.aux1.name}}
+                        {{equip.aux1|safe}}
+                    </div>
+                    {% endif %}
+                    {% if equip.weapon %}
+                    <div class="col">
+                        {{equip.aux2.name}}
+                        {{equip.aux2|safe}}
+                    </div>
+                    {% endif %}
+                    {% if equip.weapon %}
+                    <div class="col">
+                        {{equip.aux3.name}}
+                        {{equip.aux3|safe}}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -41,9 +50,11 @@
                 <h1>Inventory</h1>
                 {%for i in items%}
                     <div class="col-sm-4 text-start" >
-                        <p>{{i.name}}</p>
-                        <p>{{i|safe}}</p>
                         <div>
+                            <p>{{i.name}}</p>
+                            <p>{{i|safe}}</p>
+                        </div>
+                        <div class="align-self-end">
                             <button type="submit top-bar-button col" onclick="EquipItem('{{i.pk}}')">
                                 Equip
                             </button>
