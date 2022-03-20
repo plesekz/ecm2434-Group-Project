@@ -13,15 +13,45 @@
                 <h1>Character Image</h1>
 
             </div>
+            <div>
+                <div class="col">
+                    {{equip.weapon.name}}
+                    {{equip.weapon|safe}}
+                </div>
+                <div class="col">
+                    {{equip.armour.name}}
+                    {{equip.armour|safe}}
+                </div>
+                <div class="col">
+                    {{equip.aux1.name}}
+                    {{equip.aux1|safe}}
+                </div>
+                <div class="col">
+                    {{equip.aux2.name}}
+                    {{equip.aux2|safe}}
+                </div>
+                <div class="col">
+                    {{equip.aux3.name}}
+                    {{equip.aux3|safe}}
+                </div>
+            </div>
         </div>
         <div class="col-md-6 order-md-3 container">
             <div class="row stat-highlight">
                 <h1>Inventory</h1>
                 {%for i in items%}
-                    <button class="col-sm-4 top-bar-button" type="submit" onclick="submitData('{{i.pk}}')">
+                    <div class="col-sm-4 text-start" >
                         <p>{{i.name}}</p>
                         <p>{{i|safe}}</p>
-                    </button>
+                        <div>
+                            <button type="submit top-bar-button col" onclick="EquipItem('{{i.pk}}')">
+                                Equip
+                            </button>
+                            <button type="submit top-bar-button col" onclick="submitData('{{i.pk}}')">
+                                Upgrade
+                            </button>
+                        </div>
+                    </div>
                 {%endfor%}
             </div>
         </div>
@@ -50,6 +80,27 @@
             i.name='itemPK';
             i.value=pk;
             f.appendChild(i);
+            var t=document.createElement('input');
+            t.type='hidden';
+            t.name='csrfmiddlewaretoken';
+            t.value=getCookie('csrftoken');;
+            f.appendChild(t);
+
+            document.body.appendChild(f);
+            f.submit();
+        }
+
+        function EquipItem(pk)
+        {
+            var f = document.createElement('form');
+            f.action='/equipItem/';
+            f.method='POST';
+            var i=document.createElement('input');
+            i.type='hidden';
+            i.name='itemPK';
+            i.value=pk;
+            f.appendChild(i);
+
             var t=document.createElement('input');
             t.type='hidden';
             t.name='csrfmiddlewaretoken';
