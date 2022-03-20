@@ -458,8 +458,6 @@ def getItemFromPK(pk: int) -> Item:
     except:
         return None
 
-    return None
-
 
 def createNewBaseItem(name: str, type: str,
                       armourValue: int, vitalityBoost: int, specialAbilities: str,
@@ -878,8 +876,6 @@ def getItemFromPK(pk: int) -> Item:
     return None
 
 def applyStatPack(item: Item, statPack: Item):
-    
-    print(type(item))
 
     if isinstance(item, SpecificItem):
         if not (isinstance(statPack, SpecificItem) and statPack.type == "statPack"):
