@@ -886,13 +886,16 @@ def getItemFromPK(pk: int) -> Item:
 
 def applyStatPack(item: Item, statPack: Item):
 
+    if item == statPack:
+        return False
+
     if isinstance(item, SpecificItem):
         if not (isinstance(statPack, SpecificItem) and statPack.type == "statPack"):
             raise Exception("item can only be upgraded with a stat pack of the same type")
         
         item.armourValue += statPack.armourValue
         item.vitalityBoost += statPack.vitalityBoost
-        item.sheidlValue += statPack.shieldValue
+        item.shieldValue += statPack.shieldValue
         item.level += statPack.level
         item.save()
         return True
