@@ -2,7 +2,8 @@ from django.template import loader
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
-from TheGame.processes import getAllBaseItems, getAllBosses, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
+from TheGame.models import SpecificItem
+from TheGame.processes import getAllBaseItems, getAllBosses, getChampionsItemStatPacks, getChampionsWeaponStatPacks, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
 from Resources.processes import getAllUserResources
 
 
@@ -137,11 +138,17 @@ def itemUpgrade(request: HttpRequest) -> HttpResponse:
     item = getItemFromPK(request.POST.get('itemPK'))
     resources = getAllUserResources(user)
 
+    if isinstance(item, SpecificItem):
+        statPacks = getChampionsItemStatPacks(champion)
+    else:
+        statPacks = getChampionsWeaponStatPacks(champion)
+
     context = {
         "username": user.username,
         "champion": champion,
         "item": item,
         "resources": resources,
+        "statPacks": statPacks
     }
 
     output = template.render(context, request)

@@ -16,29 +16,16 @@
         </div>
         <div class="col-md-6 order-md-3 container">
             <div class="row stat-highlight">
-                <h1>{{item.name}}</h1>
-                <div class="col-sm-4 order-sm-1 container">
-                    <button class="top-bar-button" type="submit" onclick="EquipItem('{{item.pk}}')">
-                        <p>Equip</p>
-                    </button>
-                    <button class="top-bar-button" type="submit" onclick="SellItem('{{item.pk}}')">
-                        <p>Sell</p>
-                    </button>
-                </div>
-                <div class="col-sm-6 order-sm-2 container">
-                    <div class="container">
-                        <h5>Upgrade:</h5>
-                        <button class="top-bar-button" type="submit" onclick="upgradeStat('{{item.pk}}')">
-                            <p>Upgrade</p>
-                        </button>
-                        <button class="top-bar-button" type="submit" onclick="upgradeStat('{{item.pk}}')">
-                            <p>Upgrade</p>
-                        </button>
-                        <button class="top-bar-button" type="submit" onclick="upgradeStat('{{item.pk}}')">
-                            <p>Upgrade</p>
-                        </button>
-                    </div>
-                </div>
+                {% if statPacks %}
+                {% for pack in statPacks%}
+                <button class="col-sm-4 top-bar-button" type="submit" onclick="upgradeStat('{{item.pk}}', '{{pack.pk}}')">
+                    <p>{{pack.name}}</p>
+                    <p>{{pack|safe}}</p>
+                </button>
+                {% endfor %}
+                {% else %}
+                <h1>No stat packs to upgrade with</h1>
+                {% endif %}
             </div>
         </div>
         <div class="col-md-3 order-md-3 container">
@@ -60,16 +47,22 @@
     </div>
     </div>
     <script>
-        function submitData(pk)
+        function submitData(pk, packPK)
         {
             var f = document.createElement('form');
-            f.action='/itemUpgrade/';
+            f.action='/upgradeStatOnItem/';
             f.method='POST';
             var i=document.createElement('input');
             i.type='hidden';
             i.name='itemPK';
             i.value=pk;
             f.appendChild(i);
+
+            var packIDForm = document.createElement('input');
+            packIDForm.type='hidden';
+            packIDForm.name='packPK';
+            packIDForm.value=pk;
+            f.appendChild(packIDForm);
 
             var t=document.createElement('input');
             t.type='hidden';
@@ -79,6 +72,7 @@
 
             document.body.appendChild(f);
             f.submit();
+
         }
 
         function EquipItem(pk)
@@ -123,7 +117,7 @@
             f.submit();
         }
 
-        function upgradeStat(pk)
+        function upgradeStat(pk, packPK)
         {
             // var f = document.createElement('form');
             // f.action='/upgradeStatOnItem/';
@@ -145,6 +139,12 @@
 
             var xhr = new XMLHttpRequest();
 
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4){
+                    window.location.href = window.location.href;
+                }
+            }
+
             xhr.open("POST", '/upgradeStatOnItem/');
             xhr.setRequestHeader("Content-type", "application/json");
             const csrfToken = getCookie('csrftoken');
@@ -152,7 +152,8 @@
 
             content = JSON.stringify(
                 {
-                    "itemPK" : pk
+                    "itemPK" : pk,
+                    "packPK" : packPK
                 }
             );
 

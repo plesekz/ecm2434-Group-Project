@@ -376,6 +376,18 @@ def equipItem(request):
     # replace the foriegn keys in the champions places with the item that was bought
     # this will have to have logic for when all slots are full
 
+    if isinstance(item, SpecificWeapon):
+        userChamp.primaryWeapon = item
+    elif isinstance(item, SpecificItem) and item.type == "armour":
+        userChamp.armour = item
+    elif not userChamp.auxItem1:
+        userChamp.auxItem1 = item
+    elif not userChamp.auxItem2:
+        userChamp.auxItem2 = item
+    elif not userChamp.auxItem3:
+        userChamp.auxItem3 = item
+        
+
     return response
 
 
@@ -407,6 +419,9 @@ def upgradeStatOnItem(request):
     data = request.body.decode('utf-8')  # decode the body to a string
     requestJson = json.loads(data)  # load json from string data
     itemPK = requestJson['itemPK']
+    packPK = requestJson['packPK']
+    pack = getItemFromPK(packPK)
+    print(pack)
 
     if not request.method == "POST":
         messages.error(
@@ -421,26 +436,12 @@ def upgradeStatOnItem(request):
     userChamp = getChampion(user)
     # To be contuinued....
 
-    # if the item is a weapon then get the first weapon statpack from the user
-    if isinstance(item, SpecificWeapon):
-        #get one of the users weapon statpacks
-        if (packs := getChampionsWeaponStatPacks(userChamp)):
-            applyStatPack(item, packs[0])
-            removeItemFromChampion(userChamp, packs[0])
-            removeItemOrWeapon(packs[0])
-        else:
-            return HttpResponse("no stat packs found", status=202)
-    
-    # if the item is an item then use an item statpack
-    if isinstance(item, SpecificItem):
-        # get the users stat packs
-        if (packs := getChampionsItemStatPacks(userChamp)):
-            applyStatPack(item, packs[0])
-            removeItemFromChampion(userChamp, packs[0])
-            removeItemOrWeapon(packs[0])
-        
-        else:
-            return HttpResponse("no stat packs found", status=202)
+    # if the item is a weapon then get the first weapon statpack from the use
+    if not applyStatPack(item, pack):
+        return HttpResponse("no stat packs found", status=202)
+
+    removeItemFromChampion(userChamp, pack)
+    removeItemOrWeapon(pack)
 
 
     return HttpResponse(status=200)
@@ -886,7 +887,7 @@ def applyStatPack(item: Item, statPack: Item):
         item.vitalityBoost += statPack.vitalityBoost
         item.level += statPack.level
         item.save()
-        return
+        return True
 
     elif isinstance(item, SpecificWeapon):
         if not (isinstance(statPack, SpecificWeapon) and statPack.type == "statPack"):
@@ -897,7 +898,7 @@ def applyStatPack(item: Item, statPack: Item):
         item.range += statPack.range
         item.level += statPack.level
         item.save()
-        return
+        return True
         
     elif isinstance(statPack, Item):
         raise Exception("must use a stat pack of correct type of the statpack to apply to item")
