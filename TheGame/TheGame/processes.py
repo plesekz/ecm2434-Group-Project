@@ -429,18 +429,18 @@ def upgradeStatOnItem(request):
             removeItemFromChampion(userChamp, packs[0])
             removeItemOrWeapon(packs[0])
         else:
-            return HttpResponse("no stat packs found")
+            return HttpResponse("no stat packs found", status=202)
     
     # if the item is an item then use an item statpack
     if isinstance(item, SpecificItem):
         # get the users stat packs
         if (packs := getChampionsItemStatPacks(userChamp)):
-            applyStatPack(userChamp, packs[0])
+            applyStatPack(item, packs[0])
             removeItemFromChampion(userChamp, packs[0])
             removeItemOrWeapon(packs[0])
         
         else:
-            return HttpResponse("no stat packs found")
+            return HttpResponse("no stat packs found", status=202)
 
 
     return HttpResponse(status=200)
@@ -452,8 +452,11 @@ def upgradeStatOnItem(request):
 
 def getItemFromPK(pk: int) -> Item:
 
-    if item := Item.objects.get(pk=pk):
+    try:
+        item = Item.objects.get(pk=pk)
         return item
+    except:
+        return None
 
     return None
 
@@ -830,8 +833,8 @@ def getChampionsItemStatPacks(champion : Champion) -> "list[SpecificItem]":
     packList = []
 
     for pack in statpacks:
-        if isinstance(pack, SpecificItem):
-            packList.append(pack)
+        if isinstance(pack.item, SpecificItem):
+            packList.append(pack.item)
 
     return packList
 
@@ -849,8 +852,8 @@ def getChampionsWeaponStatPacks(champion : Champion) -> "list[SpecificItem]":
     packList = []
 
     for pack in statpacks:
-        if isinstance(pack, SpecificWeapon):
-            packList.append(pack)
+        if isinstance(pack.item, SpecificWeapon):
+            packList.append(pack.item)
 
     return packList
 
@@ -876,8 +879,10 @@ def getItemFromPK(pk: int) -> Item:
 
 def applyStatPack(item: Item, statPack: Item):
     
+    print(type(item))
+
     if isinstance(item, SpecificItem):
-        if not (isinstance(item, SpecificItem) and item.type == "statPack"):
+        if not (isinstance(statPack, SpecificItem) and statPack.type == "statPack"):
             raise Exception("item can only be upgraded with a stat pack of the same type")
         
         item.armourValue += statPack.armourValue
@@ -886,8 +891,8 @@ def applyStatPack(item: Item, statPack: Item):
         item.save()
         return
 
-    if isinstance(item, SpecificWeapon):
-        if not (isinstance(statPack, SpecificWeapon) and item.type == "statPack"):
+    elif isinstance(item, SpecificWeapon):
+        if not (isinstance(statPack, SpecificWeapon) and statPack.type == "statPack"):
             raise Exception("item can only be upgraded with a stat pack of the same type")
         
         item.damageNumber += statPack.damageNumber
@@ -897,7 +902,7 @@ def applyStatPack(item: Item, statPack: Item):
         item.save()
         return
         
-    if isinstance(statPack, Item):
-        raise Exception("must use a specific versin of the statpack to apply to item")
+    elif isinstance(statPack, Item):
+        raise Exception("must use a stat pack of correct type of the statpack to apply to item")
     
     raise Exception("failed to apply statPack to item")
