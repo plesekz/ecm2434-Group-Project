@@ -347,30 +347,29 @@ def equipItem(request):
     item = getItemFromPK(request.POST.get('itemPK'))
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
-    #To be contuinued....
+    # To be contuinued....
 
     # replace the foriegn keys in the champions places with the item that was bought
     # this will have to have logic for when all slots are full
 
     if isinstance(item, SpecificWeapon):
-        if userChamp.primaryWeapon == None:
+        if userChamp.primaryWeapon is None:
             userChamp.primaryWeapon = item
-        elif userChamp.secondaryWeapon == None:
+        elif userChamp.secondaryWeapon is None:
             userChamp.secondaryWeapon = item
 
     elif isinstance(item, SpecificItem):
         if item.type == "armour":
-            userChamp.armour = item 
-        elif userChamp.auxItem1 == None:
+            userChamp.armour = item
+        elif userChamp.auxItem1 is None:
             userChamp.auxItem1 = item
-        elif userChamp.auxItem2 == None:
+        elif userChamp.auxItem2 is None:
             userChamp.auxItem2 = item
-        elif userChamp.auxItem3 == None:
+        elif userChamp.auxItem3 is None:
             userChamp.auxItem3 = item
 
-
-
     return response
+
 
 def sellItem(request):
     """ makes a sell of an item for the user
@@ -385,9 +384,10 @@ def sellItem(request):
     item = getItemFromPK(request.POST.get('itemPK'))
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
-    #To be contuinued....
+    # To be contuinued....
 
     return response
+
 
 def upgradeStatOnItem(request):
     """ makes a sell of an item for the user
@@ -403,12 +403,12 @@ def upgradeStatOnItem(request):
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
 
-    
-    ##response = redirect("/itemUpgrade") # need to pass parameters so that the item upgrade page knows what itemPK is
+    # response = redirect("/itemUpgrade") # need to pass parameters so that
+    # the item upgrade page knows what itemPK is
     item = getItemFromPK(itemPK)
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
-    #To be contuinued....
+    # To be contuinued....
 
     return HttpResponse(status=200)
 
@@ -578,6 +578,7 @@ def addItemToChampion(item: Item, champion: Champion):
         champion=champion,
         item=item,
     )
+
 
 def getChampionsItemsAndWeapons(champion: Champion) -> "list[Item]":
     """ function that returns a list of all the items and weapons in a champions possession
