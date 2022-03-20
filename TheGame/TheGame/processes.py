@@ -869,11 +869,12 @@ def removeItemFromChampion(champion: Champion, item: Item):
 
 
 def getItemFromPK(pk: int) -> Item:
-
-    if item := Item.objects.get(pk=pk):
+    
+    try:
+        item = Item.objects.get(pk=pk)
         return item
-
-    return None
+    except:
+        return None
 
 def applyStatPack(item: Item, statPack: Item):
 
