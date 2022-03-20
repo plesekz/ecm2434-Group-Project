@@ -12,34 +12,34 @@
             <div class="stat-highlight mt-3">
                 <h1>Character Image</h1>
                 <div class="row">
-                    {% if equip.weapon %}
+                    {% if champion.primaryWeapon %}
                     <div class="col">
-                        {{equip.weapon.name}}
-                        {{equip.weapon|safe}}
+                        {{champion.primaryWeapon.name}}
+                        {{champion.primaryWeapon|safe}}
                     </div>
                     {% endif %}
-                    {% if equip.weapon %}
+                    {% if champion.armour %}
                     <div class="col">
-                        {{equip.armour.name}}
-                        {{equip.armour|safe}}
+                        {{champion.armour.name}}
+                        {{champion.armour|safe}}
                     </div>
                     {% endif %}
-                    {% if equip.weapon %}
+                    {% if champion.auxItem1 %}
                     <div class="col">
-                        {{equip.aux1.name}}
-                        {{equip.aux1|safe}}
+                        {{champion.auxItem1.name}}
+                        {{champion.auxItem1|safe}}
                     </div>
                     {% endif %}
-                    {% if equip.weapon %}
+                    {% if champion.auxItem2 %}
                     <div class="col">
-                        {{equip.aux2.name}}
-                        {{equip.aux2|safe}}
+                        {{champion.auxItem2.name}}
+                        {{champion.auxItem2|safe}}
                     </div>
                     {% endif %}
-                    {% if equip.weapon %}
+                    {% if champion.auxItem3 %}
                     <div class="col">
-                        {{equip.aux3.name}}
-                        {{equip.aux3|safe}}
+                        {{champion.auxItem3.name}}
+                        {{champion.auxItem3|safe}}
                     </div>
                     {% endif %}
                 </div>

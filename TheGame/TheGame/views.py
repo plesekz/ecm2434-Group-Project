@@ -84,13 +84,6 @@ def characterInventory(request: HttpRequest) -> HttpResponse:
         "username": user.username,
         "champion": champion,
         "items": items,
-        "equip": {
-            "weapon": getItemFromPK(champion.primaryWeapon),
-            "armour": getItemFromPK(champion.armour),
-            "aux1": getItemFromPK(champion.auxItem1),
-            "aux2": getItemFromPK(champion.auxItem2),
-            "aux3": getItemFromPK(champion.auxItem3)
-        }
     }
 
     output = template.render(context, request)
