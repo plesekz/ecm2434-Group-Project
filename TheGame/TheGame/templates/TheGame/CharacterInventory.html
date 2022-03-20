@@ -9,7 +9,7 @@
 <div class="container-floating" style="color: white;">
     <div class="row">
         <div class="col-md-3 order-md-3 container">
-            <div class="stat-highlight">
+            <div class="stat-highlight mt-3">
                 <h1>Character Image</h1>
                 <div class="row">
                     {% if equip.weapon %}
@@ -46,7 +46,7 @@
             </div>
         </div>
         <div class="col-md-6 order-md-3 container">
-            <div class="row stat-highlight">
+            <div class="row stat-highlight mt-3">
                 <h1>Inventory</h1>
                 {%for i in items%}
                     <div class="col-sm-4 text-start border border-dark" >
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="col-md-3 order-md-3 container">
-            <div class="stat-highlight">
+            <div class="stat-highlight mt-3">
                     <h3>Stats:</h3>
                     <p>
                     Health: {{champion.pHealth}}<br>
