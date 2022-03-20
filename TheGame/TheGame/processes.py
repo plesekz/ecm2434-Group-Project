@@ -333,6 +333,60 @@ def buyItem(request):
 
     return response
 
+
+def equipItem(request):
+    """ makes an equip of an item for the user
+    """
+
+    if not request.method == "POST":
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+    response = redirect("/characterInventory")
+    item = getItemFromPK(request.POST.get('itemPK'))
+    user = getUserFromCookie(request)
+    userChamp = getChampion(user)
+    #To be contuinued....
+
+    return response
+
+def sellItem(request):
+    """ makes a sell of an item for the user
+    """
+
+    if not request.method == "POST":
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+    response = redirect("/characterInventory")
+    item = getItemFromPK(request.POST.get('itemPK'))
+    user = getUserFromCookie(request)
+    userChamp = getChampion(user)
+    #To be contuinued....
+
+    return response
+
+def upgradeStatOnItem(request):
+    """ makes a sell of an item for the user
+    """
+
+    if not request.method == "POST":
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+
+    
+    response = redirect("/itemUpgrade") # need to pass parameters so that the item upgrade page knows what itemPK is
+    item = getItemFromPK(request.POST.get('itemPK'))
+    user = getUserFromCookie(request)
+    userChamp = getChampion(user)
+    #To be contuinued....
+
+    return response
+
 #
 #   THESE ARE THE FUNCTIONS THAT WILL DEAL WITH CREATING AND REMOVING ITEMS
 #
@@ -499,7 +553,6 @@ def addItemToChampion(item: Item, champion: Champion):
         champion=champion,
         item=item,
     )
-
 
 def getChampionsItemsAndWeapons(champion: Champion) -> "list[Item]":
     """ function that returns a list of all the items and weapons in a champions possession

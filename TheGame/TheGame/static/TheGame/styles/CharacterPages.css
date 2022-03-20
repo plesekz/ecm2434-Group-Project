@@ -4,6 +4,12 @@ button.top-bar-button{
     border-color: rgb(100, 60, 60);
 }
 
+div.upgrade-button-holder{
+    background-color: rgb(175, 60, 60);
+    color: white;
+    border-color: rgb(100, 60, 60);
+}
+
 div.stat-highlight{
     background-color: rgb(150, 80, 80);
     padding: 2%;

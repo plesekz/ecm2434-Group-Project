@@ -2,7 +2,7 @@ from django.template import loader
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 from Login.processes import getUserFromCookie
-from TheGame.processes import getAllBaseItems, getAllBosses, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons
+from TheGame.processes import getAllBaseItems, getAllBosses, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
 from Resources.processes import getAllUserResources
 
 
@@ -112,6 +112,31 @@ def characterShop(request: HttpRequest) -> HttpResponse:
         "username": user.username,
         "champion": champion,
         "allItems": allItems,
+        "resources": resources,
+    }
+
+    output = template.render(context, request)
+
+    return HttpResponse(output)
+
+def itemUpgrade(request: HttpRequest) -> HttpResponse:
+    """ creates response for the item Upgrade
+    """
+    if request.COOKIES.get('TheGameSessionID') is None:
+        return HttpResponseRedirect('login')
+
+    user = getUserFromCookie(request)
+    if not (champion := getChampion(user)):
+        return HttpResponseRedirect('createChampion')
+
+    template = loader.get_template('TheGame/ItemUpgrade.html')
+    item = getItemFromPK(request.POST.get('itemPK'))
+    resources = getAllUserResources(user)
+
+    context = {
+        "username": user.username,
+        "champion": champion,
+        "item": item,
         "resources": resources,
     }
 
