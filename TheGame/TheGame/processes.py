@@ -349,6 +349,27 @@ def equipItem(request):
     userChamp = getChampion(user)
     #To be contuinued....
 
+    # replace the foriegn keys in the champions places with the item that was bought
+    # this will have to have logic for when all slots are full
+
+    if isinstance(item, SpecificWeapon):
+        if userChamp.primaryWeapon == None:
+            userChamp.primaryWeapon = item
+        elif userChamp.secondaryWeapon == None:
+            userChamp.secondaryWeapon = item
+
+    elif isinstance(item, SpecificItem):
+        if item.type == "armour":
+            userChamp.armour = item 
+        elif userChamp.auxItem1 == None:
+            userChamp.auxItem1 = item
+        elif userChamp.auxItem2 == None:
+            userChamp.auxItem2 = item
+        elif userChamp.auxItem3 == None:
+            userChamp.auxItem3 = item
+
+
+
     return response
 
 def sellItem(request):
@@ -372,6 +393,10 @@ def upgradeStatOnItem(request):
     """ makes a sell of an item for the user
     """
 
+    data = request.body.decode('utf-8')  # decode the body to a string
+    requestJson = json.loads(data)  # load json from string data
+    itemPK = requestJson['itemPK']
+
     if not request.method == "POST":
         messages.error(
             request,
@@ -379,13 +404,13 @@ def upgradeStatOnItem(request):
         return "failed to process, please use POST method"
 
     
-    response = redirect("/itemUpgrade") # need to pass parameters so that the item upgrade page knows what itemPK is
-    item = getItemFromPK(request.POST.get('itemPK'))
+    ##response = redirect("/itemUpgrade") # need to pass parameters so that the item upgrade page knows what itemPK is
+    item = getItemFromPK(itemPK)
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
     #To be contuinued....
 
-    return response
+    return HttpResponse(status=200)
 
 #
 #   THESE ARE THE FUNCTIONS THAT WILL DEAL WITH CREATING AND REMOVING ITEMS
