@@ -62,7 +62,7 @@ class SpecificWeapon(BaseWeapon):
     glory = models.IntegerField()
 
     def __str__(self):
-        return f"Damage: {self.damageNumber}<br>Speed: {self.damageNumber}<br>Range: {self.damageNumber}<br>AP Cost: {self.ap_cost}<br>Level: {self.level}<br>Glory: {self.glory}"
+        return f"Damage: {self.damageNumber}<br>Range: {self.damageNumber}<br>AP Cost: {self.ap_cost}<br>Level: {self.level}<br>Glory: {self.glory}"
 
 
 class Champion(models.Model):
