@@ -371,6 +371,9 @@ def sellItem(request):
     userChamp = getChampion(user)
     # To be contuinued....
 
+    removeItemFromChampion(userChamp, item)
+    removeItemOrWeapon(item)
+
     return response
 
 
@@ -402,6 +405,8 @@ def upgradeStatOnItem(request):
             applyStatPack(item, packs[0])
             removeItemFromChampion(userChamp, packs[0])
             removeItemOrWeapon(packs[0])
+        else:
+            return HttpResponse("no stat packs found")
     
     # if the item is an item then use an item statpack
     if isinstance(item, SpecificItem):
@@ -411,6 +416,8 @@ def upgradeStatOnItem(request):
             removeItemFromChampion(userChamp, packs[0])
             removeItemOrWeapon(packs[0])
         
+        else:
+            return HttpResponse("no stat packs found")
 
 
     return HttpResponse(status=200)
@@ -766,13 +773,14 @@ def getChampionsItemStatPacks(champion : Champion) -> "list[SpecificItem]":
 
     #query the table for the stat packs
 
-    if not (statpacks := SpecificItem.objects.filter(query)).exists():
+    if not (statpacks := ChampionItems.objects.filter(query)).exists():
         return None
 
     packList = []
 
     for pack in statpacks:
-        packList.append(pack)
+        if isinstance(pack, SpecificItem):
+            packList.append(pack)
 
     return packList
 
@@ -784,13 +792,14 @@ def getChampionsWeaponStatPacks(champion : Champion) -> "list[SpecificItem]":
 
     #query the table for the stat packs
 
-    if not (statpacks := SpecificWeapon.objects.filter(query)).exists():
+    if not (statpacks := ChampionItems.objects.filter(query)).exists():
         return None
 
     packList = []
 
     for pack in statpacks:
-        packList.append(pack)
+        if isinstance(pack, SpecificWeapon):
+            packList.append(pack)
 
     return packList
 
