@@ -92,3 +92,13 @@ def getAllResources() -> "list[Resource]":
     resources = Resource.objects.all()
 
     return resources
+
+def getPlayerResourceAmount(player : Player, resource: Resource) -> int:
+    """ function that returns the amount of a resource that a player has
+    """
+
+    try:
+        pr = PlayerResource.objects.get(player=player, resource=resource)
+        return pr.amount
+    except:
+        return 0

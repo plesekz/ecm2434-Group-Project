@@ -4,12 +4,24 @@ from unicodedata import decimal
 from django.db import models
 from Login.models import Player
 from polymorphic.models import PolymorphicModel
+from Resources.models import Resource
 
 
 class Item(PolymorphicModel):
     name = models.CharField(max_length=50)
-    price = models.IntegerField()
     type = models.CharField(max_length=50)
+
+    priceRes1 = models.ForeignKey(Resource, null=False,
+         related_name="priceRes1", on_delete=models.CASCADE)
+    price1 = models.IntegerField(null=False)
+
+    priceRes2 = models.ForeignKey(Resource, null=True,
+         related_name="priceRes2", on_delete=models.CASCADE)
+    price2 = models.IntegerField(null=True)
+
+    priceRes3 = models.ForeignKey(Resource, null=True,
+         related_name="priceRes3", on_delete=models.CASCADE)
+    price3 = models.IntegerField(null=True)    
 
     def __str__(self):
         return "item: " + self.name

@@ -49,17 +49,14 @@ def characterMenu(request: HttpRequest) -> HttpResponse:
     context = {
         "username": user.username,
         "champion": champion,
-        "pHealth": champion.pHealth,
-        "pToughness": champion.pToughness,
-        "pEvasion": champion.pEvasion,
-        # item stats would replace this when item database is created
-        "damage": champion.damage,
-        "accuracy": champion.accuracy,
-        "attackSpeed": champion.attackSpeed,
-        # armour stats would replace this when armour database is created
-        "aHealth": champion.aHealth,
-        "aToughness": champion.aToughness,
-        "aEvasion": champion.aEvasion,
+        # # item stats would replace this when item database is created
+        # "damage": champion.damage,
+        # "accuracy": champion.accuracy,
+        # "attackSpeed": champion.attackSpeed,
+        # # armour stats would replace this when armour database is created
+        # "aHealth": champion.aHealth,
+        # "aToughness": champion.aToughness,
+        # "aEvasion": champion.aEvasion,
         "resources": resources,
     }
 
@@ -166,7 +163,6 @@ def battleSelectView(request: HttpRequest) -> HttpResponse:
         "champion": champ,
         "resources": resources,
         "bosses": bosses,
-        "stats": stats,
         "resources": resources,
     }
 

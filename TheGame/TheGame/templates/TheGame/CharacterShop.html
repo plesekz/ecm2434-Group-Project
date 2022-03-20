@@ -20,7 +20,13 @@
                     <button class="col-sm-4 top-bar-button" type="submit" onclick="submitData('{{i.pk}}')">
                         <p>{{i.name}}</p>
                         <p>{{i|safe}}</p>
-                        <p>{{i.price}}</p>
+                        <p>{{i.priceRes1}}{{i.price1}}</p>
+                        {% if i.priceRes2 %}
+                        <p>{{i.priceRes2}}{{i.price2}}</p>
+                        {% endif %}
+                        {% if i.priceRes3 %}
+                        <p>{{i.priceRes3}}{{i.price3}}</p>
+                        {% endif %}
                     </button>
                 {%endfor%}
             </div>

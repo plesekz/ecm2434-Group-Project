@@ -5,7 +5,7 @@ from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedi
 from django.shortcuts import redirect
 from django.contrib import messages
 from Login.models import Player
-from Resources.processes import removeResourceFromUser, addResourceToUser, getResourceByName
+from Resources.processes import *
 from .models import Champion
 from Login.processes import getUserFromCookie
 from Login.models import Player
@@ -36,12 +36,28 @@ def spendResource(request, rNeeded, amount):
     try:
         removeResourceFromUser(
             getUserFromCookie(request),
-            getResourceByName(rNeeded),
+            rNeeded,
             amount)
         return True
     except Exception as e:
         messages.error(request, ('Not enough resources'))
         return False
+
+def spendMultiResource(request, resources: "list[tuple(Resource,int)]"):
+    user = getUserFromCookie(request)
+    # check that for each resource the player has enough
+    for tup in resources:
+        if getPlayerResourceAmount(user, tup[0]) < tup[1]: #tup[0] = resource tup[1] = amount
+            messages.error(request, ('Not enough resources'))
+            return False # return false if they dont have enough
+    
+    # if execution gets here then they have enough resources so we can spend
+    for tup in resources:
+        if not spendResource(request, tup[0], tup[1]):
+            messages.error(request, ('something has gone very wrong and you may have lost resources'))
+            return False
+    return True
+
 
 
 def buyPHealth(request):
@@ -52,7 +68,7 @@ def buyPHealth(request):
             request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         userStats = getUserFromName(request)
         userStats.pHealth += 1
         userStats.save()
@@ -85,7 +101,7 @@ def buyPEvasion(request):
             request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         userStats = getUserFromName(request)
         userStats.pEvasion += 1
         userStats.save()
@@ -101,7 +117,7 @@ def buyDamage(request):
             request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         userStats = getUserFromName(request)
         userStats.damage += 1
         userStats.save()
@@ -117,7 +133,7 @@ def buyAccuracy(request):
             request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         userStats = getUserFromName(request)
         userStats.accuracy += 1
         userStats.save()
@@ -133,7 +149,7 @@ def buyAttackSpeed(request):
             request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         userStats = getUserFromName(request)
         userStats.attackSpeed += 1
         userStats.save()
@@ -149,7 +165,7 @@ def buyAHealth(request):
             request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         userStats = getUserFromName(request)
         userStats.aHealth += 1
         userStats.save()
@@ -165,7 +181,7 @@ def buyAToughness(request):
             request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         userStats = getUserFromName(request)
         userStats.aToughness += 1
         userStats.save()
@@ -181,7 +197,7 @@ def buyAEvasion(request):
             request, ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         userStats = getUserFromName(request)
         userStats.aEvasion += 1
         userStats.save()
@@ -239,7 +255,7 @@ def buyPHealth(request):
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.pHealth += 1
@@ -259,7 +275,7 @@ def buyPAthletics(request):
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.pAthletics += 1
@@ -279,7 +295,7 @@ def buyPBrain(request):
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.pBrain += 1
@@ -299,7 +315,7 @@ def buyPControl(request):
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
     response = redirect("characterMenu")
-    if spendResource(request, 'wood', 1):
+    if spendResource(request, getResourceByName('wood'), 1):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         userChamp.pControl += 1
@@ -326,7 +342,14 @@ def buyItem(request):
     response = redirect("characterShop")
 
     item = getItemFromPK(itemPK)
-    if spendResource(request, 'wood', item.price):
+
+    resList = [(item.priceRes1, item.price1)]
+    if item.priceRes2:
+        resList.append((item.priceRes2, item.price2))
+    if item.priceRes3:
+        resList.append((item.priceRes3, item.price3))
+
+    if spendMultiResource(request, resList):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         addItemToChampion(createNewSpecificItem(item, 0, 0), userChamp)
@@ -435,8 +458,11 @@ def getItemFromPK(pk: int) -> Item:
     return None
 
 
-def createNewBaseItem(name: str, price: int, type: str,
-                      armourValue: int, vitalityBoost: int, specialAbilities: str) -> BaseItem:
+def createNewBaseItem(name: str, type: str,
+                      armourValue: int, vitalityBoost: int, specialAbilities: str,
+                      priceRes1: Resource, price1: int,
+                      priceRes2: Resource = None, price2: int = None,
+                      priceRes3: Resource = None, price3: int = None) -> BaseItem:
     """ this function will create a new BaseItem in the database,
     Args:
         name(Str): name of the item
@@ -460,7 +486,12 @@ def createNewBaseItem(name: str, price: int, type: str,
 
     baseItem = BaseItem.objects.create(
         name=name,
-        price=price,
+        priceRes1=priceRes1,
+        priceRes2=priceRes2,
+        priceRes3=priceRes3,
+        price1=price1,
+        price2=price2,
+        price3=price3,
         type=type,
         armourValue=armourValue,
         vitalityBoost=vitalityBoost,
@@ -487,8 +518,14 @@ def createNewSpecificItem(
     if isinstance(baseItem, BaseItem):
         si = SpecificItem.objects.create(
             name=baseItem.name,
-            price=baseItem.price,
             type=baseItem.type,
+
+            priceRes1=baseItem.priceRes1,
+            priceRes2=baseItem.priceRes2,
+            priceRes3=baseItem.priceRes3,
+            price1=baseItem.price1,
+            price2=baseItem.price2,
+            price3=baseItem.price3,
 
             armourValue=baseItem.armourValue,
             vitalityBoost=baseItem.vitalityBoost,
@@ -503,8 +540,14 @@ def createNewSpecificItem(
     elif isinstance(baseItem, BaseWeapon):
         sw = SpecificWeapon.objects.create(
             name=baseItem.name,
-            price=baseItem.price,
             type=baseItem.type,
+
+            priceRes1=baseItem.priceRes1,
+            priceRes2=baseItem.priceRes2,
+            priceRes3=baseItem.priceRes3,
+            price1=baseItem.price1,
+            price2=baseItem.price2,
+            price3=baseItem.price3,
 
             damageNumber=baseItem.damageNumber,
             damageInstances=baseItem.damageInstances,
@@ -519,8 +562,11 @@ def createNewSpecificItem(
         return sw
 
 
-def createNewBaseWeapon(name: str, price: int, type: str,
-                        damageNumber: int, damageInstances: int, range: int, association: chr, ap_cost: int) -> BaseWeapon:
+def createNewBaseWeapon(name: str, type: str,
+                        damageNumber: int, damageInstances: int, range: int, association: chr, ap_cost: int,
+                        priceRes1: Resource, price1: int,
+                        priceRes2: Resource = None, price2: int = None,
+                        priceRes3: Resource = None, price3: int = None) -> BaseWeapon:
     """ this function will create a new BaseWeapon in the database,
     Args:
         name(Str): name of the item
@@ -544,8 +590,13 @@ def createNewBaseWeapon(name: str, price: int, type: str,
 
     bw = BaseWeapon.objects.create(
         name=name,
-        price=price,
         type=type,
+        priceRes1=priceRes1,
+        priceRes2=priceRes2,
+        priceRes3=priceRes3,
+        price1=price1,
+        price2=price2,
+        price3=price3,
 
         damageInstances=damageInstances,
         damageNumber=damageNumber,
