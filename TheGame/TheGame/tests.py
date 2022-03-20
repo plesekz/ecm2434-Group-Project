@@ -283,3 +283,78 @@ class ItemTestCase(TestCase):
         self.assertEqual(
             getChampionsItems(mychamp), None
         )
+
+    def stat_pack_test(self):
+        # create a new item that we can use for upgrading
+
+        baseItem = createNewBaseItem(
+            name = "shield",
+            price = 10,
+            type = "item",
+            armourValue = 15,
+            vitalityBoost = 50,
+            specialAbilities = "sleeping",
+        )
+
+        specItem = createNewSpecificItem(
+            baseItem = baseItem,
+            startingLevel = 3,
+            startingGlory = 2,
+        )
+
+        baseStatPack = createNewBaseItem(
+            name = "shieldUpgradePack",
+            price = 14,
+            type = "statPack",
+            armourValue = 10,
+            vitalityBoost = 0,
+            specialAbilities = "",
+        )
+
+        specStatPack = createNewSpecificItem(
+            baseItem = baseStatPack,
+            startingLevel = 5,
+            startingGlory = 0
+        )
+
+        # apply the stat pack
+        applyStatPack(specItem, specStatPack)
+
+        # check that the item was updgraded
+        self.assertEqual(specItem.armourValue, 25)
+
+    def test_removing_items(self):
+        # create an item that we can remove
+
+        baseItem = createNewBaseItem(
+            name = "shield",
+            price = 10,
+            type = "item",
+            armourValue = 15,
+            vitalityBoost = 50,
+            specialAbilities = "sleeping",
+        )
+
+        specItem = createNewSpecificItem(
+            baseItem = baseItem,
+            startingLevel = 3,
+            startingGlory = 2,
+        )
+
+        # once its removed it should also remove the spec item leaving items table empty
+        self.assertEqual(baseItem.pk, 1)
+        self.assertEqual(specItem.pk, 2)
+
+        removeItemOrWeapon(baseItem)
+
+        # there should now be no base item in the system
+        self.assertEquals(
+            getAllBaseItemsAndWeapons(), None
+        )
+
+        # assert that no item with pk 2 exists
+        try:
+            Item.objects.get(pk=2)
+            assert False
+        except:
+            assert True

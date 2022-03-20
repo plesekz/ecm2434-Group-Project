@@ -240,3 +240,4 @@ class QrTestCase(TestCase):
         """
 
         assert True
+

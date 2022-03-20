@@ -14,7 +14,6 @@ class Item(PolymorphicModel):
     def __str__(self):
         return "item: " + self.name
 
-
 class BaseItem(Item):
     armourValue = models.IntegerField()
     vitalityBoost = models.IntegerField()

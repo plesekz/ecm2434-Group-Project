@@ -343,6 +343,7 @@ def equipItem(request):
             request,
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
+
     response = redirect("/characterInventory")
     item = getItemFromPK(request.POST.get('itemPK'))
     user = getUserFromCookie(request)
@@ -351,22 +352,6 @@ def equipItem(request):
 
     # replace the foriegn keys in the champions places with the item that was bought
     # this will have to have logic for when all slots are full
-
-    if isinstance(item, SpecificWeapon):
-        if userChamp.primaryWeapon is None:
-            userChamp.primaryWeapon = item
-        elif userChamp.secondaryWeapon is None:
-            userChamp.secondaryWeapon = item
-
-    elif isinstance(item, SpecificItem):
-        if item.type == "armour":
-            userChamp.armour = item
-        elif userChamp.auxItem1 is None:
-            userChamp.auxItem1 = item
-        elif userChamp.auxItem2 is None:
-            userChamp.auxItem2 = item
-        elif userChamp.auxItem3 is None:
-            userChamp.auxItem3 = item
 
     return response
 
@@ -409,6 +394,24 @@ def upgradeStatOnItem(request):
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
     # To be contuinued....
+
+    # if the item is a weapon then get the first weapon statpack from the user
+    if isinstance(item, SpecificWeapon):
+        #get one of the users weapon statpacks
+        if (packs := getChampionsWeaponStatPacks(userChamp)):
+            applyStatPack(item, packs[0])
+            removeItemFromChampion(userChamp, packs[0])
+            removeItemOrWeapon(packs[0])
+    
+    # if the item is an item then use an item statpack
+    if isinstance(item, SpecificItem):
+        # get the users stat packs
+        if (packs := getChampionsItemStatPacks(userChamp)):
+            applyStatPack(userChamp, packs[0])
+            removeItemFromChampion(userChamp, packs[0])
+            removeItemOrWeapon(packs[0])
+        
+
 
     return HttpResponse(status=200)
 
@@ -651,20 +654,20 @@ def getChampionsWeapons(champion: Champion) -> "list[Item]":
     return itemList
 
 
-def removeBaseItemOrWeapon(item: Item):
+def removeItemOrWeapon(item: Item):
     """ function that will remove all the item in the database, note that this will also remove
     any specific instances of that item
     """
-
     if isinstance(item, SpecificItem) or isinstance(item, SpecificWeapon):
-        raise Exception("item was not a base item or weapon")
+        item.delete()
+        return
 
     instances = SpecificItem.objects.filter(name=item.name)
 
     for i in instances:
-        i.remove()
+        i.delete()
 
-    item.remove()
+    item.delete()
 
 
 def getAllBaseItemsAndWeapons() -> "list[Item]":
@@ -682,6 +685,9 @@ def getAllBaseItemsAndWeapons() -> "list[Item]":
     itemList = []
     for i in items:
         itemList.append(i)
+
+    if itemList == []:
+        return None
 
     return itemList
 
@@ -752,6 +758,54 @@ def createNewBaseItemFromHTMLRequest(request):
 
     return HttpResponseRedirect('addItems')
 
+def getChampionsItemStatPacks(champion : Champion) -> "list[SpecificItem]":
+    """ function that will return a list of all the users item stat packs
+    """
+
+    query = Q(champion=champion) & Q(item__type="statPack")
+
+    #query the table for the stat packs
+
+    if not (statpacks := SpecificItem.objects.filter(query)).exists():
+        return None
+
+    packList = []
+
+    for pack in statpacks:
+        packList.append(pack)
+
+    return packList
+
+def getChampionsWeaponStatPacks(champion : Champion) -> "list[SpecificItem]":
+    """ function that will return a list of all the users item stat packs
+    """
+
+    query = Q(champion=champion) & Q(item__type="statPack")
+
+    #query the table for the stat packs
+
+    if not (statpacks := SpecificWeapon.objects.filter(query)).exists():
+        return None
+
+    packList = []
+
+    for pack in statpacks:
+        packList.append(pack)
+
+    return packList
+
+def removeItemFromChampion(champion: Champion, item: Item):
+    """function that will remove an item from a champion
+    """
+
+    query = Q(champion=champion) & Q(item=item)
+    
+    try:
+        ChampionItems.objects.get(query).delete()
+        return True
+    except:
+        return False
+
 
 def getItemFromPK(pk: int) -> Item:
 
@@ -759,3 +813,31 @@ def getItemFromPK(pk: int) -> Item:
         return item
 
     return None
+
+def applyStatPack(item: Item, statPack: Item):
+    
+    if isinstance(item, SpecificItem):
+        if not (isinstance(item, SpecificItem) and item.type == "statPack"):
+            raise Exception("item can only be upgraded with a stat pack of the same type")
+        
+        item.armourValue += statPack.armourValue
+        item.vitalityBoost += statPack.vitalityBoost
+        item.level += statPack.level
+        item.save()
+        return
+
+    if isinstance(item, SpecificWeapon):
+        if not (isinstance(statPack, SpecificWeapon) and item.type == "statPack"):
+            raise Exception("item can only be upgraded with a stat pack of the same type")
+        
+        item.damageNumber += statPack.damageNumber
+        item.damageInstances += statPack.damageInstances
+        item.range += statPack.range
+        item.level += statPack.level
+        item.save()
+        return
+        
+    if isinstance(statPack, Item):
+        raise Exception("must use a specific versin of the statpack to apply to item")
+    
+    raise Exception("failed to apply statPack to item")
