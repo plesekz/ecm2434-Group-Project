@@ -26,6 +26,7 @@ Currently precompiled wasm and js files are included in git, so it will work by 
 ## Use
 ### First run
 Create database by running `python3 manage.py migrate`
+
 Initialise defaults by running `python3 manage.py shell -c "import first_run"`
 
 ### Using DJango runserver
