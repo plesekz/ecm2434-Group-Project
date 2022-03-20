@@ -13,33 +13,33 @@
                 <h1>Character Image</h1>
                 <div class="row">
                     {% if champion.primaryWeapon %}
-                    <div class="col">
-                        {{champion.primaryWeapon.name}}
-                        {{champion.primaryWeapon|safe}}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.primaryWeapon.name}}</p>
+                        <p>{{champion.primaryWeapon|safe}}</p>
                     </div>
                     {% endif %}
                     {% if champion.armour %}
-                    <div class="col">
-                        {{champion.armour.name}}
-                        {{champion.armour|safe}}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.armour.name}}</p>
+                        <p>{{champion.armour|safe}}</p>
                     </div>
                     {% endif %}
                     {% if champion.auxItem1 %}
-                    <div class="col">
-                        {{champion.auxItem1.name}}
-                        {{champion.auxItem1|safe}}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.auxItem1.name}}</p>
+                        <p>{{champion.auxItem1|safe}}</p>
                     </div>
                     {% endif %}
                     {% if champion.auxItem2 %}
-                    <div class="col">
-                        {{champion.auxItem2.name}}
-                        {{champion.auxItem2|safe}}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.auxItem2.name}}</p>
+                        <p>{{champion.auxItem2|safe}}</p>
                     </div>
                     {% endif %}
                     {% if champion.auxItem3 %}
-                    <div class="col">
-                        {{champion.auxItem3.name}}
-                        {{champion.auxItem3|safe}}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.auxItem3.name}}</p>
+                        <p>{{champion.auxItem3|safe}}</p>
                     </div>
                     {% endif %}
                 </div>
