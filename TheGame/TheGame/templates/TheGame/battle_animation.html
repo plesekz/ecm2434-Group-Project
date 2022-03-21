@@ -5,96 +5,158 @@
 sets up the different sprites
 character is the bounding box, the default position is entirely within it
 -->*/
+
 #arena {
     position: relative;
+    width: 1600px;
+    aspect-ratio: 16 / 9;
+    border-style: solid;
+    position: relative;
+    contain: strict;
 }
 
+
 #leftCharacter {
-    width: 384px;
-    height: 768px;
+    height: 75%;
+    aspect-ratio: 1 / 2;
     position: absolute; 
-}
-#lArm {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index:-1;
-    background:url(sprites/hacker/arm.png);
-}
-#lWeapon {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index:-2;
-    background:url(sprites/weapons/sword.png);
+    top: 10%;
+    left: 2%;
 }
 #lBody {
-    width: 384px;
-    height: 768px;
-    position: absolute;
+    background: url(sprites/hacker/body.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     z-index:-3;
-    background:url(sprites/hacker/body.png);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0%;
+    left: 0%;
 }
 #lBodyShield {
-    width: 384px;
-    height: 768px;
-    position: absolute;
-    z-index:-5;
     background:url(sprites/hacker/bodyshield.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index:-5;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+}
+
+#lArm {
+    background:url(sprites/hacker/arm.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index:-1;
+    width: 200%;
+    height: 100%;
+    position: absolute;
+    top: -24%;
+    left: -54%;
+    transform: rotate(60deg);
+    
 }
 #lArmShield {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index: -4;
     background:url(sprites/hacker/armshield.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index: -4;
+    width: 200%;
+    height: 100%;
+    position: absolute;
+    top: -24%;
+    left: -54%;
+    transform: rotate(60deg);
 }
+
+#lWeapon {
+    background:url(sprites/weapons/sword.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index:-2;
+    width: 200%;
+    height: 100%;
+    position: absolute;
+    top: -24%;
+    left: -54%;
+    transform: rotate(60deg);
+}
+
 
 
 #rightCharacter {
-    width: 384px;
-    height: 768px;
-    position: absolute;
-}
-#rArm {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index:-1;
-    background:url(sprites/hacker/arm.png);
-    transform: scaleX(-1);
-}
-#rWeapon {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index:-2;
-    transform: scaleX(-1);
-    background:url(sprites/weapons/sword.png);
+    height: 75%;
+    aspect-ratio: 1 / 2;
+    position: absolute; 
+    top: 10%;
+    right: 2%;
 }
 #rBody {
-    width: 384px;
-    height: 768px;
-    position: absolute;
+    background: url(sprites/hacker/body.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     z-index:-3;
-    background:url(sprites/hacker/body.png);
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0%;
+    left: 0%;
     transform: scaleX(-1);
 }
+
 #rBodyShield {
-    width: 384px;
-    height: 768px;
-    position: absolute;
-    z-index:-5;
     background:url(sprites/hacker/bodyshield.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index:-5;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0%;
+    left: 0%;
     transform: scaleX(-1);
+}
+
+#rArm {
+    background:url(sprites/hacker/arm.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index:-1;
+    width: 200%;
+    height: 100%;
+    position: absolute;
+    top: -24%;
+    left: -54%;
+    transform: scaleX(-1) rotate(60deg);
+    
 }
 #rArmShield {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index: -4;
     background:url(sprites/hacker/armshield.png);
-    transform: scaleX(-1);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index: -4;
+    width: 200%;
+    height: 100%;
+    position: absolute;
+    top: -24%;
+    left: -54%;
+    transform: scaleX(-1) rotate(60deg);
+}
+
+#rWeapon {
+    background:url(sprites/weapons/sword.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index:-2;
+    width: 200%;
+    height: 100%;
+    position: absolute;
+    top: -24%;
+    left: -54%;
+    transform: scaleX(-1) rotate(60deg);
 }
 
 </style>
@@ -132,60 +194,7 @@ character is the bounding box, the default position is entirely within it
         function sleep (time) {
             return new Promise((resolve) => setTimeout(resolve, time));
         }
-
         
-        function setup(scale) {
-            //variables 
-            var battle = document.getElementById("arena");
-            
-            var lcharacter = document.getElementById("leftCharacter");
-            var larm = document.getElementById("lArm"); 
-            var lweapon = document.getElementById("lWeapon");
-            var lbody = document.getElementById("lBody");
-            var lbshield = document.getElementById("lBodyShield");
-            var lashield = document.getElementById("lArmShield");
-            
-            var rcharacter = document.getElementById("rightCharacter");
-            var rarm = document.getElementById("rArm");
-            var rweapon = document.getElementById("rWeapon");
-            var rbody = document.getElementById("rBody");
-            var rbshield = document.getElementById("rBodyShield");
-            var rashield = document.getElementById("rArmShield");
-            
-            
-            battle.style.top = '30px';
-            
-            //TODO: scale each sprite
-            
-            
-            //for each part, it is placed in the default position           
-            lcharacter.style.top = '0px';
-            lcharacter.style.left = '0px';
-            larm.style.top = (-160*scale) + 'px'; 
-            larm.style.left = (-208*scale) + 'px';
-            lashield.style.transform = 'rotate(60deg)';
-            lashield.style.top = (-160*scale) + 'px'; 
-            lashield.style.left = (-208*scale) + 'px';
-            larm.style.transform = 'rotate(60deg)';
-            lweapon.style.top = (-160*scale) + 'px'; 
-            lweapon.style.left = (-208*scale) + 'px';
-            lweapon.style.transform = 'rotate(60deg)';
-            
-            rcharacter.style.top = '0px';
-            rcharacter.style.right = '0px';
-            rarm.style.top = (-160*scale) + 'px'; 
-            rarm.style.left = (-176*scale) + 'px';
-            rarm.style.transform = 'scaleX(-1) rotate(60deg)';
-            rashield.style.top = (-160*scale) + 'px'; 
-            rashield.style.left = (-176*scale) + 'px';
-            rashield.style.transform = 'scaleX(-1) rotate(60deg)';
-            rweapon.style.top = (-160*scale) + 'px'; 
-            rweapon.style.left = (-176*scale) + 'px';
-            rweapon.style.transform = 'scaleX(-1) rotate(60deg)';
-        }
-        
-        
-         
         async function leftAttack() {
         
             //variables
@@ -325,15 +334,12 @@ character is the bounding box, the default position is entirely within it
             return true;
         }
         
-        
-        
         async function battle() {
             //sets up battle
             await leftAttack();
             await rightAttack();
         }
         
-        setup(1); //runs setup after the page has loaded, so the character is in default position
     </script>
 </body>
 </html>
