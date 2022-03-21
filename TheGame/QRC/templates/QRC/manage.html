@@ -46,7 +46,7 @@
             xhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == 200) {
                     // successful execution
-                    reload();
+                    window.location.reload();
                 }
                 if (this.readyState == 4 && this.status == 400) {
                     // unsuccessful execution
@@ -87,6 +87,7 @@
                     // successful execution
                     document.getElementById("processing").style.display = "none";
                     document.getElementById("success").style.display = "inline-block";
+                    window.location.reload();
                 }
                 if (this.readyState == 4 && this.status == 400) {
                     // unsuccessful execution
