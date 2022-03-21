@@ -9,56 +9,94 @@
 <div class="container-floating" style="color: white;">
     <div class="row">
         <div class="col-md-3 order-md-3 container">
-            <div class="stat-highlight mt-3">
-                <h1>Character Image</h1>
-                <div class="row">
+            <div class="row stat-highlight mt-3">
+                <h1>Character</h1>
                     {% if champion.primaryWeapon %}
-                    <div class="col text-start border border-dark">
-                        <p>{{champion.primaryWeapon.name}}</p>
+                    <div class="col-sm-12 text-start border border-dark upgrade-button-holder">
+                        <h5>{{champion.primaryWeapon.name}}</h5>
                         <p>{{champion.primaryWeapon|safe}}</p>
+                        <div class="align-self-end">
+                            <button class="top-bar-button" type="submit" onclick="UnquipItem('{{champion.primaryWeapon.pk}}')">
+                                Unequip
+                            </button>
+                            <button class="top-bar-button" type="submit" onclick="submitData('{{champion.primaryWeapon.pk}}')">
+                                Upgrade
+                            </button>
+                        </div>
                     </div>
                     {% endif %}
                     {% if champion.armour %}
-                    <div class="col text-start border border-dark">
-                        <p>{{champion.armour.name}}</p>
+                    <div class="col-sm-12 text-start border border-dark upgrade-button-holder">
+                        <h5>{{champion.armour.name}}</h5>
                         <p>{{champion.armour|safe}}</p>
+                        <div class="align-self-end">
+                            <button class="top-bar-button" type="submit" onclick="UnquipItem('{{champion.armour.pk}}')">
+                                Unequip
+                            </button>
+                            <button class="top-bar-button" type="submit" onclick="submitData('{{champion.armour.pk}}')">
+                                Upgrade
+                            </button>
+                        </div>
                     </div>
                     {% endif %}
                     {% if champion.auxItem1 %}
-                    <div class="col text-start border border-dark">
-                        <p>{{champion.auxItem1.name}}</p>
+                    <div class="col-sm-4 text-start border border-dark upgrade-button-holder">
+                        <h5>{{champion.auxItem1.name}}</h5>
                         <p>{{champion.auxItem1|safe}}</p>
+                        <div class="align-self-end">
+                            <button class="top-bar-button" type="submit" onclick="UnquipItem('{{champion.auxItem1.pk}}')">
+                                Unequip
+                            </button>
+                            <button class="top-bar-button" type="submit" onclick="submitData('{{champion.auxItem1.pk}}')">
+                                Upgrade
+                            </button>
+                        </div>
                     </div>
                     {% endif %}
                     {% if champion.auxItem2 %}
-                    <div class="col text-start border border-dark">
-                        <p>{{champion.auxItem2.name}}</p>
+                    <div class="col-sm-4 text-start border border-dark upgrade-button-holder">
+                        <h5>{{champion.auxItem2.name}}</h5>
                         <p>{{champion.auxItem2|safe}}</p>
+                        <div class="align-self-end">
+                            <button class="top-bar-button" type="submit" onclick="UnquipItem('{{champion.auxItem2.pk}}')">
+                                Unequip
+                            </button>
+                            <button class="top-bar-button" type="submit" onclick="submitData('{{champion.auxItem2.pk}}')">
+                                Upgrade
+                            </button>
+                        </div>
                     </div>
                     {% endif %}
                     {% if champion.auxItem3 %}
-                    <div class="col text-start border border-dark">
-                        <p>{{champion.auxItem3.name}}</p>
+                    <div class="col-sm-4 text-start border border-dark upgrade-button-holder">
+                        <h5>{{champion.auxItem3.name}}</h5>
                         <p>{{champion.auxItem3|safe}}</p>
+                        <div class="align-self-end">
+                            <button class="top-bar-button" type="submit" onclick="UnquipItem('{{champion.auxItem3.pk}}')">
+                                Unequip
+                            </button>
+                            <button class="top-bar-button" type="submit" onclick="submitData('{{champion.auxItem3.pk}}')">
+                                Upgrade
+                            </button>
+                        </div>
                     </div>
                     {% endif %}
-                </div>
             </div>
         </div>
         <div class="col-md-6 order-md-3 container">
             <div class="row stat-highlight mt-3">
                 <h1>Inventory</h1>
                 {%for i in items%}
-                    <div class="col-sm-4 text-start border border-dark" >
+                    <div class="col-sm-4 text-start border border-dark upgrade-button-holder" >
                         <div>
-                            <p>{{i.name}}</p>
+                            <h5>{{i.name}}</h5>
                             <p>{{i|safe}}</p>
                         </div>
                         <div class="align-self-end">
-                            <button type="submit top-bar-button col" onclick="EquipItem('{{i.pk}}')">
+                            <button class="top-bar-button" type="submit" onclick="EquipItem('{{i.pk}}')">
                                 Equip
                             </button>
-                            <button type="submit top-bar-button col" onclick="submitData('{{i.pk}}')">
+                            <button class="top-bar-button" type="submit" onclick="submitData('{{i.pk}}')">
                                 Upgrade
                             </button>
                         </div>
@@ -105,6 +143,27 @@
         {
             var f = document.createElement('form');
             f.action='/equipItem/';
+            f.method='POST';
+            var i=document.createElement('input');
+            i.type='hidden';
+            i.name='itemPK';
+            i.value=pk;
+            f.appendChild(i);
+
+            var t=document.createElement('input');
+            t.type='hidden';
+            t.name='csrfmiddlewaretoken';
+            t.value=getCookie('csrftoken');;
+            f.appendChild(t);
+
+            document.body.appendChild(f);
+            f.submit();
+        }
+
+        function UnquipItem(pk)
+        {
+            var f = document.createElement('form');
+            f.action='/unequipItem/';
             f.method='POST';
             var i=document.createElement('input');
             i.type='hidden';

@@ -14,6 +14,8 @@ machine_parts = Resource.objects.create(
 )
 
 createNewBaseItem("Salvaged armour", "armour", 10, 0, 0, "", circuitry, 10)
+createNewBaseItem("Aux1", "aux", 1, 0, 0, "", circuitry, 1)
+createNewBaseItem("Aux2", "auax", 3, 2, 0, "", circuitry, 2)
 createNewBaseWeapon("Shiv", "weapon", 15, 1, 1, "A", 2, books, 2)
 createNewBaseWeapon("Makeshift rifle", "weapon", 12, 2, 10, "C", 2, machine_parts, 2, books, 1)
 createNewBaseWeapon("Self-taught psionics", "weapon", 5, 5, 5, "B", 2, machine_parts, 5)

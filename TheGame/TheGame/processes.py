@@ -349,7 +349,7 @@ def buyItem(request):
     if item.priceRes3:
         resList.append((item.priceRes3, item.price3))
 
-    if spendMultiResource(request, resList):
+    if not spendMultiResource(request, resList):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         addItemToChampion(createNewSpecificItem(item, 0, 0), userChamp)
@@ -388,6 +388,40 @@ def equipItem(request):
         userChamp.auxItem2 = item
     elif not userChamp.auxItem3:
         userChamp.auxItem3 = item
+
+    userChamp.save()
+        
+
+    return response
+
+def unequipItem(request):
+    """ makes an unequip of an item for the user
+    """
+
+    if not request.method == "POST":
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+
+    response = redirect("/characterInventory")
+    item = getItemFromPK(request.POST.get('itemPK'))
+    user = getUserFromCookie(request)
+    userChamp = getChampion(user)
+    # To be contuinued....
+    # replace the foriegn keys in the champions places with the item that was bought
+    # this will have to have logic for when all slots are full
+
+    if isinstance(item, SpecificWeapon):
+        userChamp.primaryWeapon = None
+    elif isinstance(item, SpecificItem) and item.type == "armour":
+        userChamp.armour = None
+    elif userChamp.auxItem1 == item:
+        userChamp.auxItem1 = None
+    elif userChamp.auxItem2 == item:
+        userChamp.auxItem2 = None
+    elif userChamp.auxItem3 == item:
+        userChamp.auxItem3 = None
 
     userChamp.save()
         
