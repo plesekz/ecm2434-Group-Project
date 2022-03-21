@@ -48,12 +48,21 @@ def createRes(request: HttpRequest) -> HttpResponse:
 
         qrImage = qr.make_image(fill="black", back_color="white")
         filepath = f"QRC/qrImages/{json_data['codeID']}.png"
+        filedirectorypath = "QRC/static/QRC/qrImages/"
+        if not os.path.exists(filedirectorypath):
+            os.makedirs(filedirectorypath)
         qrImage.save("QRC/static/" + filepath)
+
+        try:
+            latitude = '{:06.4f}'.format(float(json_data['longitude']))
+            longitude = '{:06.4f}'.format(float(json_data['longitude']))
+        except ValueError:
+            print("bru")
 
         qrc = QRC.objects.create(
             QRID=int(json_data['codeID']),
-            latitude=float(json_data['latitude']),
-            longitude=float(json_data['longitude']),
+            latitude=latitude,
+            longitude=longitude,
             image=filepath
         )
 

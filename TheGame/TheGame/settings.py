@@ -142,3 +142,11 @@ try:
     HOSTNAME = socket.gethostname()
 except BaseException:
     HOSTNAME = 'localhost'
+
+
+if DEBUG:
+    import mimetypes
+    mimetypes.add_type("text/javascript", ".js", True)
+    mimetypes.add_type("application/wasm", ".wasm", True)
+
+
