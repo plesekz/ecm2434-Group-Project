@@ -801,26 +801,51 @@ def createNewBaseItemFromHTMLRequest(request):
 
     data = request.POST
 
+    try:
+        priceRes2 = getResourceByName(data['priceRes2'])
+        price2 = data['price2']
+    except:
+        priceRes2 = None
+        price2 = None
+    try:
+        priceRes3 = getResourceByName(data['priceRes3'])
+        price3 = data['price3']
+    except:
+        priceRes3 = None
+        price3 = None
+
     if data['itemType'] == "item":
         createNewBaseItem(
             name=data['name'],
-            price=data['price'],
             type=data['type'],
             armourValue=data['armourValue'],
             vitalityBoost=data['vitalityBoost'],
-            specialAbilities=data['specialAbilities']
+            shieldValue=data['shieldValue'],
+            specialAbilities=data['specialAbilities'],
+            priceRes1=getResourceByName(data['priceRes1']),
+            price1=data['price1'],
+            priceRes2=priceRes2,
+            price2=price2,
+            priceRes3=priceRes3,
+            price3=price3,
         )
 
     elif data['itemType']:
         createNewBaseWeapon(
             name=data['name'],
-            price=data['price'],
             type=data['type'],
             damageNumber=data['damageNumber'],
             damageInstances=data['damageInstances'],
             range=data['range'],
             association=data['associated'],
-            ap_cost=data['ap_cost']
+            ap_cost=data['ap_cost'],
+
+            priceRes1=getResourceByName(data['priceRes1'][0]),
+            price1=data['price1'],
+            priceRes2=priceRes2,
+            price2=price2,
+            priceRes3=priceRes3,
+            price3=price3,
         )
 
     return HttpResponseRedirect('addItems')

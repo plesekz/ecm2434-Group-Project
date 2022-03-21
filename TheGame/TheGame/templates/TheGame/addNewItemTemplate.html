@@ -20,15 +20,31 @@
     </form>
 </div>
 
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <ul>
+                <h2>Current Items</h2>
+                {% for item in items %}
+                <li>
+                    {{ item.name }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
 
-<ul>
-    <h2>Current Items</h2>
-    {% for item in items %}
-    <li>
-        {{ item.name }}
-    </li>
-    {% endfor %}
-</ul>
+        <div class="col-6">
+            <ul>
+                <h2>Current Reources</h2>
+                {% for res in resources %}
+                <li>
+                    {{ res.name }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 
 
 <script>
@@ -37,10 +53,6 @@
 
         wrapper.innerHTML = `
             <input type="text" placeholder="name" name="name" class="form-control form-control-lg" required>
-            <br>
-
-            <label for="priceInput">Price</label>
-            <input type="number" id="priceInput" name="price" required>
             <br>
 
             <label for="priceInput">type</label>
@@ -55,8 +67,36 @@
             <input type="number" id="vitBoostInput" name="vitalityBoost" required>
             <br>
 
+            <label for="shieldInput">Shield value</label>
+            <input type="number" id="shieldInput" name="shieldValue" required>
+            <br>
+
             <label for="specAbilityInput">special abilities</label>
             <input type="text" id="specAbilityInput" name="specialAbilities" required>
+            <br>
+
+            <label for="priceRes1Input">Resource 1</label>
+            <input type="text" id="price1ResInput" name="priceRes1" required>
+            <br>
+
+            <label for="price1Input">Price 1</label>
+            <input type="number" id="price1Input" name="price1" required>
+            <br>
+
+            <label for="priceRes2Input">Resource 2</label>
+            <input type="text" id="priceRes2Input" name="priceRes2">
+            <br>
+
+            <label for="price2Input">Price 2</label>
+            <input type="number" id="price2Input" name="price2">
+            <br>
+
+            <label for="priceRes1Input">Resource 3</label>
+            <input type="text" id="priceRes1Input" name="priceRes1">
+            <br>
+
+            <label for="price3Input">Price 3</label>
+            <input type="number" id="price3Input" name="price3">
             <br>
 
             <input type="hidden" name="itemType" value="item" />
