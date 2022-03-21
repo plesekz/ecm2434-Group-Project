@@ -14,7 +14,8 @@
                 {% if active_QR_codes_list %}
                 {% for code in active_QR_codes_list %}
                     <div class="col w-25 container-floating">
-                        <p>Latittude: {{ code.lat }}<br>
+                        <p>
+                        Latittude: {{ code.lat }}<br>
                         Longtitude: {{ code.lon }}<br>
 
                         {% for resource in code.resources %}
