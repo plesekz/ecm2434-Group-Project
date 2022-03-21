@@ -195,7 +195,7 @@ character is the bounding box, the default position is entirely within it
             return new Promise((resolve) => setTimeout(resolve, time));
         }
         
-        async function leftAttack() {
+        async function leftMelee() {
         
             //variables
             var character = document.getElementById("leftCharacter");
@@ -264,7 +264,7 @@ character is the bounding box, the default position is entirely within it
             
             return true;
         }
-        async function rightAttack() {
+        async function rightMelee() {
         
             //variables
             var character = document.getElementById("rightCharacter");
@@ -334,10 +334,22 @@ character is the bounding box, the default position is entirely within it
             return true;
         }
         
+        async function leftRanged() {
+            //ranged attack
+        }
+        async function rightRanged() {
+            //ranged attack
+        }
+        
         async function battle() {
             //sets up battle
-            await leftAttack();
-            await rightAttack();
+            //assigns the correct sprites to each element
+            
+            //gets turn order and plays it out
+            await leftMelee();
+            await rightMelee();
+            await leftRanged();
+            await rightRanged();
         }
         
     </script>
