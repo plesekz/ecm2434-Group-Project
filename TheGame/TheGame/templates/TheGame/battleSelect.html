@@ -18,26 +18,36 @@
                 <ul>
                     <h3>Stats:</h3>
                     <li>
-                        Health: {{stats.pHealth}}
+                        Health: {{champion.pHealth}}
                     </li>
                     <li>
-                        Toughness: {{stats.pToughness}}
+                        Athletics: {{champion.pAthletics}}
                     </li>
                     <li>
-                        Evasion: {{stats.pEvasion}}
+                        Brains: {{champion.pBrain}}
+                    </li>
+                    <li>
+                        Control: {{champion.pControl}}
                     </li>
                 </ul>
             </div>
             <div class="container-floating stat-highlight">
-                <h3>Average joe's stats</h3>
-                <button onclick="fightAverageJoe()">
-                    <h1>Fight 'Average Joe'</h1>
-                </button>
-                {% if messages %}
-                {% for message in messages %}
-                    <div class="font-weight-boldx">{{ message }}</div>
-                {% endfor %}
-                {% endif %}
+
+                <ul>
+                    <li>
+                        <h3>Average joe's stats</h3>
+                        <button onclick="fightAverageJoe()">
+                            <h1>Fight 'Average Joe'</h1>
+                        </button>
+                    </li>
+                    {% for boss in bosses %}
+                    <li>
+                        <button onclick="fightAverageJoe()">
+                            <h1>Fight {{boss.name}}</h1>
+                        </button>
+                    </li>
+                    {% endfor %}
+                </ul>
             </div>
         </div>
 

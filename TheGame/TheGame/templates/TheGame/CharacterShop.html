@@ -1,0 +1,89 @@
+{% extends 'TheGame/CharacterSettingsTemplate.html' %}
+
+{% block headBlock %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'TheGame/styles/CharacterPages.css'%}">
+{% endblock %}
+
+{% block bodyBlock %}
+<div class="container-floating" style="color: white;">
+    <div class="row">
+        <div class="col-md-3 container">
+            <div class="stat-highlight">
+                <h1>Character Image</h1>
+            </div>
+        </div>
+        <div class="col-md-6 container">
+            <div class="row stat-highlight">
+                <h1>Shop</h1>
+                {%for i in allItems%}
+                    <button class="col-sm-4 top-bar-button" type="submit" onclick="submitData('{{i.pk}}')">
+                        <p>{{i.name}}</p>
+                        <p>{{i|safe}}</p>
+                        <p>{{i.priceRes1}}{{i.price1}}</p>
+                        {% if i.priceRes2 %}
+                        <p>{{i.priceRes2}}{{i.price2}}</p>
+                        {% endif %}
+                        {% if i.priceRes3 %}
+                        <p>{{i.priceRes3}}{{i.price3}}</p>
+                        {% endif %}
+                    </button>
+                {%endfor%}
+            </div>
+        </div>
+        <div class="col-md-3 container">
+            <div class="stat-highlight">
+                <ul>
+                    <h3>Resources:</h3>
+                    {%for r in resources%}
+                        <p>{{r.0}}: {{r.1}}<br></p>
+                    {%endfor%}
+                </ul>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script>
+        function submitData(pk)
+        {
+            let url = "/buyItem/"
+            const csrftoken = getCookie('csrftoken');
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", url);
+
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+
+            xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log(xhr.responseText);
+                window.location.href = window.location.href
+            }};
+            xhr.send(JSON.stringify({"itemPk": pk}));
+
+            console.log(pk);
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+    </script>
+
+  {% endblock%}
+</html>

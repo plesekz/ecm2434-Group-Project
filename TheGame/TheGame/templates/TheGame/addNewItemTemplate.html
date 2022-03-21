@@ -1,0 +1,111 @@
+{% extends 'TheGame/navbarTemplate.html' %}
+
+{% block bodyBlock %}
+<h1>this is the page for adding new items to the system</h1>
+
+<button onclick="changeToItems()">
+    Item form
+</button>
+
+<button onclick="changeToWeapons()">
+    Weapon form
+</button>
+
+<div id="formWrapper" style="margin-bottom: 5%">
+    <form action="/validateItem" method="post">
+        {% csrf_token %}
+        <div class="form-group" id="fg">
+            
+        </div>
+    </form>
+</div>
+
+
+<ul>
+    <h2>Current Items</h2>
+    {% for item in items %}
+    <li>
+        {{ item.name }}
+    </li>
+    {% endfor %}
+</ul>
+
+
+<script>
+    function changeToItems(){
+        wrapper = document.getElementById("fg")
+
+        wrapper.innerHTML = `
+            <input type="text" placeholder="name" name="name" class="form-control form-control-lg" required>
+            <br>
+
+            <label for="priceInput">Price</label>
+            <input type="number" id="priceInput" name="price" required>
+            <br>
+
+            <label for="priceInput">type</label>
+            <input type="text" id="typeInput" name="type" required>
+            <br>
+
+            <label for="armourValueInput">armour value</label>
+            <input type="number" id="armourValueInput" name="armourValue" required>
+            <br>
+            
+            <label for="vitBoostInput">vitality boost</label>
+            <input type="number" id="vitBoostInput" name="vitalityBoost" required>
+            <br>
+
+            <label for="specAbilityInput">special abilities</label>
+            <input type="text" id="specAbilityInput" name="specialAbilities" required>
+            <br>
+
+            <input type="hidden" name="itemType" value="item" />
+
+            <button type="submit" class="btn">Create Item</button>
+        `
+    }
+
+    function changeToWeapons(){
+        wrapper = document.getElementById("fg")
+
+        wrapper.innerHTML = `
+            <input type="text" placeholder="name" name="name" class="form-control form-control-lg" required>
+            <br>
+
+            <label for="priceInput">Price</label>
+            <input type="number" id="priceInput" name="price" required>
+            <br>
+
+            <label for="priceInput">type</label>
+            <input type="text" id="typeInput" name="type" required>
+            <br>
+
+            <label for="damageNumberInput">damage number</label>
+            <input type="number" id="damageNumberInput" name="damageNumber" required>
+            <br>
+            
+            <label for="damageInstancesInput">damage instances</label>
+            <input type="number" id="damageInstancesInput" name="damageInstances" required>
+            <br>
+
+            <label for="rangeInput">range</label>
+            <input type="number" id="rangeInput" name="range" required>
+            <br>
+
+            <label for="associatedInput">associated</label>
+            <input type="text" id="associatedInput" name="associated" required>
+            <br>
+
+            <label for="apCostInput">ap cost</label>
+            <input type="number" id="apCostInput" name="ap_cost" required>
+            <br>
+
+            <input type="hidden" name="itemType" value="weapon" />
+
+            <button type="submit" class="btn">Create Item</button>
+        `
+    }
+
+</script>
+
+{% endblock %}

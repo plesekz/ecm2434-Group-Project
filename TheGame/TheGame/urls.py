@@ -16,7 +16,6 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-#from TheGame.views import homePageView, characterMenu, battleSelectView, homePageView2
 from TheGame.views import *
 from . import processes, battle
 
@@ -27,16 +26,26 @@ urlpatterns = [
     path('qr/', include("QRC.urls")),
     path('', homePageView, name="homePage"),
     path('characterMenu/', characterMenu, name="characterMenu"),
-    path('buyphealth/', processes.buyPHealth, name="buyphealth"),
-    path('buyptoughness/', processes.buyPToughness, name="buyptoughness"),
-    path('buypevasion/', processes.buyPEvasion, name="buypevasion"),
-    path('buydamage/', processes.buyDamage, name="buydamage"),
-    path('buyaccuracy/', processes.buyAccuracy, name="buyaccuracy"),
-    path('buyattackspeed/', processes.buyAttackSpeed, name="buyattackspeed"),
-    path('buyahealth/', processes.buyAHealth, name="buyahealth"),
-    path('buyatoughness/', processes.buyAToughness, name="buyatoughness"),
-    path('buyaevasion/', processes.buyAEvasion, name="buyaevasion"),
+    path('characterInventory/', characterInventory, name="characterInventory"),
+    path('characterShop/', characterShop, name="characterShop"),
+    path('buyPHealth/', processes.buyPHealth, name="buyPHealth"),
+    path('buyPAthletics/', processes.buyPAthletics, name="buyPAthletics"),
+    path('buyPBrain/', processes.buyPBrain, name="buyPBrain"),
+    path('buyPControl/', processes.buyPControl, name="buyPControl"),
+    path('buyItem/', processes.buyItem, name="buyItem"),
+    path('equipItem/', processes.equipItem, name="equipItem"),
+    path('sellItem/', processes.sellItem, name="sellItem"),
+    path('upgradeStatOnItem/', processes.upgradeStatOnItem, name="upgradeStatOnItem"),
+    path('itemUpgrade/', itemUpgrade, name="itemUpgrade"),
     path('battleSelect/battle', battle.callBattle, name="battleSelect/battle"),
     path('login/', include("Login.urls")),
     path('battleSelect/', battleSelectView, name="battleSelect"),
+    path('createChampion/', createChampionView, name='createChampion'),
+    path('addBosses/', addNewBossView, name='addNewBoss'),
+    path('newBossValidation', processes.addBossToSystem),
+    path('addItems/', addNewBaseItemView, name="addNewItem"),
+    path(
+        'validateItem',
+        processes.createNewBaseItemFromHTMLRequest,
+        name='validateItem'),
 ]

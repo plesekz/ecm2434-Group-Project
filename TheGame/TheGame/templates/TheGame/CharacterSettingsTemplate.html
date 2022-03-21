@@ -18,15 +18,26 @@
     <div class="text-center" style="background-color: rgb(75, 40, 40);">
         <div class="container-floating top-bar-container">
             <div class="row justify-content-around">
-                <button class="col-sm-3 top-bar-button">
-                        <h1>Factions</h1>
+                <button class="col-sm-3 top-bar-button" onclick="onHomeButtonClick()">
+                        <h1>Home</h1>
                 </button>
-                <button class="col-sm-4 top-bar-button" onclick="onInventoryButtonClick()">
-                        <h1>Inventory</h1>
+                <button class="col-sm-4 top-bar-button">
+                        <h1>Factions</h1>
                 </button>
                 <button class="col-sm-3 top-bar-button">
                         <h1>Map</h1>
                 </button>
+                <button class="col-sm-3 top-bar-button" onclick="onInventoryButtonClick()">
+                        <h1>Inventory</h1>
+                </button>
+                <button class="col-sm-4 top-bar-button" onclick="onShopButtonClick()">
+                        <h1>Shop</h1>
+                </button>
+                <button class="col-sm-3 top-bar-button" onclick="onLogoutButtonClick()">
+                  <h1>Logout</h1>
+                </button>
+
+
             </div>
         </div>
 
@@ -37,8 +48,20 @@
     </div>
 
     <script>
-        function onInventoryButtonClick(){
+        function onHomeButtonClick(){
             window.location.href = "/"
+        }
+
+        function onLogoutButtonClick(){
+            window.location.href = "/login/logout"
+        }
+
+        function onInventoryButtonClick(){
+            window.location.href = "/characterInventory"
+        }
+
+        function onShopButtonClick(){
+            window.location.href = "/characterShop"
         }
     </script>
 
