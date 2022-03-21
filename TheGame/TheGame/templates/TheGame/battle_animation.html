@@ -73,7 +73,7 @@ character is the bounding box, the default position is entirely within it
 }
 
 #lWeapon {
-    background:url(sprites/weapons/shiv.png);
+    background:url(sprites/weapons/assaultrifle.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index:-2;
@@ -199,7 +199,7 @@ character is the bounding box, the default position is entirely within it
             var arm = document.getElementById("lArm");
             var shield = document.getElementById("lArmShield");
             var weapon = document.getElementById("lWeapon");
-            pos = 0;
+            pos = 2;
             deg = 60;
             
             while (animating) {
@@ -208,9 +208,9 @@ character is the bounding box, the default position is entirely within it
             animating = true;
             
             //move forward
-            while (pos < (320*scale)) {
-                pos+=(4*scale);
-                character.style.left = pos + 'px';
+            while (pos < (7)) {
+                pos+=(0.25);
+                character.style.left = pos + '%';
                 await sleep(5);
             }
             
@@ -251,9 +251,9 @@ character is the bounding box, the default position is entirely within it
             }
             
             //move back
-            while (pos > 0) {
-                pos-=4;
-                character.style.left = pos + 'px';
+            while (pos > 2) {
+                pos-=0.25;
+                character.style.left = pos + '%';
                 await sleep(5);
             }
             
@@ -268,7 +268,7 @@ character is the bounding box, the default position is entirely within it
             var arm = document.getElementById("rArm");
             var shield = document.getElementById("rArmShield");
             var weapon = document.getElementById("rWeapon");
-            pos = 0;
+            pos = 2;
             deg = 60;
             
             while (animating) {
@@ -277,9 +277,9 @@ character is the bounding box, the default position is entirely within it
             animating = true;
             
             //move forward
-            while (pos < 320) {
-                pos+=4;
-                character.style.right = pos + 'px';
+            while (pos < 7) {
+                pos+=0.25;
+                character.style.right = pos + '%';
                 await sleep(5);
             }
             
@@ -320,9 +320,9 @@ character is the bounding box, the default position is entirely within it
             }
             
             //move back
-            while (pos > 0) {
-                pos-=4;
-                character.style.right = pos + 'px';
+            while (pos > 2) {
+                pos-=0.25;
+                character.style.right = pos + '%';
                 await sleep(5);
             }
             
@@ -332,10 +332,113 @@ character is the bounding box, the default position is entirely within it
         }
         
         async function leftRanged() {
-            //ranged attack
+        
+            //variables
+            var character = document.getElementById("leftCharacter");
+            var arm = document.getElementById("lArm");
+            var shield = document.getElementById("lArmShield");
+            var weapon = document.getElementById("lWeapon");
+            pos = 2;
+            deg = 60;
+            
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
+            while (deg > 45) {
+                if (deg < 45) {
+                    deg = 45;
+                }
+                deg-=1;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                shield.style.transform = 'rotate(' + deg + 'deg)';
+                weapon.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(15);
+            }
+            
+            
+            //recoil
+            weapon.style.left = '-55%';
+            arm.style.left = '-54.5%';
+            shield.style.left = '-54.5%';
+            await sleep(100);
+            weapon.style.left = '-54.5%';
+            arm.style.left = '-54.25%';
+            shield.style.left = '-54.25%';
+            await sleep(100);
+            weapon.style.left = '-54%';
+            arm.style.left = '-54%';
+            shield.style.left = '-54%';
+            
+            //return to position
+            while (deg < 60) {
+                if (deg > 60) {
+                    deg = 61;
+                }
+                deg+=1;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                shield.style.transform = 'rotate(' + deg + 'deg)';
+                weapon.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(20);
+            }
+            
+            animating = false;
+            return true;
         }
         async function rightRanged() {
-            //ranged attack
+            //variables
+            var character = document.getElementById("rightCharacter");
+            var arm = document.getElementById("rArm");
+            var shield = document.getElementById("rArmShield");
+            var weapon = document.getElementById("rWeapon");
+            pos = 2;
+            deg = 60;
+            
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
+            while (deg > 45) {
+                if (deg < 45) {
+                    deg = 45;
+                }
+                deg-=1;
+                arm.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                shield.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                weapon.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                await sleep(15);
+            }
+            
+            
+            //recoil
+            weapon.style.left = '-55%';
+            arm.style.left = '-54.5%';
+            shield.style.left = '-54.5%';
+            await sleep(100);
+            weapon.style.left = '-54.5%';
+            arm.style.left = '-54.25%';
+            shield.style.left = '-54.25%';
+            await sleep(100);
+            weapon.style.left = '-54%';
+            arm.style.left = '-54%';
+            shield.style.left = '-54%';
+            
+            //return to position
+            while (deg < 60) {
+                if (deg > 60) {
+                    deg = 61;
+                }
+                deg+=1;
+                arm.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                shield.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                weapon.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                await sleep(20);
+            }
+            
+            animating = false;
+            return true;
         }
         
         async function battle() {
