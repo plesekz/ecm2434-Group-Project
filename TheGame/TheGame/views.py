@@ -1,6 +1,7 @@
 from importlib import resources
 from django.template import loader
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
 
 from Login.processes import getUserFromCookie
 from TheGame.models import SpecificItem
@@ -12,7 +13,7 @@ def homePageView(request: HttpRequest) -> HttpResponse:
     """ creates response for the Home page
     """
     if request.COOKIES.get('TheGameSessionID') is None:
-        return HttpResponseRedirect('login')
+        return redirect('login')
 
     try:
         user = getUserFromCookie(request)
@@ -20,7 +21,7 @@ def homePageView(request: HttpRequest) -> HttpResponse:
         resources = getAllUserResources(user)
     except Exception as e:
         print(e)
-        return HttpResponseRedirect('/login')
+        return redirect('/login')
 
     template = loader.get_template('TheGame/HomePage.html')
     context = {
@@ -38,11 +39,11 @@ def characterMenu(request: HttpRequest) -> HttpResponse:
     """ creates response for the character menu
     """
     if request.COOKIES.get('TheGameSessionID') is None:
-        return HttpResponseRedirect('login')
+        return redirect('login')
 
     user = getUserFromCookie(request)
     if not (champion := getChampion(user)):
-        return HttpResponseRedirect('createChampion')
+        return redirect('createChampion')
 
     template = loader.get_template('TheGame/CharacterMenu.html')
 
@@ -71,11 +72,11 @@ def characterInventory(request: HttpRequest) -> HttpResponse:
     """ creates response for the character menu
     """
     if request.COOKIES.get('TheGameSessionID') is None:
-        return HttpResponseRedirect('login')
+        return redirect('login')
 
     user = getUserFromCookie(request)
     if not (champion := getChampion(user)):
-        return HttpResponseRedirect('createChampion')
+        return redirect('createChampion')
 
     template = loader.get_template('TheGame/CharacterInventory.html')
 
@@ -96,11 +97,11 @@ def characterShop(request: HttpRequest) -> HttpResponse:
     """ creates response for the character menu
     """
     if request.COOKIES.get('TheGameSessionID') is None:
-        return HttpResponseRedirect('login')
+        return redirect('login')
 
     user = getUserFromCookie(request)
     if not (champion := getChampion(user)):
-        return HttpResponseRedirect('createChampion')
+        return redirect('createChampion')
 
     template = loader.get_template('TheGame/CharacterShop.html')
 
@@ -122,11 +123,11 @@ def itemUpgrade(request: HttpRequest) -> HttpResponse:
     """ creates response for the item Upgrade
     """
     if request.COOKIES.get('TheGameSessionID') is None:
-        return HttpResponseRedirect('login')
+        return redirect('login')
 
     user = getUserFromCookie(request)
     if not (champion := getChampion(user)):
-        return HttpResponseRedirect('createChampion')
+        return redirect('createChampion')
 
     template = loader.get_template('TheGame/ItemUpgrade.html')
     item = getItemFromPK(request.POST.get('itemPK'))
@@ -154,12 +155,12 @@ def battleSelectView(request: HttpRequest) -> HttpResponse:
     """ create response for the battle selection page
     """
     if request.COOKIES.get('TheGameSessionID') is None:
-        return HttpResponseRedirect('login')
+        return redirect('login')
 
     user = getUserFromCookie(request)
 
     if not (champ := getChampion(user)):
-        return HttpResponseRedirect('createChampion')
+        return redirect('createChampion')
 
     resources = getAllUserResources(user)
 
@@ -187,7 +188,7 @@ def addNewBossView(request):
     user = getUserFromCookie(request)
 
     # if not user.role == "gameMaster":
-    #     return HttpResponseRedirect('homePage')
+    #     return redirect('homePage')
 
     template = loader.get_template('TheGame/newBoss.html')
 
