@@ -60,7 +60,7 @@
             xhr.onreadystatechange = function () {
             if (xhr.readyState === 4) {
                 console.log(xhr.responseText);
-                window.location.href = window.location.href
+                window.location.reload()
             }};
             xhr.send(JSON.stringify({"itemPk": pk}));
 

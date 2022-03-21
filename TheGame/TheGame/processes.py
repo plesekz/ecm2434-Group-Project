@@ -50,11 +50,11 @@ def spendMultiResource(request, resources: "list[tuple(Resource,int)]"):
         if getPlayerResourceAmount(user, tup[0]) < tup[1]: #tup[0] = resource tup[1] = amount
             messages.error(request, ('Not enough resources'))
             return False # return false if they dont have enough
-    
     # if execution gets here then they have enough resources so we can spend
     for tup in resources:
         if not spendResource(request, tup[0], tup[1]):
             messages.error(request, ('something has gone very wrong and you may have lost resources'))
+            print("failed at res" + tup[0])
             return False
     return True
 
@@ -349,7 +349,8 @@ def buyItem(request):
     if item.priceRes3:
         resList.append((item.priceRes3, item.price3))
 
-    if not spendMultiResource(request, resList):
+    if spendMultiResource(request, resList):
+        print("spent")
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         addItemToChampion(createNewSpecificItem(item, 0, 0), userChamp)
@@ -449,11 +450,11 @@ def sellItem(request):
         addResourceToUser(user, item.priceRes2, item.price2)
     if item.priceRes3:
         addResourceToUser(user, item.priceRes3, item.price3)
+
     removeItemFromChampion(userChamp, item)
     removeItemOrWeapon(item)
 
     return HttpResponse(status=200)
-
 
 
 def upgradeStatOnItem(request):
@@ -931,6 +932,23 @@ def getChampionsWeaponStatPacks(champion : Champion) -> "list[SpecificItem]":
 def removeItemFromChampion(champion: Champion, item: Item):
     """function that will remove an item from a champion
     """
+
+    # make sure the item isnt equipt
+
+    if champion.primaryWeapon == item:
+        champion.primaryWeapon = None
+    elif champion.secondaryWeapon == item:
+        champion.secondaryWeapon = None
+    elif champion.armour == item:
+        champion.armour = None
+    elif champion.auxItem1 == item:
+        champion.auxItem1 = None        
+    elif champion.auxItem2 == item:
+        champion.auxItem2 = None        
+    elif champion.auxItem3 == item:
+        champion.auxItem3 = None        
+
+    champion.save()
 
     query = Q(champion=champion) & Q(item=item)
     
