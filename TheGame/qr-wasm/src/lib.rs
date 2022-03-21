@@ -503,13 +503,18 @@ async fn load_qr(
         .chain(bardecoder_codes)
         .filter(|code| {
             if let Ok(code) = code {
-                !unique_codes.insert(code.clone())
+                let keep = !unique_codes.contains(code);
+                if keep {
+                    unique_codes.insert(code.clone());
+                }
+                keep
             } else {
                 true
             }
         })
         .collect();
-
+    log::info!("Codes: {:?}", codes);
+    log::info!("unique_codes: {:?}", unique_codes);
     Ok(codes)
 }
 
