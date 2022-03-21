@@ -349,7 +349,7 @@ def buyItem(request):
     if item.priceRes3:
         resList.append((item.priceRes3, item.price3))
 
-    if spendMultiResource(request, resList):
+    if not spendMultiResource(request, resList):
         user = getUserFromCookie(request)
         userChamp = getChampion(user)
         addItemToChampion(createNewSpecificItem(item, 0, 0), userChamp)
@@ -394,9 +394,8 @@ def equipItem(request):
 
     return response
 
-
-def sellItem(request):
-    """ makes a sell of an item for the user
+def unequipItem(request):
+    """ makes an unequip of an item for the user
     """
 
     if not request.method == "POST":
@@ -404,16 +403,57 @@ def sellItem(request):
             request,
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
+
     response = redirect("/characterInventory")
     item = getItemFromPK(request.POST.get('itemPK'))
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
-    # To be contuinued....
 
+    if isinstance(item, SpecificWeapon):
+        userChamp.primaryWeapon = None
+    elif isinstance(item, SpecificItem) and item.type == "armour":
+        userChamp.armour = None
+    elif userChamp.auxItem1 == item:
+        userChamp.auxItem1 = None
+    elif userChamp.auxItem2 == item:
+        userChamp.auxItem2 = None
+    elif userChamp.auxItem3 == item:
+        userChamp.auxItem3 = None
+
+    userChamp.save()
+        
+
+    return response
+
+
+def sellItem(request):
+    """ makes a sell of an item for the user
+    """
+
+    data = request.body.decode('utf-8')  # decode the body to a string
+    requestJson = json.loads(data)  # load json from string data
+    itemPK = requestJson['itemPK']
+
+    if not request.method == "POST":
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+
+    item = getItemFromPK(itemPK)
+    user = getUserFromCookie(request)
+    userChamp = getChampion(user)
+
+    addResourceToUser(user, item.priceRes1, item.price1)
+    if item.priceRes2:
+        addResourceToUser(user, item.priceRes2, item.price2)
+    if item.priceRes3:
+        addResourceToUser(user, item.priceRes3, item.price3)
     removeItemFromChampion(userChamp, item)
     removeItemOrWeapon(item)
 
-    return response
+    return HttpResponse(status=200)
+
 
 
 def upgradeStatOnItem(request):

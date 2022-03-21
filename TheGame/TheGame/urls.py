@@ -34,6 +34,7 @@ urlpatterns = [
     path('buyPControl/', processes.buyPControl, name="buyPControl"),
     path('buyItem/', processes.buyItem, name="buyItem"),
     path('equipItem/', processes.equipItem, name="equipItem"),
+    path('unequipItem/', processes.unequipItem, name="unequipItem"),
     path('sellItem/', processes.sellItem, name="sellItem"),
     path('upgradeStatOnItem/', processes.upgradeStatOnItem, name="upgradeStatOnItem"),
     path('itemUpgrade/', itemUpgrade, name="itemUpgrade"),
