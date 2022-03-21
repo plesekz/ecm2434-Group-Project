@@ -60,12 +60,20 @@
             <h2>Current Items</h2>
             {% for item in items %}
             <li>
-                {{ item.name }}
+                {{ item.name }} : {{item.type}}
             </li>
             {% endfor %}
         </ul>
     </div>
 
 </div>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 
 {% endblock %}

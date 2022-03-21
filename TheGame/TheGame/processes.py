@@ -222,41 +222,55 @@ def addBossToSystem(request: HttpRequest):
 
     statInfo = request.POST
 
-    itemCount = 1
+    itemCount = 0
     newItems = []
 
     try:
-        primaryWeapon = createNewSpecificItem(getBaseItemFromName(statInfo['primaryWeapon']), 0, 0)
-        itemCount += 1
-        newItems.append(primaryWeapon)
-    except:
+        if (primaryWeapon := createNewSpecificItem(getBaseItemFromName(statInfo['primaryWeapon']), 0, 0)) != None:
+            itemCount += 1
+            newItems.append(primaryWeapon)
+            if not isinstance(primaryWeapon, SpecificWeapon):
+                messages.add_message(request, messages.ERROR, 'primary weapon must be a weapon')
+                raise Exception('primary weapon must be a weapon')
         primaryWeapon = None
-    try:
-        armour = createNewSpecificItem(getBaseItemFromName(statInfo['armour']), 0, 0)
-        itemCount += 1
-        newItems.append(armour)
-    except:
+
+        if (armour := createNewSpecificItem(getBaseItemFromName(statInfo['armour']), 0, 0)) != None:
+            itemCount += 1
+            newItems.append(armour)
+            if not (isinstance(armour, SpecificItem) and armour.type == "armour"):
+                messages.add_message(request, messages.ERROR, 'armour must be an armour')
+                raise Exception('armour must be an armour')
+
         armour = None
-    try:
-        auxItem1 = createNewSpecificItem(getBaseItemFromName(statInfo['auxItem1']), 0, 0)
-        itemCount += 1
-        newItems.append(auxItem1)
-    except:
+
+        if (auxItem1 := createNewSpecificItem(getBaseItemFromName(statInfo['auxItem1']), 0, 0)) != None:
+            itemCount += 1
+            newItems.append(auxItem1)
+            if not isinstance(auxItem1, SpecificItem):
+                messages.add_message(request, messages.ERROR, 'aux items cannot be weapons')
+                raise Exception('aux items cannot be weapons')
+
         auxItem1 = None
-    try:
-        auxItem2 = createNewSpecificItem(getBaseItemFromName(statInfo['auxItem2']), 0, 0)
-        itemCount += 1
-        newItems.append(auxItem2)
-    except:
+
+        if (auxItem2 := createNewSpecificItem(getBaseItemFromName(statInfo['auxItem2']), 0, 0)) != None:
+            itemCount += 1
+            newItems.append(auxItem2)
+            if not isinstance(auxItem2, SpecificItem):
+                messages.add_message(request, messages.ERROR, 'aux items cannot be weapons')
+                raise Exception('aux items cannot be weapons')
+
         auxItem2 = None
-    try:
-        auxItem3 = createNewSpecificItem(getBaseItemFromName(statInfo['auxItem3']), 0, 0)
-        itemCount += 1
-        newItems.append(auxItem3)
-    except:
+
+        if (auxItem3 := createNewSpecificItem(getBaseItemFromName(statInfo['auxItem3']), 0, 0)) != None:
+            itemCount += 1
+            newItems.append(auxItem3)
+            if isinstance(auxItem3, SpecificItem):
+                messages.add_message(request, messages.ERROR, 'aux items cannot be weapons')
+                raise Exception('aux items cannot be weapons')
+
         auxItem3 = None
 
-    try:
+
         Champion.objects.create(
             player=None,
             name=statInfo['name'],
@@ -271,9 +285,11 @@ def addBossToSystem(request: HttpRequest):
             auxItem2 = auxItem2,
             auxItem3 = auxItem3,
         )
-    except:
+    except Exception as e:
         # if creating the champion fails delete the items so they arent left hanging
         for i in range(itemCount):
+            print(i)
+            print(newItems[i].name)
             removeItemOrWeapon(newItems[i])
 
     return HttpResponseRedirect('addBosses')
@@ -704,12 +720,12 @@ def getBaseItemFromName(name: str) -> Item:
     """
 
     # get the item
+    query = ~Q(instance_of=SpecificItem) & ~Q(instance_of=SpecificWeapon) & Q(name=name)
     try:
-         item = Item.objects.get(instance_of=BaseItem, name=name)
-         return item
+        item = Item.objects.get(query)
+        return item
     except:
         return None
-        return item
 
     return None
 
