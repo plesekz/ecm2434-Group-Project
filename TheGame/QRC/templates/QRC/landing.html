@@ -1,36 +1,26 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+{% extends 'TheGame/CharacterSettingsTemplate.html' %}
 
-    <title>Load QR code</title>
-</head>
-<body>
+
+{% block headBlock %}
+<title>Load QR code</title>
+{% load static %}
+<link rel="stylesheet" href="{% static 'TheGame/styles/CharacterPages.css'%}">
+{% endblock %}
+
+
+{% block bodyBlock%}
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 	<script type="module">
 		{% load static %}
-      import init from "{% static 'QRC/qr_wasm.js' %}";
+      import init from "{% static 'QRC/qrwasm/qr_wasm.js' %}";
 
       init();
     </script>
-    <header>
-        <div class="navbar navbar-dark bg-dark shadow-sm">
-            <div class="container">
-                <img /> <!-- Logo -->
-                <a class="btn btn-danger" href="/login/logout">Log-out</a>
-            </div>
-        </div>
-    </header>
     <main><!-- class="bg-dark text-white"-->
         <div class="py-5 pb-3 text-left">
             <div class="container">
                 <!-- button container -->
-				Load QR code
 				<button class="loadQR btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#addQRCodeModal">Upload QR</button>
             </div>
         </div>
@@ -45,7 +35,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-					<p> Running <span id='runningStatus'/></p>
+                    <p> Running <span id='runningStatus'>Failed to Load JavaScript</span></p>
 					<div class="progress">
 						<style>
 							#taskCount {
@@ -67,5 +57,4 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

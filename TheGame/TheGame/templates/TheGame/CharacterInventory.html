@@ -1,0 +1,143 @@
+{% extends 'TheGame/CharacterSettingsTemplate.html' %}
+
+{% block headBlock %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'TheGame/styles/CharacterPages.css'%}">
+{% endblock %}
+
+{% block bodyBlock %}
+<div class="container-floating" style="color: white;">
+    <div class="row">
+        <div class="col-md-3 order-md-3 container">
+            <div class="stat-highlight mt-3">
+                <h1>Character Image</h1>
+                <div class="row">
+                    {% if champion.primaryWeapon %}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.primaryWeapon.name}}</p>
+                        <p>{{champion.primaryWeapon|safe}}</p>
+                    </div>
+                    {% endif %}
+                    {% if champion.armour %}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.armour.name}}</p>
+                        <p>{{champion.armour|safe}}</p>
+                    </div>
+                    {% endif %}
+                    {% if champion.auxItem1 %}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.auxItem1.name}}</p>
+                        <p>{{champion.auxItem1|safe}}</p>
+                    </div>
+                    {% endif %}
+                    {% if champion.auxItem2 %}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.auxItem2.name}}</p>
+                        <p>{{champion.auxItem2|safe}}</p>
+                    </div>
+                    {% endif %}
+                    {% if champion.auxItem3 %}
+                    <div class="col text-start border border-dark">
+                        <p>{{champion.auxItem3.name}}</p>
+                        <p>{{champion.auxItem3|safe}}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 order-md-3 container">
+            <div class="row stat-highlight mt-3">
+                <h1>Inventory</h1>
+                {%for i in items%}
+                    <div class="col-sm-4 text-start border border-dark" >
+                        <div>
+                            <p>{{i.name}}</p>
+                            <p>{{i|safe}}</p>
+                        </div>
+                        <div class="align-self-end">
+                            <button type="submit top-bar-button col" onclick="EquipItem('{{i.pk}}')">
+                                Equip
+                            </button>
+                            <button type="submit top-bar-button col" onclick="submitData('{{i.pk}}')">
+                                Upgrade
+                            </button>
+                        </div>
+                    </div>
+                {%endfor%}
+            </div>
+        </div>
+        <div class="col-md-3 order-md-3 container">
+            <div class="stat-highlight mt-3">
+                    <h3>Stats:</h3>
+                    <p>
+                    Health: {{champion.pHealth}}<br>
+                    Athletics: {{champion.pAthletics}}<br>
+                    Brains: {{champion.pBrain}}<br>
+                    Control: {{champion.pControl}}
+                    </p>
+            </div>
+        </div>
+    </div>
+    </div>
+    
+    <script>
+        function submitData(pk)
+        {
+            var f = document.createElement('form');
+            f.action='/itemUpgrade/';
+            f.method='POST';
+            var i=document.createElement('input');
+            i.type='hidden';
+            i.name='itemPK';
+            i.value=pk;
+            f.appendChild(i);
+            var t=document.createElement('input');
+            t.type='hidden';
+            t.name='csrfmiddlewaretoken';
+            t.value=getCookie('csrftoken');;
+            f.appendChild(t);
+
+            document.body.appendChild(f);
+            f.submit();
+        }
+
+        function EquipItem(pk)
+        {
+            var f = document.createElement('form');
+            f.action='/equipItem/';
+            f.method='POST';
+            var i=document.createElement('input');
+            i.type='hidden';
+            i.name='itemPK';
+            i.value=pk;
+            f.appendChild(i);
+
+            var t=document.createElement('input');
+            t.type='hidden';
+            t.name='csrfmiddlewaretoken';
+            t.value=getCookie('csrftoken');;
+            f.appendChild(t);
+
+            document.body.appendChild(f);
+            f.submit();
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+    </script>
+  {% endblock%}
+</html>

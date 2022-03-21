@@ -1,78 +1,90 @@
-{% extends 'TheGame/navbarTemplate.html' %}
+{% extends 'TheGame/CharacterSettingsTemplate.html' %}
 
-{% block headblock %}
-<title>Homepage</title>
+{% block headBlock %}
+<title>Character Viewer</title>
+{% load static %}
+<link rel="stylesheet" href="{% static 'TheGame/styles/CharacterPages.css'%}">
 {% endblock %}
 
-{% block bodyBlock %}
+{% block bodyBlock%}
 
-  <style>
-    
-    button.navigationBtn {
-      margin-bottom: 6px !important;
-      width: 100%;
-      font-size: medium;
-    }
-
-  </style>
-
-    <main>
-
-    <div class="container text-center" style="padding-bottom: 12px;">
-      <div class="jumbotron font-weight-bold">
-        <h1 style="font-weight: bold;">{{user.username}}'s Homepage</h1>
-      </div>
-    </div>
-
+<div class="container-floating" style="color:white">
     <div class="row">
-      <div class="col-sm-3 col-6 order-2 order-sm-1">
-        <button class="btn btn-secondary navigationBtn"  style="background-color:lavender !important;" onclick="onQRButtonClick()">
-          <h3 class="text-dark">Scan a new QR code</h3>
-          <p class="text-dark">scan a new qr code and get some new resources!</p>
-        </button>
-        <button class="btn btn-secondary navigationBtn" style="background-color:aquamarine !important;" onclick="onManageButtonClick()">
-          <h3 class="text-dark">Manage your champion</h3>
-          <p class="text-dark">spend your resources on new upgrades!</p>
-        </button>
-        <button class="btn btn-secondary navigationBtn" style="background-color:antiquewhite !important;" onclick="onChallengeButtonClick()">
-          <h3 class="text-dark">Challenge an opponent</h3>
-          <p class="text-dark">take your champion to battle!</p>
-        </button>
-      </div>
+        {% load static %}
+        <div class="col-6 col-md-3 order-3 order-md-1">
+            <ul style="list-style-type: none;">
+                <li >
+                    <a href="/qr/qr-landing">   
+                        <div class="stat-highlight">
+                            <img src="{% static 'TheGame/images/scanQRButton.png' %}" alt="" style="max-height: 100%; max-width: 100%;">
+                        </div>
+                    </a>
+                </li>
+                <li >
+                    <a href="/characterMenu">
+                        <div class="stat-highlight">
+                            <img src="{% static 'TheGame/images/buyStatsButton.png' %}" alt="" style="max-height: 100%; max-width: 100%;">
+                        </div>
+                    </a>
+                </li>
+                <li >
+                    <a href="/battleSelect">
+                        <div class="stat-highlight">
+                            <img src="{% static 'TheGame/images/battleButton.png' %}" alt="" style="max-height: 100%; max-width: 100%;">
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
 
-      <div class="col-12 col-sm-6 justify-content-start order-1 order-sm-2">
-        <p>second col</p>
-      </div>
+        <div class="col-12 col-md-6 order-1 order-md-2">
+            <h1>character image</h1>
+        </div>
 
-      <div class="col-sm-3 col-6 order-3 order-sm-3 text-center">
-        {% if resources %}
-        <h3 style="text-decoration: underline;">Your resources</h3>
-        <ul class="list-group">
-          {% for res in resources %}
-          <div class="col-sm text-center">
-            <li class="list-group-item">
-              {{res.0.name}}: {{res.1}}
-            </li>
-          </div>
-          {% endfor %}
-        </ul>
-        {% endif %}
-      </div>
+        <div class="col-6 col-md-3 order-2 order-md-3">
+            <div class="container-floating stat-highlight">
+                <ul>
+                    <h3>Stats:</h3>
+                    <li>
+                        Health: {{champion.pHealth}}
+                    </li>
+                    <li>
+                        Athletics: {{champion.pAthletics}}
+                    </li>
+                    <li>
+                        Brains: {{champion.pBrain}}
+                    </li>
+                    <li>
+                        Control: {{champion.pControl}}
+                    </li>
+                </ul>
+            </div>
+            <div class="container-floating stat-highlight">
+                <ul>
+                    <h3>Resources:</h3>
+                    {%for r in resources%}
+                    <li>
+                        {{r.0}}: {{r.1}}
+                    </li>
+                    {%endfor%}
+                </ul>
+            </div>
+        </div>
     </div>
+</div>
 
-
-  </main>
-
-  <script>
-    function onQRButtonClick(){
-      window.location.href = "/qr/qr-landing"
-    }
-    function onManageButtonClick(){
-      window.location.href = "/characterMenu"
-    }
-    function onChallengeButtonClick(){
-      window.location.href = "/battleSelect"
-    }
-  </script>
+<div class="container" style="color:white">
+    <div class="row">
+        <div class="col-sm">
+            <h1>GOOD PLACE</h1>
+        </div>
+        <div class="col-sm">
+            <h1>A PLACE</h1>
+        </div>
+        <div class="col-sm">
+            <h1>BAD PLACE</h1>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
