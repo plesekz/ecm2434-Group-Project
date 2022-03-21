@@ -408,9 +408,6 @@ def unequipItem(request):
     item = getItemFromPK(request.POST.get('itemPK'))
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
-    # To be contuinued....
-    # replace the foriegn keys in the champions places with the item that was bought
-    # this will have to have logic for when all slots are full
 
     if isinstance(item, SpecificWeapon):
         userChamp.primaryWeapon = None
@@ -433,21 +430,30 @@ def sellItem(request):
     """ makes a sell of an item for the user
     """
 
+    data = request.body.decode('utf-8')  # decode the body to a string
+    requestJson = json.loads(data)  # load json from string data
+    itemPK = requestJson['itemPK']
+
     if not request.method == "POST":
         messages.error(
             request,
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
-    response = redirect("/characterInventory")
-    item = getItemFromPK(request.POST.get('itemPK'))
+
+    item = getItemFromPK(itemPK)
     user = getUserFromCookie(request)
     userChamp = getChampion(user)
-    # To be contuinued....
 
+    addResourceToUser(user, item.priceRes1, item.price1)
+    if item.priceRes2:
+        addResourceToUser(user, item.priceRes2, item.price2)
+    if item.priceRes3:
+        addResourceToUser(user, item.priceRes3, item.price3)
     removeItemFromChampion(userChamp, item)
     removeItemOrWeapon(item)
 
-    return response
+    return HttpResponse(status=200)
+
 
 
 def upgradeStatOnItem(request):

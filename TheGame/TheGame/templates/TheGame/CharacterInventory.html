@@ -99,6 +99,9 @@
                             <button class="top-bar-button" type="submit" onclick="submitData('{{i.pk}}')">
                                 Upgrade
                             </button>
+                            <button class="top-bar-button" type="submit" onclick="SellItem('{{i.pk}}')">
+                                Sell
+                            </button>
                         </div>
                     </div>
                 {%endfor%}
@@ -181,6 +184,31 @@
             f.submit();
         }
 
+        function SellItem(pk)
+        {
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function() {
+                if (this.readyState == 4){
+                    window.location.reload();
+                    //window.location.href = window.location.href;
+                }
+            }
+
+            xhr.open("POST", '/sellItem/');
+            xhr.setRequestHeader("Content-type", "application/json");
+            const csrfToken = getCookie('csrftoken');
+            xhr.setRequestHeader("X-CSRFToken", csrfToken);
+
+            content = JSON.stringify(
+                {
+                    "itemPK" : pk,
+                }
+            );
+
+            xhr.send(content);
+        }
+        
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
