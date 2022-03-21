@@ -11,8 +11,14 @@ character is the bounding box, the default position is entirely within it
     width: 1600px;
     aspect-ratio: 16 / 9;
     border-style: solid;
-    position: relative;
     contain: strict;
+}
+
+#bars {
+    position: absolute;
+    width: 95%;
+    height: 10%;
+    border-style: solid;
 }
 
 
@@ -186,7 +192,6 @@ character is the bounding box, the default position is entirely within it
     
     <script>
         var animating = false;
-        var scale = 1;
         
         function sleep (time) {
             return new Promise((resolve) => setTimeout(resolve, time));
@@ -441,9 +446,18 @@ character is the bounding box, the default position is entirely within it
             return true;
         }
         
-        async function battle() {
-            //sets up battle
+        async function leftTakeHealthDamage(dmg){}
+        async function leftTakeHealthDamage(dmg){}
+        async function leftTakeShieldDamage(dmg){}
+        async function leftTakeShieldDamage(dmg){}
+        
+        
+        async function setup(lClass, lWeapon, rClass, rWeapon) {
+            
             //assigns the correct sprites to each element
+        }
+        
+        async function battle() {
             
             //gets turn order and plays it out
             await leftMelee();
