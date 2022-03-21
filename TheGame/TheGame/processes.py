@@ -1,6 +1,5 @@
 import json
 from logging import exception
-from msilib.schema import Error
 from operator import getitem, truediv
 from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
