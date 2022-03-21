@@ -1,72 +1,71 @@
 {% extends 'TheGame/navbarTemplate.html' %}
 
 {% block bodyBlock %}
-<h1>this is the page for adding new bosses to the system</h1>
+<h1 class="text-center">this is the page for adding new bosses to the system</h1>
 
-<form action="/newBossValidation" method="post">
-    {% csrf_token %}
-    <div class="form-group">
-        <input type="text" placeholder="name" name="name" class="form-control form-control-lg" required>
-        <br>
+<div class="row justify-content-center text-center">
 
-        <label for="healthInput">Base Health</label>
-        <input type="number" id="pHealthInput" name="pHealth" required>
-        <br>
-
-        <label for="pToughnessInput">Base Athletics</label>
-        <input type="number" id="pToughnessInput" name="pAthletics" required>
-        <br>
-
-        <label for="pEvasionInput">Base Brains</label>
-        <input type="number" id="pEvasionInput" name="pBrain" required>
-        <br>
-        
-        <label for="damageInput">Base Control</label>
-        <input type="number" id="damageInput" name="pControl" required>
-        <br>
-
-        <label for="primaryWeaponIput">Primary weapon</label>
-        <input type="text" id="primaryWeaponInput" name="primaryWeapon" required>
-        <br>
-
-        <label for="armourInput">armour</label>
-        <input type="text" id="armourInput" name="armour" required>
-        <br>
-
-        <label for="aux1Input">Aux item 1</label>
-        <input type="text" id="aux1Input" name="auxItem1" required>
-        <br>
-
-        <button type="submit" class="btn">Create Boss</button>
+    <div class="col-3">
+        <ul>
+            <h2>Current bosses</h2>
+            {% for boss in bosses %}
+            <li>
+                {{ boss.name }}
+            </li>
+            {% endfor %}
+        </ul>
     </div>
-</form>
 
+    <div class="col-6">
+        <form action="/newBossValidation" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" placeholder="name" name="name" class="form-control" required>
+                <br>
 
-<div class="container">
-    <div class="row">
-        <div class="col-6">
-            <ul>
-                <h2>Current bosses</h2>
-                {% for boss in bosses %}
-                <li>
-                    {{ boss.name }}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+                <input type="number" id="pHealthInput" name="pHealth" class="form-control" placeholder="Base health" required>
+                <br>
 
-        <div class="col-6">
-            <ul>
-                <h2>Current Items</h2>
-                {% for item in items %}
-                <li>
-                    {{ item.name }}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+                <input type="number" id="pToughnessInput" name="pAthletics" class="form-control" placeholder="Base athletics" required>
+                <br>
+
+                <input type="number" id="pEvasionInput" name="pBrain" class="form-control" placeholder="Base Brains" required>
+                <br>
+
+                <input type="number" id="damageInput" name="pControl" class="form-control" placeholder="Base Control" required>
+                <br>
+
+                <input type="text" id="primaryWeaponInput" name="primaryWeapon" class="form-control" placeholder="Primary Weapon (optional)">
+                <br>
+
+                <input type="text" id="armourInput" name="armour" class="form-control" placeholder="Armour (optional)">
+                <br>
+
+                <input type="text" id="aux1Input" name="auxItem1" class="form-control" placeholder="Aux item 1 (optional)">
+                <br>
+
+                <input type="text" id="aux2Input" name="auxItem2" class="form-control" placeholder="Aux item 3 (optional)">
+                <br>
+
+                <input type="text" id="aux3Input" name="auxItem3" class="form-control" placeholder="Aux item 3 (optional)">
+                <br>
+
+                <button type="submit" class="btn btn-primary">Create Boss</button>
+            </div>
+        </form>
     </div>
+
+    <div class="col-3">
+        <ul>
+            <h2>Current Items</h2>
+            {% for item in items %}
+            <li>
+                {{ item.name }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
 </div>
-
 
 {% endblock %}

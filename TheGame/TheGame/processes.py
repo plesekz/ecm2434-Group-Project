@@ -1,6 +1,4 @@
 import json
-from logging import exception
-from operator import getitem, truediv
 from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 from django.contrib import messages
@@ -226,17 +224,39 @@ def addBossToSystem(request: HttpRequest):
 
     itemCount = 1
     newItems = []
+
     try:
         primaryWeapon = createNewSpecificItem(getBaseItemFromName(statInfo['primaryWeapon']), 0, 0)
         itemCount += 1
         newItems.append(primaryWeapon)
+    except:
+        primaryWeapon = None
+    try:
         armour = createNewSpecificItem(getBaseItemFromName(statInfo['armour']), 0, 0)
         itemCount += 1
         newItems.append(armour)
+    except:
+        armour = None
+    try:
         auxItem1 = createNewSpecificItem(getBaseItemFromName(statInfo['auxItem1']), 0, 0)
         itemCount += 1
         newItems.append(auxItem1)
+    except:
+        auxItem1 = None
+    try:
+        auxItem2 = createNewSpecificItem(getBaseItemFromName(statInfo['auxItem2']), 0, 0)
+        itemCount += 1
+        newItems.append(auxItem2)
+    except:
+        auxItem2 = None
+    try:
+        auxItem3 = createNewSpecificItem(getBaseItemFromName(statInfo['auxItem3']), 0, 0)
+        itemCount += 1
+        newItems.append(auxItem3)
+    except:
+        auxItem3 = None
 
+    try:
         Champion.objects.create(
             player=None,
             name=statInfo['name'],
@@ -248,9 +268,11 @@ def addBossToSystem(request: HttpRequest):
             primaryWeapon = primaryWeapon,
             armour = armour,
             auxItem1 = auxItem1,
+            auxItem2 = auxItem2,
+            auxItem3 = auxItem3,
         )
-
     except:
+        # if creating the champion fails delete the items so they arent left hanging
         for i in range(itemCount):
             removeItemOrWeapon(newItems[i])
 

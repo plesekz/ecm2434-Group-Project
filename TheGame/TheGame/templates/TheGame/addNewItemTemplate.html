@@ -1,107 +1,96 @@
 {% extends 'TheGame/navbarTemplate.html' %}
 
 {% block bodyBlock %}
-<h1>this is the page for adding new items to the system</h1>
 
-<button onclick="changeToItems()">
-    Item form
-</button>
+<h1 class="text-center">this is the page for adding new items to the system</h1>
 
-<button onclick="changeToWeapons()">
-    Weapon form
-</button>
+<div class="row justify-content-center">
 
-<div id="formWrapper" style="margin-bottom: 5%">
-    <form action="/validateItem" method="post">
-        {% csrf_token %}
-        <div class="form-group" id="fg">
-            
-        </div>
-    </form>
-</div>
-
-<div class="container">
-    <div class="row">
-        <div class="col-6">
-            <ul>
-                <h2>Current Items</h2>
-                {% for item in items %}
-                <li>
-                    {{ item.name }}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        <div class="col-6">
-            <ul>
-                <h2>Current Reources</h2>
-                {% for res in resources %}
-                <li>
-                    {{ res.name }}
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
+    <div class="col-3">
+        <ul>
+            <h2>Current Items</h2>
+            {% for item in items %}
+            <li>
+                {{ item.name }}
+            </li>
+            {% endfor %}
+        </ul>
     </div>
-</div>
 
+    <div id="formWrapper" style="margin-bottom: 5%" class="form-group form-wrapper col-6 text-center">
+        <button onclick="changeToItems()" class="btn btn-info">
+            Item form
+        </button>
+
+        <button onclick="changeToWeapons()" class="btn btn-info">
+            Weapon form
+        </button>
+
+        <form action="/validateItem" method="post">
+            {% csrf_token %}
+            <div class="form-group" id="fg">
+                
+            </div>
+        </form>
+    </div>
+
+    <div class="col-3">
+        <ul>
+            <h2>Current Resources</h2>
+            {% for res in resources %}
+            <li>
+                {{ res.name }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
 
 <script>
     function changeToItems(){
         wrapper = document.getElementById("fg")
 
         wrapper.innerHTML = `
-            <input type="text" placeholder="name" name="name" class="form-control form-control-lg" required>
+            <input type="text" placeholder="name" name="name" class="form-control" required>
             <br>
 
-            <label for="priceInput">type</label>
-            <input type="text" id="typeInput" name="type" required>
+            <input type="text" id="typeInput" name="type" class="form-control" placeholder="type" equired>
             <br>
 
-            <label for="armourValueInput">armour value</label>
-            <input type="number" id="armourValueInput" name="armourValue" required>
+            <input type="number" id="armourValueInput" name="armourValue" class="form-control" placeholder="armour value" required>
             <br>
             
-            <label for="vitBoostInput">vitality boost</label>
-            <input type="number" id="vitBoostInput" name="vitalityBoost" required>
+            <input type="number" id="vitBoostInput" name="vitalityBoost" class="form-control" placeholder="vitality boost" required>
             <br>
 
-            <label for="shieldInput">Shield value</label>
-            <input type="number" id="shieldInput" name="shieldValue" required>
+            <input type="number" id="shieldInput" name="shieldValue" class="form-control" placeholder="shield value" required>
             <br>
 
-            <label for="specAbilityInput">special abilities</label>
-            <input type="text" id="specAbilityInput" name="specialAbilities" required>
+            <input type="text" id="specAbilityInput" name="specialAbilities" class="form-control" placeholder="special ability" required>
             <br>
 
-            <label for="priceRes1Input">Resource 1</label>
-            <input type="text" id="price1ResInput" name="priceRes1" required>
+            <input type="text" id="price1ResInput" name="priceRes1" class="form-control" placeholder="resource 1" required>
             <br>
 
-            <label for="price1Input">Price 1</label>
-            <input type="number" id="price1Input" name="price1" required>
+            <input type="number" id="price1Input" name="price1" class="form-control" placeholder="price 1" required>
             <br>
 
-            <label for="priceRes2Input">Resource 2</label>
-            <input type="text" id="priceRes2Input" name="priceRes2">
+            <input type="text" id="priceRes2Input" name="priceRes2" class="form-control" placeholder="resource 2 (optional)">
             <br>
 
-            <label for="price2Input">Price 2</label>
-            <input type="number" id="price2Input" name="price2">
+            <input type="number" id="price2Input" name="price2" class="form-control" placeholder="price 2 (optional)">
             <br>
 
-            <label for="priceRes3Input">Resource 3</label>
-            <input type="text" id="priceRes3Input" name="priceRes3">
+            <input type="text" id="priceRes3Input" name="priceRes3" class="form-control" placeholder="resource 3 (optional)">
             <br>
 
-            <label for="price3Input">Price 3</label>
-            <input type="number" id="price3Input" name="price3">
+            <input type="number" id="price3Input" name="price3" class="form-control" placeholder="price 3 (optional)">
             <br>
 
             <input type="hidden" name="itemType" value="item" />
 
-            <button type="submit" class="btn">Create Item</button>
+            <button type="submit" class="btn btn-primary">Create Item</button>
         `
     }
 
@@ -109,62 +98,52 @@
         wrapper = document.getElementById("fg")
 
         wrapper.innerHTML = `
-            <input type="text" placeholder="name" name="name" class="form-control form-control-lg" required>
+            <input type="text" placeholder="name" name="name" class="form-control" required>
             <br>
 
-            <label for="priceInput">type</label>
-            <input type="text" id="typeInput" name="type" required>
+            <input type="text" id="typeInput" name="type" class="form-control" placeholder="type" required>
             <br>
 
-            <label for="damageNumberInput">damage number</label>
-            <input type="number" id="damageNumberInput" name="damageNumber" required>
+            <input type="number" id="damageNumberInput" name="damageNumber" class="form-control" placeholder="damage number" required>
             <br>
             
-            <label for="damageInstancesInput">damage instances</label>
-            <input type="number" id="damageInstancesInput" name="damageInstances" required>
+            <input type="number" id="damageInstancesInput" name="damageInstances" class="form-control" placeholder="damage instances" required>
             <br>
 
-            <label for="rangeInput">range</label>
-            <input type="number" id="rangeInput" name="range" required>
+            <input type="number" id="rangeInput" name="range" class="form-control" placeholder="range" required>
             <br>
 
-            <label for="associatedInput">associated</label>
-            <input type="text" id="associatedInput" name="associated" required>
+            <input type="text" id="associatedInput" name="associated" class="form-control" placeholder="associated" required>
             <br>
 
-            <label for="apCostInput">ap cost</label>
-            <input type="number" id="apCostInput" name="ap_cost" required>
+            <input type="number" id="apCostInput" name="ap_cost" class="form-control" placeholder="ap cost" required>
             <br>
 
-            <label for="priceRes1Input">Resource 1</label>
-            <input type="text" id="price1ResInput" name="priceRes1" required>
+            <input type="text" id="price1ResInput" name="priceRes1" class="form-control" placeholder="resource 1" required>
             <br>
 
-            <label for="price1Input">Price 1</label>
-            <input type="number" id="price1Input" name="price1" required>
+            <input type="number" id="price1Input" name="price1" class="form-control" placeholder="price 1" required>
             <br>
 
-            <label for="priceRes2Input">Resource 2</label>
-            <input type="text" id="priceRes2Input" name="priceRes2" >
+            <input type="text" id="priceRes2Input" name="priceRes2" class="form-control" placeholder="resource 2 (optional)">
             <br>
 
-            <label for="price2Input">Price 2</label>
-            <input type="number" id="price2Input" name="price2" >
+            <input type="number" id="price2Input" name="price2" class="form-control" placeholder="price 2 (optional)">
             <br>
 
-            <label for="priceRes3Input">Resource 3</label>
-            <input type="text" id="priceRes3Input" name="priceRes3" >
+            <input type="text" id="priceRes3Input" name="priceRes3" class="form-control" placeholder="resource 3 (optional)">
             <br>
 
-            <label for="price3Input">Price 3</label>
-            <input type="number" id="price3Input" name="price3" >
+            <input type="number" id="price3Input" name="price3" class="form-control" placeholder="price 3 (optional)">
             <br>
 
             <input type="hidden" name="itemType" value="weapon" />
 
-            <button type="submit" class="btn">Create Item</button>
+            <button type="submit" class="btn btn-primary">Create Item</button>
         `
     }
+
+    changeToItems();
 
 </script>
 
