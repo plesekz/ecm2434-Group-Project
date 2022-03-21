@@ -117,14 +117,4 @@ class ChampionItems(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
 
     def __str__(self):
-<<<<<<< HEAD
-        return str(self.name)
-
-class Item (models.Model):
-    ## item stats
-    type = models.CharField(max_length="20")
-    damageReduction = models.PositiveIntegerField()
-    damageScaling = models.DecimalField()
-=======
         return str(self.champion) + " " + str(self.item)
->>>>>>> 0b419260c2c3597aabbd465953f4868ea279668b
