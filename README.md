@@ -5,6 +5,7 @@
 - django: Used for the webserver `pip3 install django`
 - polymorphic: Used for improved django models `pip3 install django-polymorphic`
 - qrcode: Used to generate QR codes: `pip3 install qrcode`
+- pillow: Required for qrcode `pip3 install pillow`
 ### Required for building wasm files
 - cargo: Used to compile Rust for QR decoder `curl https://sh.rustup.rs -sSf | sh`
 - wasm-pack: Used to build wasm and js for QR decoder `cargo install wasm-pack`
