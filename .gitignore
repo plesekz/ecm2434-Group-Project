@@ -128,4 +128,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-TheGame/QRC/static/QRC/qrImages/*
+TheGame/QRC/static/QRC/qrImages/*.png
