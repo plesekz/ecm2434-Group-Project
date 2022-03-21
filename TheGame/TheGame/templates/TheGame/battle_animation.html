@@ -21,7 +21,6 @@ character is the bounding box, the default position is entirely within it
     border-style: solid;
 }
 
-
 #leftCharacter {
     height: 75%;
     aspect-ratio: 1 / 2;
@@ -30,7 +29,6 @@ character is the bounding box, the default position is entirely within it
     left: 2%;
 }
 #lBody {
-    background: url(sprites/hacker/body.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index:-3;
@@ -41,7 +39,6 @@ character is the bounding box, the default position is entirely within it
     left: 0%;
 }
 #lBodyShield {
-    background:url(sprites/hacker/bodyshield.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index:-5;
@@ -53,7 +50,6 @@ character is the bounding box, the default position is entirely within it
 }
 
 #lArm {
-    background:url(sprites/hacker/arm.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index:-1;
@@ -66,7 +62,6 @@ character is the bounding box, the default position is entirely within it
     
 }
 #lArmShield {
-    background:url(sprites/hacker/armshield.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index: -4;
@@ -79,7 +74,6 @@ character is the bounding box, the default position is entirely within it
 }
 
 #lWeapon {
-    background:url(sprites/weapons/assaultrifle.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index:-2;
@@ -101,7 +95,6 @@ character is the bounding box, the default position is entirely within it
     right: 2%;
 }
 #rBody {
-    background: url(sprites/hacker/body.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index:-3;
@@ -114,7 +107,6 @@ character is the bounding box, the default position is entirely within it
 }
 
 #rBodyShield {
-    background:url(sprites/hacker/bodyshield.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index:-5;
@@ -127,7 +119,6 @@ character is the bounding box, the default position is entirely within it
 }
 
 #rArm {
-    background:url(sprites/hacker/arm.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index:-1;
@@ -140,7 +131,6 @@ character is the bounding box, the default position is entirely within it
     
 }
 #rArmShield {
-    background:url(sprites/hacker/armshield.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index: -4;
@@ -153,7 +143,6 @@ character is the bounding box, the default position is entirely within it
 }
 
 #rWeapon {
-    background:url(sprites/weapons/sword.png);
     background-repeat: no-repeat;
     background-size: 100% 100%;
     z-index:-2;
@@ -452,20 +441,58 @@ character is the bounding box, the default position is entirely within it
         async function leftTakeShieldDamage(dmg){}
         
         
-        async function setup(lClass, lWeapon, rClass, rWeapon) {
+        function setup(lClass, leftWeapon, rClass, rightWeapon) {
+            //left character variables
+            var lBody = document.getElementById("lBody");
+            var lbShield = document.getElementById("lBodyShield");
+            var lArm = document.getElementById("lArm");
+            var laShield = document.getElementById("lArmShield");
+            var lWeapon = document.getElementById("lWeapon");
             
-            //assigns the correct sprites to each element
+            //right character variables
+            var rBody = document.getElementById("rBody");
+            var rbShield = document.getElementById("rBodyShield");
+            var rArm = document.getElementById("rArm");
+            var raShield = document.getElementById("rArmShield");
+            var rWeapon = document.getElementById("rWeapon");
+            
+            
+            //sets sprites to the correct sprite and size
+            lBody.style.background = 'url(sprites/' + lClass + '/body.png) no-repeat';
+            lBody.style.backgroundSize = '100% 100%';            
+            lbShield.style.background = 'url(sprites/' + lClass + '/bodyshield.png)';
+            lbShield.style.backgroundSize = '100% 100%';
+            lArm.style.background = 'url(sprites/' + lClass + '/arm.png)';
+            lArm.style.backgroundSize = '100% 100%';
+            laShield.style.background = 'url(sprites/' + lClass + '/armshield.png)';
+            laShield.style.backgroundSize = '100% 100%';
+            lWeapon.style.background = 'url(sprites/weapons/' + leftWeapon + '.png)';
+            lWeapon.style.backgroundSize = '100% 100%';
+            
+            rBody.style.background = 'url(sprites/' + rClass + '/body.png) no-repeat';
+            rBody.style.backgroundSize = '100% 100%';            
+            rbShield.style.background = 'url(sprites/' + rClass + '/bodyshield.png)';
+            rbShield.style.backgroundSize = '100% 100%';
+            rArm.style.background = 'url(sprites/' + rClass + '/arm.png)';
+            rArm.style.backgroundSize = '100% 100%';
+            raShield.style.background = 'url(sprites/' + rClass + '/armshield.png)';
+            raShield.style.backgroundSize = '100% 100%';
+            rWeapon.style.background = 'url(sprites/weapons/' + rightWeapon + '.png)';
+            rWeapon.style.backgroundSize = '100% 100%';
+            
+
+            
         }
         
         async function battle() {
-            
+        
             //gets turn order and plays it out
             await leftMelee();
             await rightMelee();
             await leftRanged();
             await rightRanged();
         }
-        
+        setup("psionic", "shiv", "soldier", "assaultrifle");
     </script>
 </body>
 </html>

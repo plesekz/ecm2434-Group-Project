@@ -38,16 +38,16 @@ Also fades the right character's shield sprite to an opacity equal to what perce
 
 
 
-### setup(lClass, lWeapon, rClass, rWeapon)
+### setup(lClass, leftWeapon, rClass, rightWeapon)
 Parameters: 
     lClass - string of what class the left character is
-    lWeapon - string of what weapon the left character uses
+    leftWeapon - string of what weapon the left character uses
     rClass - string of what class the right character is
-    rWeapon - string of what weapon the right character uses
+    rightWeapon - string of what weapon the right character uses
 Assigns each css element the correct sprite based on class or weapon
 Example
     if you were to set up a hacker with a shiv on the left, and ignoring the character on the right:
-        you would pass lClass as "hacker" and lWeapon as "shiv"
+        you would pass lClass as "hacker" and leftWeapon as "shiv"
         the hacker's arm sprite would be in "sprites/hacker/arm.png"
         the weapon would be in "sprites/weapons/shiv.png"
         and so forth for each sprite
