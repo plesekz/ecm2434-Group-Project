@@ -61,6 +61,7 @@
             xhttp.open("POST", "deleteRes", true);
             xhttp.setRequestHeader("Content-type", "text/plain");
 
+            const csrftoken = getCookie('csrftoken')
             xhttp.setRequestHeader("X-CSRFToken", csrftoken);
 
             xhttp.send(intID);

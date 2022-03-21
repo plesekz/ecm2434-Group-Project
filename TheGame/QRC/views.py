@@ -85,7 +85,7 @@ def deleteRes(request: HttpRequest) -> HttpResponse:
     if not (qrresources := QRResource.objects.filter(QRID=qrCode)).exists():
         QRC.objects.get(QRID=qrid).delete()
         # delete image
-        os.remove(f"static/QRC/qrImages/{qrid}.png")
+        os.remove(f"QRC/static/QRC/qrImages/{qrid}.png")
         # A QRResource with the given UID doesn't exist so already 'deleted'
         return HttpResponse(status=201)
     for qrres in qrresources:

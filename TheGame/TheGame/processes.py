@@ -1,5 +1,6 @@
 import json
 from logging import exception
+from msilib.schema import Error
 from operator import getitem, truediv
 from django.http import HttpRequest, HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
@@ -843,17 +844,23 @@ def createNewBaseItemFromHTMLRequest(request):
     data = request.POST
 
     try:
+        priceRes1 = getResourceByName(data['priceRes1'])
+        price1 = int(data['price1'])
+    except:
+        return HttpResponseRedirect(status=501)
+    try:
         priceRes2 = getResourceByName(data['priceRes2'])
-        price2 = data['price2']
+        price2 = int(data['price2'])
     except:
         priceRes2 = None
         price2 = None
     try:
         priceRes3 = getResourceByName(data['priceRes3'])
-        price3 = data['price3']
+        price3 = int(data['price3'])
     except:
         priceRes3 = None
         price3 = None
+
 
     if data['itemType'] == "item":
         createNewBaseItem(
@@ -881,7 +888,7 @@ def createNewBaseItemFromHTMLRequest(request):
             association=data['associated'],
             ap_cost=data['ap_cost'],
 
-            priceRes1=getResourceByName(data['priceRes1'][0]),
+            priceRes1=getResourceByName(data['priceRes1']   ),
             price1=data['price1'],
             priceRes2=priceRes2,
             price2=price2,
