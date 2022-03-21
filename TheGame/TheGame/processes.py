@@ -450,7 +450,7 @@ def sellItem(request):
         addResourceToUser(user, item.priceRes2, item.price2)
     if item.priceRes3:
         addResourceToUser(user, item.priceRes3, item.price3)
-
+        
     removeItemFromChampion(userChamp, item)
     removeItemOrWeapon(item)
 
