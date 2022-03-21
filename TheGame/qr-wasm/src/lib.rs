@@ -234,7 +234,7 @@ impl QRManager {
                     continue;
                 }
             };
-            match load_qr(&mut decoder, &img).await {
+            match load_qr(&mut decoder, img).await {
                 Ok(codes) => {
                     for code in codes {
                         let code: Result<usize, _> = code
@@ -447,7 +447,7 @@ Parses image and then uses quircs to identify QR codes
 */
 async fn load_qr(
     decoder: &mut quircs::Quirc,
-    img: &image::GrayImage,
+    img: image::GrayImage,
 ) -> Result<Vec<Result<String, Box<dyn std::error::Error>>>, Box<dyn std::error::Error>> {
     let quircs_codes = decoder.identify(img.width() as usize, img.height() as usize, &img);
 
@@ -461,26 +461,46 @@ async fn load_qr(
         );
         let decoded = code.decode()?;
         let payload = decoded.payload;
-        let msg = std::str::from_utf8(&payload)?;
+        let msg = String::from_utf8_lossy(&payload).into_owned();
         log::info!("quircs {}", &msg);
         Ok(msg.to_owned())
     });
 
-    let mut img = rqrr::PreparedImage::prepare_from_greyscale(
+    let mut prepared_img = rqrr::PreparedImage::prepare_from_greyscale(
         img.width() as usize,
         img.height() as usize,
         |x, y| img.get_pixel(x as u32, y as u32).0[0],
     );
-    let grids = img.detect_grids();
-    let rqrr_codes = grids.iter().map(|grid| {
-        let (meta, content) = grid.decode()?;
+    let grids = prepared_img.detect_grids();
+    let rqrr_codes = grids.iter().flat_map(|grid| {
+        let mut writer = Vec::new();
+        let meta = grid.decode_to(&mut writer);
+        log::info!("meta: {:?}", meta);
+        let content = String::from_utf8_lossy(&writer).into_owned();
         log::info!("rqrr Code metadata: {:?}, content: {}", meta, content);
-        Ok::<_, Box<dyn std::error::Error>>(content)
+        let content = Ok::<_, Box<dyn std::error::Error>>(content);
+        std::iter::once(content).chain(
+            if let Err(error) = meta {
+                Some(Err(Box::new(error) as Box<dyn std::error::Error>))
+            } else {
+                None
+            }
+            .into_iter(),
+        )
     });
+
+    let decoder = bardecoder::default_decoder();
+    let results = decoder
+        .decode(&image::DynamicImage::ImageLuma8(img));
+    log::info!("bardecoder found {} codes", results.len());
+    let bardecoder_codes = results
+        .into_iter()
+        .filter_map(|result| result.ok().map(|res| Ok(res)));
 
     let mut unique_codes = std::collections::HashSet::new();
     let codes = quircs_codes
         .chain(rqrr_codes)
+        .chain(bardecoder_codes)
         .filter(|code| {
             if let Ok(code) = code {
                 !unique_codes.insert(code.clone())
@@ -512,7 +532,7 @@ mod tests {
                         .await
                         .map_err(|e| format!("{:?}", e))
                         .unwrap();
-                    let vals: Vec<_> = load_qr(&mut decoder, &img)
+                    let vals: Vec<_> = load_qr(&mut decoder, img)
                         .await
                         .unwrap()
                         .into_iter()

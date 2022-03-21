@@ -18,8 +18,8 @@ js-sys = "0.3.56"
 gloo = "0.6.1"
 
 
-quircs = "0.10.0"
-#bardecoder = "0.3"
+quircs = {git = "https://github.com/mkb2091/quircs"}
+bardecoder = {git = "https://github.com/mkb2091/bardecoder"}
 rqrr = {version = "0.5.1", default-features = false}
 
 concat-idents = "1.1.3"
