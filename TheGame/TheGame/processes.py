@@ -895,6 +895,8 @@ def createNewBaseItemFromHTMLRequest(request):
 
     data = request.POST
 
+    response = HttpResponseRedirect('addItems')
+
     try:
         priceRes1 = getResourceByName(data['priceRes1'])
         price1 = int(data['price1'])
@@ -914,41 +916,46 @@ def createNewBaseItemFromHTMLRequest(request):
         price3 = None
 
 
-    if data['itemType'] == "item":
-        createNewBaseItem(
-            name=data['name'],
-            type=data['type'],
-            armourValue=data['armourValue'],
-            vitalityBoost=data['vitalityBoost'],
-            shieldValue=data['shieldValue'],
-            specialAbilities=data['specialAbilities'],
-            priceRes1=getResourceByName(data['priceRes1']),
-            price1=data['price1'],
-            priceRes2=priceRes2,
-            price2=price2,
-            priceRes3=priceRes3,
-            price3=price3,
-        )
+    try:
+        if data['itemType'] == "item":
+            createNewBaseItem(
+                name=data['name'],
+                type=data['type'],
+                armourValue=data['armourValue'],
+                vitalityBoost=data['vitalityBoost'],
+                shieldValue=data['shieldValue'],
+                specialAbilities=data['specialAbilities'],
+                priceRes1=getResourceByName(data['priceRes1']),
+                price1=data['price1'],
+                priceRes2=priceRes2,
+                price2=price2,
+                priceRes3=priceRes3,
+                price3=price3,
+            )
 
-    elif data['itemType']:
-        createNewBaseWeapon(
-            name=data['name'],
-            type=data['type'],
-            damageNumber=data['damageNumber'],
-            damageInstances=data['damageInstances'],
-            range=data['range'],
-            association=data['associated'],
-            ap_cost=data['ap_cost'],
+        elif data['itemType']:
+            createNewBaseWeapon(
+                name=data['name'],
+                type=data['type'],
+                damageNumber=data['damageNumber'],
+                damageInstances=data['damageInstances'],
+                range=data['range'],
+                association=data['associated'],
+                ap_cost=data['ap_cost'],
 
-            priceRes1=getResourceByName(data['priceRes1']   ),
-            price1=data['price1'],
-            priceRes2=priceRes2,
-            price2=price2,
-            priceRes3=priceRes3,
-            price3=price3,
-        )
+                priceRes1=getResourceByName(data['priceRes1']   ),
+                price1=data['price1'],
+                priceRes2=priceRes2,
+                price2=price2,
+                priceRes3=priceRes3,
+                price3=price3,
+            )
 
-    return HttpResponseRedirect('addItems')
+        return response
+
+    except Exception as e:
+        messages.add_message(request, messages.ERROR, e)
+        return response
 
 def getChampionsItemStatPacks(champion : Champion) -> "list[SpecificItem]":
     """ function that will return a list of all the users item stat packs
