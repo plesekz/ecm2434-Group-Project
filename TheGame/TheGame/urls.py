@@ -38,6 +38,7 @@ urlpatterns = [
     path('sellItem/', processes.sellItem, name="sellItem"),
     path('upgradeStatOnItem/', processes.upgradeStatOnItem, name="upgradeStatOnItem"),
     path('itemUpgrade/', itemUpgrade, name="itemUpgrade"),
+    path('map/', map, name="map"),
     path('battleSelect/battle', battle.callBattle, name="battleSelect/battle"),
     path('login/', include("Login.urls")),
     path('battleSelect/', battleSelectView, name="battleSelect"),

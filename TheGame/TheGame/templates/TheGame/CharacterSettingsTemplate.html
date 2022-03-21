@@ -24,7 +24,7 @@
                 <button class="col-sm-4 top-bar-button">
                         <h1>Factions</h1>
                 </button>
-                <button class="col-sm-3 top-bar-button">
+                <button class="col-sm-3 top-bar-button" onclick="onMapButtonClick()">
                         <h1>Map</h1>
                 </button>
                 <button class="col-sm-3 top-bar-button" onclick="onInventoryButtonClick()">
@@ -50,6 +50,10 @@
     <script>
         function onHomeButtonClick(){
             window.location.href = "/"
+        }
+
+        function onMapButtonClick(){
+            window.location.href = "/map"
         }
 
         function onLogoutButtonClick(){

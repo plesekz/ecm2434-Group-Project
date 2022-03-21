@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
 
 from Login.processes import getUserFromCookie
+from QRC.models import QRResource, QRC
 from TheGame.models import SpecificItem
 from TheGame.processes import getAllBaseItems, getAllBosses, getChampionsItemStatPacks, getChampionsWeaponStatPacks, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
 from Resources.processes import getAllUserResources, getAllResources
@@ -61,6 +62,44 @@ def characterMenu(request: HttpRequest) -> HttpResponse:
         # "aToughness": champion.aToughness,
         # "aEvasion": champion.aEvasion,
         "resources": resources,
+    }
+
+    output = template.render(context, request)
+
+    return HttpResponse(output)
+
+def map(request: HttpRequest) -> HttpResponse:
+    """ creates response for the map
+    """
+    if request.COOKIES.get('TheGameSessionID') is None:
+        return redirect('login')
+
+    user = getUserFromCookie(request)
+    if not (champion := getChampion(user)):
+        return redirect('createChampion')
+
+    codes = []
+    for QRCode in QRC.objects.all():
+        codes.append(
+            {
+                'name': QRCode.QRID,
+                'lat': QRCode.latitude,
+                'lon': QRCode.longitude,
+                'resources': QRResource.objects.filter(QRID=QRCode),
+                'imagePath': QRCode.image,
+                'staticPath': "QRC/qrImages/"
+            }
+        )
+
+    template = loader.get_template('TheGame/map.html')
+
+    resources = getAllUserResources(user)
+
+    context = {
+        "username": user.username,
+        "champion": champion,
+        "resources": resources,
+        "active_QR_codes_list": codes,
     }
 
     output = template.render(context, request)
