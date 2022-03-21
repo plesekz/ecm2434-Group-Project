@@ -225,24 +225,35 @@ def addBossToSystem(request: HttpRequest):
 
     statInfo = request.POST
 
-    Champion.objects.create(
-        player=None,
-        name=statInfo['name'],
-        pHealth=statInfo['pHealth'],
+    itemCount = 1
+    newItems = []
+    try:
+        primaryWeapon = createNewSpecificItem(getBaseItemFromName(statInfo['primaryWeapon']), 0, 0)
+        itemCount += 1
+        newItems.append(primaryWeapon)
+        armour = createNewSpecificItem(getBaseItemFromName(statInfo['armour']), 0, 0)
+        itemCount += 1
+        newItems.append(armour)
+        auxItem1 = createNewSpecificItem(getBaseItemFromName(statInfo['auxItem1']), 0, 0)
+        itemCount += 1
+        newItems.append(auxItem1)
 
-        pToughness=statInfo['pToughness'],
-        pEvasion=statInfo['pEvasion'],
-        damage=statInfo['damage'],
-        accuracy=statInfo['accuracy'],
-        attackSpeed=statInfo['attackSpeed'],
-        aHealth=statInfo['aHealth'],
-        aToughness=statInfo['aToughness'],
-        aEvasion=statInfo['aEvasion'],
+        Champion.objects.create(
+            player=None,
+            name=statInfo['name'],
+            pHealth=statInfo['pHealth'],
+            pAthletics=statInfo['pAthletics'],
+            pBrain=statInfo['pBrain'],
+            pControl=statInfo['pControl'],
 
-        pAthletics=statInfo['pAthletics'],
-        pBrain=statInfo['pBrain'],
-        pControl=statInfo['pControl'],
-    )
+            primaryWeapon = primaryWeapon,
+            armour = armour,
+            auxItem1 = auxItem1,
+        )
+
+    except:
+        for i in range(itemCount):
+            removeItemOrWeapon(newItems[i])
 
     return HttpResponseRedirect('addBosses')
 
@@ -672,7 +683,11 @@ def getBaseItemFromName(name: str) -> Item:
     """
 
     # get the item
-    if item := Item.get(instance_of=BaseItem, name=name):
+    try:
+         item = Item.objects.get(instance_of=BaseItem, name=name)
+         return item
+    except:
+        return None
         return item
 
     return None

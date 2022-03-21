@@ -25,19 +25,48 @@
         <input type="number" id="damageInput" name="pControl" required>
         <br>
 
+        <label for="primaryWeaponIput">Primary weapon</label>
+        <input type="text" id="primaryWeaponInput" name="primaryWeapon" required>
+        <br>
+
+        <label for="armourInput">armour</label>
+        <input type="text" id="armourInput" name="armour" required>
+        <br>
+
+        <label for="aux1Input">Aux item 1</label>
+        <input type="text" id="aux1Input" name="auxItem1" required>
+        <br>
+
         <button type="submit" class="btn">Create Boss</button>
     </div>
 </form>
 
 
-<ul>
-    <h2>Current Bosses</h2>
-    {% for boss in bosses %}
-    <li>
-        {{ boss.name }}
-    </li>
-    {% endfor %}
-</ul>
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <ul>
+                <h2>Current bosses</h2>
+                {% for boss in bosses %}
+                <li>
+                    {{ boss.name }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="col-6">
+            <ul>
+                <h2>Current Items</h2>
+                {% for item in items %}
+                <li>
+                    {{ item.name }}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

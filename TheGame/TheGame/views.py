@@ -193,9 +193,11 @@ def addNewBossView(request):
     template = loader.get_template('TheGame/newBoss.html')
 
     bosses = getAllBosses()
+    items = getAllBaseItemsAndWeapons()
 
     context = {
         "bosses": bosses,
+        "items": items,
     }
 
     output = template.render(context, request)
