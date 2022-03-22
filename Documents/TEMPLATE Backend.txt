@@ -1,0 +1,32 @@
+# How to use this Template
+# Copy the template and change the name to "[Feature] specification"
+# Fill in the fields with bullet points
+# Remove this header
+
+Functions:
+	[ Describe in bulletpoints the functionality of this module. ]
+	●
+Database tables:
+	[ Name all tables/objects that will be necessary for the backend to function. ]
+	●
+Interface:
+	[ Describe all ways of communicating with this module. ]
+	[ If other modules can call this module's functions,
+		name the public functions here,
+		specify their arguments,
+		describe the function's behavivour,
+		describe the return statement value.
+	]
+	●
+Endpoints:
+	[ If this module provides any endpoints, name them. ]
+	[ Specify the endpoints' address. ]
+	[ Specify what methods the endpoint accepts. ]
+	[ Specify what headers the endpoint expects. ]
+	[ Specify what payload the endpoint expects. ]
+	[ Specify what responses the endpoint gives under which circumstance. ]
+	[ Describe the behavivour of the endpoint. ]
+	●
+
+Other notes:
+	[ If there are any other notes in regards to the back-end, provide them here. ]
