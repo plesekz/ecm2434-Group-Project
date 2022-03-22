@@ -1001,6 +1001,18 @@ def removeItemFromChampion(champion: Champion, item: Item):
 
     # make sure the item isnt equipt
 
+    uneqipFromChampion(champion, item)
+
+    query = Q(champion=champion) & Q(item=item)
+    
+    try:
+        ChampionItems.objects.get(query).delete()
+        return True
+    except:
+        return False
+
+def uneqipFromChampion(champion: Champion, item: Item):
+
     if champion.primaryWeapon == item:
         champion.primaryWeapon = None
     elif champion.secondaryWeapon == item:
@@ -1015,15 +1027,6 @@ def removeItemFromChampion(champion: Champion, item: Item):
         champion.auxItem3 = None        
 
     champion.save()
-
-    query = Q(champion=champion) & Q(item=item)
-    
-    try:
-        ChampionItems.objects.get(query).delete()
-        return True
-    except:
-        return False
-
 
 def getItemFromPK(pk: int) -> Item:
     
