@@ -452,6 +452,9 @@ def createNewBaseItem(name: str, type: str,
 
     # create the base item in the database
 
+    if sprite == None:
+        sprite = Champion._meta.get_field('sprite').get_default()
+
     query = ~Q(instance_of=SpecificItem) & Q(name=name)
 
     if (baseItem := BaseItem.objects.filter(query)).exists():
@@ -559,6 +562,9 @@ def createNewBaseWeapon(name: str, type: str,
     """
 
     # create the base weapon instance
+
+    if sprite == None:
+        sprite = Champion._meta.get_field('sprite').get_default()
 
     query = ~Q(instance_of=SpecificWeapon) & Q(name=name)
 
