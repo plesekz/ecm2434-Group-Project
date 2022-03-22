@@ -428,13 +428,13 @@ def equipItem(request):
     if item.type == "statPack":
         return response
 
-    if item == userChamp.primaryWeapon or item == userChamp.armour or item == userChamp.auxItem1 or item == userChamp.auxItem2 or item == userChamp.auxItem3:
+    if isEquiped(userChamp, item):
         return response
     elif isinstance(item, SpecificWeapon):
         userChamp.primaryWeapon = item
     elif isinstance(item, SpecificItem) and item.type == "armour":
         userChamp.armour = item
-    elif not userChamp.auxItem1 == item:
+    elif not userChamp.auxItem1:
         userChamp.auxItem1 = item
     elif not userChamp.auxItem2:
         userChamp.auxItem2 = item
@@ -996,6 +996,36 @@ def getChampionsWeaponStatPacks(champion : Champion) -> "list[SpecificItem]":
             packList.append(pack.item)
 
     return packList
+
+def getAllChampionUnequipedItems(champion: Champion):
+
+    if not (champItems := ChampionItems.objects.filter(
+        champion=champion)).exists():
+        return None
+
+    itemList = []
+
+    for ci in champItems:
+        if not isEquiped(champion, ci.item):
+            itemList.append(ci.item)
+
+    return itemList
+
+def isEquiped(champion: Champion, item: Item) -> bool:
+    if champion.primaryWeapon == item:
+        return True
+    elif champion.secondaryWeapon == item:
+        return True
+    elif champion.armour == item:
+        return True
+    elif champion.auxItem1 == item:
+        return True       
+    elif champion.auxItem2 == item:
+        return True       
+    elif champion.auxItem3 == item:
+        return True
+    return False
+    
 
 def removeItemFromChampion(champion: Champion, item: Item):
     """function that will remove an item from a champion

@@ -5,6 +5,7 @@ from django.shortcuts import redirect
 
 from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
+from TheGame.processes import getAllChampionUnequipedItems
 from TheGame.models import SpecificItem
 from TheGame.processes import getAllBaseItems, getAllBosses, getChampionsItemStatPacks, getChampionsWeaponStatPacks, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
 from Resources.processes import getAllUserResources, getAllResources
@@ -119,7 +120,7 @@ def characterInventory(request: HttpRequest) -> HttpResponse:
 
     template = loader.get_template('TheGame/CharacterInventory.html')
 
-    items = getChampionsItemsAndWeapons(champion)
+    items = getAllChampionUnequipedItems(champion)
 
     context = {
         "username": user.username,
