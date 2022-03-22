@@ -1,5 +1,5 @@
 from __future__ import annotations
-from models import SpecificWeapon
+from TheGame.models import SpecificWeapon
 
 
 class Unit:

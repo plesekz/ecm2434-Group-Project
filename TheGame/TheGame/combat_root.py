@@ -1,12 +1,13 @@
 from typing import List
-from models import Champion, SpecificWeapon, SpecificItem
-from unit import Unit, Damage
-from GameState import GameState
+from TheGame.models import Champion, SpecificWeapon, SpecificItem
+from TheGame.unit import Unit, Damage
+from TheGame.GameState import GameState
 from random import seed, randint
-from action import Action
-from processes import getArmour, getGlory, getShields
+from TheGame.action import Action
+from TheGame.processes import getArmour, getGlory, getShields
 
-
+"""The entry function, call this function with two champions to have them battle.
+"""
 def battle(attacker: Champion, defender: Champion) -> List:
     seed()
 
@@ -29,11 +30,13 @@ def battle(attacker: Champion, defender: Champion) -> List:
     else:
         defender.pHealth = 1
 
+    attacker.save()
+    defender.save()
     # return
     return actions
 
-
-def fight(pAtt: Unit, pDef: Unit):
+"""Function alternating turns through through the champions until one of them is felled."""
+def fight(pAtt: Unit, pDef: Unit) -> List:
     actions = []
     GS = GameState(10)
 
@@ -58,7 +61,7 @@ def fight(pAtt: Unit, pDef: Unit):
 
     return actions
 
-
+"""An 'ai' function deciding the champion's next move."""
 def decide(active: Unit, other: Unit, GS: GameState):
     a = None
     if(active.weapon.range > GS.distance):
@@ -69,7 +72,7 @@ def decide(active: Unit, other: Unit, GS: GameState):
 
     return a
 
-
+"""Function represting one champion's turn"""
 def turn(active: Unit, other: Unit, GS: GameState) -> List:
     finished = False
     actions = []
@@ -77,24 +80,23 @@ def turn(active: Unit, other: Unit, GS: GameState) -> List:
 
     while(not(finished)):
         action = decide(active, other, GS)
-        match(action.type):
-            case "attack":
-                active.spendActionPoints(action.cost)
-                action = attack(active, action.weapon, other, GS)
-            case "move_closer":
-                active.spendActionPoints(1)
-                GS.distance = GS.distance - 1
-            case "move_away":
-                active.spendActionPoints(1)
-                GS.distance = GS.distance + 1
-            case "finish":
-                finished = True
+        if action.type == "attack":
+            active.spendActionPoints(action.cost)
+            action = attack(active, action.weapon, other, GS)
+        if action.type == "move_closer":
+            active.spendActionPoints(1)
+            GS.distance = GS.distance - 1
+        if action.type == "move_away":
+            active.spendActionPoints(1)
+            GS.distance = GS.distance + 1
+        if action.type == "finish":
+            finished = True
         actions.append(action)
     return actions
 
-
+"""Function for handling champion's attack"""
 def attack(attacker: Unit, weapon: SpecificWeapon,
-           target: Unit, GS: GameState):
+           target: Unit, GS: GameState) -> Action:
     hits = 0
     a = Action("attack", weapon.ap_cost)
     if(GS.distance > weapon.range):
@@ -111,7 +113,7 @@ def attack(attacker: Unit, weapon: SpecificWeapon,
             dmgs.append(dmg)
     return a.attackResolved(dmgs)
 
-
+"""Function to preprocess the champions and compile them into a Unit class object."""
 def preprocess(character: Champion) -> Unit:
     a = character.pAthletics
     b = character.pBrain

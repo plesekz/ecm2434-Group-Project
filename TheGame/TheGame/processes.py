@@ -27,6 +27,12 @@ def getChampion(player: Player) -> Champion:
 
     return champs[0]
 
+def getChampionFromID(pk: int) -> Champion:
+    if not (champs := Champion.objects.filter(pk=pk)).exists():
+        return None
+
+    return champs[0]
+
 
 def spendResource(request, rNeeded, amount):
     """ spends a requested amount of a resource from a user

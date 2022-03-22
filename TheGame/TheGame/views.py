@@ -1,15 +1,16 @@
 from importlib import resources
 from django.template import loader
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 
 from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
 from Login.processes import is_game_master
-from TheGame.processes import getAllChampionUnequipedItems
+from TheGame.processes import getAllChampionUnequipedItems, getUserFromName, getChampionFromID
 from TheGame.models import SpecificItem
 from TheGame.processes import getAllBaseItems, getAllBosses, getChampionsItemStatPacks, getChampionsWeaponStatPacks, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
 from Resources.processes import getAllUserResources, getAllResources
+from TheGame.combat_root import battle
 
 
 def homePageView(request: HttpRequest) -> HttpResponse:
@@ -272,7 +273,23 @@ def addNewBaseItemView(request):
     return HttpResponse(output)
 
 def battleChampion(request):
+    att = getUserFromName(request)
+    deff = getChampionFromID(request.GET['id'])
 
-    context = {}
+    context = {
+        'attackerClass': att.sprite,
+        'defenderClass': deff.sprite,
+        'attWeapon': att.primaryWeapon.sprite,
+        'defWeapon': deff.primaryWeapon.sprite
+    }
 
     return render(request, 'TheGame/battle.html', context=context)
+
+def runBattle(request):
+    att = getUserFromName(request)
+    deff = getChampionFromID(request.GET['id'])
+
+    result = battle(att, deff)
+
+    return JsonResponse(result)
+    
