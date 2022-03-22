@@ -90,44 +90,44 @@ def addBossToSystem(request: HttpRequest):
             newItems.append(primaryWeapon)
             if not isinstance(primaryWeapon, SpecificWeapon):
                 messages.add_message(request, messages.ERROR, 'primary weapon must be a weapon')
-                raise Exception('primary weapon must be a weapon')
-        primaryWeapon = None
+                primaryWeapon = None
+                return HttpResponseRedirect('addBosses')
 
         if (armour := createNewSpecificItem(getBaseItemFromName(statInfo['armour']), 0, 0)) != None:
             itemCount += 1
             newItems.append(armour)
             if not (isinstance(armour, SpecificItem) and armour.type == "armour"):
                 messages.add_message(request, messages.ERROR, 'armour must be an armour')
+                armour = None
                 raise Exception('armour must be an armour')
-
-        armour = None
+                
 
         if (auxItem1 := createNewSpecificItem(getBaseItemFromName(statInfo['auxItem1']), 0, 0)) != None:
             itemCount += 1
             newItems.append(auxItem1)
             if not isinstance(auxItem1, SpecificItem):
+                auxItem1 = None
                 messages.add_message(request, messages.ERROR, 'aux items cannot be weapons')
                 raise Exception('aux items cannot be weapons')
 
-        auxItem1 = None
 
         if (auxItem2 := createNewSpecificItem(getBaseItemFromName(statInfo['auxItem2']), 0, 0)) != None:
             itemCount += 1
             newItems.append(auxItem2)
             if not isinstance(auxItem2, SpecificItem):
                 messages.add_message(request, messages.ERROR, 'aux items cannot be weapons')
+                auxItem2 = None
                 raise Exception('aux items cannot be weapons')
 
-        auxItem2 = None
 
         if (auxItem3 := createNewSpecificItem(getBaseItemFromName(statInfo['auxItem3']), 0, 0)) != None:
             itemCount += 1
             newItems.append(auxItem3)
             if isinstance(auxItem3, SpecificItem):
                 messages.add_message(request, messages.ERROR, 'aux items cannot be weapons')
+                auxItem3 = None
                 raise Exception('aux items cannot be weapons')
 
-        auxItem3 = None
 
 
         Champion.objects.create(

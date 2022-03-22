@@ -70,7 +70,7 @@
         </div>
         <script src="{% static 'TheGame/javascript/battle_animation.js' %}"></script>
         <script>
-            setup({{attackerClass}}, {{attWeaponType}}, {{defenderClass}}, {{defWeaponName}});
+            setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
         </script>
     {% endblock %}
 </html>
