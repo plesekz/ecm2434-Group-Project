@@ -10,7 +10,7 @@
         <ul>
             <h2>Current Items</h2>
             {% for item in items %}
-            <li>
+            <li style="list-style: none;">
                 {{ item.name }} : {{item.type}}
             </li>
             {% endfor %}
@@ -38,7 +38,7 @@
         <ul>
             <h2>Current Resources</h2>
             {% for res in resources %}
-            <li>
+            <li style="list-style: none;">
                 {{ res.name }}
             </li>
             {% endfor %}
