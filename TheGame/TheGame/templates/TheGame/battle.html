@@ -3,6 +3,7 @@
     {% block headBlock %}
     {% load static %}
     <link rel="stylesheet" href="{% static 'TheGame/styles/CharacterPages.css'%}">
+    <link rel="stylesheet" href="{% static 'TheGame/styles/battle_animation.css'%}">
     {% endblock %}
 
     {% block bodyBlock %}
@@ -69,14 +70,18 @@
                 <div class="col-md-9 col-12 order-md-3 order-2 offset-md-3">
                     <!-- Controls -->
                     <div>
-                        <button>⏸</button>
-                        <button>⏯</button>
-                        <button>▶</button>
-                        <button>⏭</button>
+                        <button class="top-bar-button">⏸</button>
+                        <button class="top-bar-button">⏯</button>
+                        <button class="top-bar-button">▶</button>
+                        <button class="top-bar-button">⏭</button>
                     </div>
                     Lorem ipsum dolor sic amet. This is where the controls are going to be.
                 </div>
             </div>
         </div>
+        <script src="{% static 'TheGame/javascript/battle_animation.js' %}"></script>
+        <script>
+            setup("psionic", "shiv", "soldier", "assaultrifle");
+        </script>
     {% endblock %}
 </html>
