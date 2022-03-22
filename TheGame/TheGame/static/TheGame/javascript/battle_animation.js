@@ -390,26 +390,26 @@ function setup(lClass, leftWeapon, rClass, rightWeapon) {
     
     
     //sets sprites to the correct sprite and size
-    lBody.style.background = 'url(sprites/' + lClass + '/body.png) no-repeat'; //sets image
+    lBody.style.background = 'url(/static/TheGame/sprites/' + lClass + '/body.png) no-repeat'; //sets image
     lBody.style.backgroundSize = '100% 100%';                                  //scales image to the correct size
-    lbShield.style.background = 'url(sprites/' + lClass + '/bodyshield.png)';
+    lbShield.style.background = 'url(/static/TheGame/sprites/' + lClass + '/bodyshield.png)';
     lbShield.style.backgroundSize = '100% 100%';
-    lArm.style.background = 'url(sprites/' + lClass + '/arm.png)';
+    lArm.style.background = 'url(/static/TheGame/sprites/' + lClass + '/arm.png)';
     lArm.style.backgroundSize = '100% 100%';
-    laShield.style.background = 'url(sprites/' + lClass + '/armshield.png)';
+    laShield.style.background = 'url(/static/TheGame/sprites/' + lClass + '/armshield.png)';
     laShield.style.backgroundSize = '100% 100%';
-    lWeapon.style.background = 'url(sprites/weapons/' + leftWeapon + '.png)';
+    lWeapon.style.background = 'url(/static/TheGame/sprites/weapons/' + leftWeapon + '.png)';
     lWeapon.style.backgroundSize = '100% 100%';
     
-    rBody.style.background = 'url(sprites/' + rClass + '/body.png) no-repeat';
+    rBody.style.background = 'url(/static/TheGame/sprites/' + rClass + '/body.png) no-repeat';
     rBody.style.backgroundSize = '100% 100%';            
-    rbShield.style.background = 'url(sprites/' + rClass + '/bodyshield.png)';
+    rbShield.style.background = 'url(/static/TheGame/sprites/' + rClass + '/bodyshield.png)';
     rbShield.style.backgroundSize = '100% 100%';
-    rArm.style.background = 'url(sprites/' + rClass + '/arm.png)';
+    rArm.style.background = 'url(/static/TheGame/sprites/' + rClass + '/arm.png)';
     rArm.style.backgroundSize = '100% 100%';
-    raShield.style.background = 'url(sprites/' + rClass + '/armshield.png)';
+    raShield.style.background = 'url(/static/TheGame/sprites/' + rClass + '/armshield.png)';
     raShield.style.backgroundSize = '100% 100%';
-    rWeapon.style.background = 'url(sprites/weapons/' + rightWeapon + '.png)';
+    rWeapon.style.background = 'url(/static/TheGame/sprites/weapons/' + rightWeapon + '.png)';
     rWeapon.style.backgroundSize = '100% 100%';
        
 }
