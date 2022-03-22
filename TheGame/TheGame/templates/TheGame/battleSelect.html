@@ -31,15 +31,11 @@
 
         <div class="col-sm">
             <div class="container-floating stat-highlight">
-                <ul class="list-group">
-                    <li class="list-group-item">
-                        <h3>Average joe's stats</h3>
-                        <button onclick="fightAverageJoe()">
-                            <h1>Fight 'Average Joe'</h1>
-                        </button>
-                    </li>
+                    <h3>Average joe's stats</h3>
+                    <button onclick="fightAverageJoe()">
+                        <h1>Fight 'Average Joe'</h1>
+                    </button>
                     {% for boss in bosses %}
-                    <li class="">
                         <button onclick="fightBoss('{{boss.pk}}')">
                             <h1>Fight {{boss.name}}</h1>
                         </button>
@@ -55,9 +51,7 @@
                                 Brains: {{boss.pBrains}}
                             </div>
                         </div>
-                    </li>
                     {% endfor %}
-                </ul>
             </div>
         </div>
     </div>
@@ -76,7 +70,6 @@
 
         var url = `/battle?id=${bossPK}`;
         window.location.href = url;
-
     }
 </script>
 
