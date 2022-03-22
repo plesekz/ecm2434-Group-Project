@@ -1,7 +1,7 @@
 from importlib import resources
 from django.template import loader
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 
 from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
@@ -261,3 +261,9 @@ def addNewBaseItemView(request):
     output = template.render(context, request)
 
     return HttpResponse(output)
+
+def battleChampion(request):
+
+    context = {}
+
+    return render(request, 'TheGame/battle.html', context=context)

@@ -1,0 +1,36 @@
+    {% extends 'TheGame/CharacterSettingsTemplate.html' %}
+
+    {% block headBlock %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'TheGame/styles/CharacterPages.css'%}">
+    {% endblock %}
+
+    {% block bodyBlock %}
+        <div class="container floating" >
+            <div class="row">
+                <div class="col-md-3 col-12 order-first">
+                    <!-- Combat log -->
+                    <div class="overflow-auto">
+                        Lorem ipsum dolor sic amet. This is where the combat log will be.
+                    </div>
+                </div>
+                <div class="col-md-9 col-12 order-md-2 order-3">
+                    <!-- Arena -->
+                    <div class="arena">
+                        
+                    </div>
+                    Lorem ipsum dolor sic amet. This is where the arena will be.
+                </div>
+                <div class="col-md-9 col-12 order-md-3 order-2 offset-md-3">
+                    <!-- Controls -->
+                    <div>
+                        <button>⏸</button>
+                        <button>▶</button>
+                        <button>⏭</button>
+                    </div>
+                    Lorem ipsum dolor sic amet. This is where the controls are going to be.
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+</html>

@@ -50,4 +50,5 @@ urlpatterns = [
         'validateItem',
         processes.createNewBaseItemFromHTMLRequest,
         name='validateItem'),
+    path('battle/', battleChampion, name="battle champion")
 ]
