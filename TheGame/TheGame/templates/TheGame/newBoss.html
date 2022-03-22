@@ -6,14 +6,12 @@
 <div class="row justify-content-center text-center">
 
     <div class="col-3">
-        <ul>
+        <p>
             <h2>Current bosses</h2>
             {% for boss in bosses %}
-            <li>
-                {{ boss.name }}
-            </li>
+                {{ boss.name }}<br>
             {% endfor %}
-        </ul>
+        </p>
     </div>
 
     <div class="col-6">
@@ -56,14 +54,12 @@
     </div>
 
     <div class="col-3">
-        <ul>
             <h2>Current Items</h2>
+            <p>
             {% for item in items %}
-            <li>
-                {{ item.name }} : {{item.type}}
-            </li>
+                {{ item.name }} : {{item.type}}<br>
             {% endfor %}
-        </ul>
+            </p>
     </div>
 
 </div>
