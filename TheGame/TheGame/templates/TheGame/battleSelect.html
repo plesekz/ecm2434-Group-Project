@@ -42,7 +42,7 @@
                     </li>
                     {% for boss in bosses %}
                     <li class="list-group-item">
-                        <button onclick="">
+                        <button onclick="fightBoss({{boss.pk}})">
                             <h1>Fight {{boss.name}}</h1>
                             <p>difficulty = </p>
                         </button>
@@ -64,6 +64,12 @@
 <script>
     function fightAverageJoe() {
         window.location.href = "battle"
+    }
+
+    function fightBoss(bossPK){
+        // this function will be called once the user has selected a boss to fight
+        // it will be passed the primary key of the boss
+        // it will redirect to [root]/battle?id=bossPK
     }
 </script>
 
