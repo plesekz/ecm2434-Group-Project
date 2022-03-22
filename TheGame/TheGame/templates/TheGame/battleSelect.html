@@ -33,17 +33,18 @@
             </div>
             <div class="container-floating stat-highlight">
 
-                <ul>
-                    <li>
+                <ul class="list-group">
+                    <li class="list-group-item">
                         <h3>Average joe's stats</h3>
                         <button onclick="fightAverageJoe()">
                             <h1>Fight 'Average Joe'</h1>
                         </button>
                     </li>
                     {% for boss in bosses %}
-                    <li>
+                    <li class="list-group-item">
                         <button onclick="fightAverageJoe()">
                             <h1>Fight {{boss.name}}</h1>
+                            <p>difficulty = </p>
                         </button>
                     </li>
                     {% endfor %}

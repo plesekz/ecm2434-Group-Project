@@ -225,7 +225,6 @@ def createChampionView(request):
 
 
 def addNewBossView(request):
-    user = getUserFromCookie(request)
 
     # if not user.role == "gameMaster":
     #     return redirect('homePage')
