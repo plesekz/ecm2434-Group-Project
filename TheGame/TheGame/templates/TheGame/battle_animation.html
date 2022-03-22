@@ -5,11 +5,13 @@
 </style>
 <body>
     <p>
-        <!--buttons, for testing-->
+        <!--
+        TODO: REMOVE FOR FULL IMPLEMENTATION
+        buttons, for testing-->
         <button onclick="battle()">battle</button>
     </p>
-    <!-- health bars -->
     <div id="arena">
+        <!--health bars-->
         <div id="bars">
             <div id="lHealthBar">
                 <div id="lHealthFill"></div>
@@ -25,6 +27,7 @@
             </div>
         </div>
         
+        <!--left character-->
         <div id ="leftCharacter">
             <div id ="lBodyShield"></div>
             <div id ="lBody"></div>
@@ -33,6 +36,7 @@
             <div id ="lArm"></div>
         </div>
     
+        <!--right character-->
         <div id ="rightCharacter">
             <div id ="rBodyShield"></div>
             <div id ="rBody"></div>
@@ -43,19 +47,21 @@
     </div>
     
     <script>
-        var animating = false;
+        //keeps track of if an animation is playing
+        var animating = false; 
+        
         //keeps track of health and shield values as a percentage
         var lhealthleft = 100;
         var lshieldleft = 100;
         var rhealthleft = 100;
         var rshieldleft = 100;
         
+        
         function sleep (time) {
             return new Promise((resolve) => setTimeout(resolve, time));
         }
         
         async function leftMelee() {
-        
             //variables
             var character = document.getElementById("leftCharacter");
             var arm = document.getElementById("lArm");
@@ -64,6 +70,7 @@
             pos = 2;
             deg = 60;
             
+            //waits until no other animations are playing
             while (animating) {
                 await sleep(100);
             }
@@ -79,6 +86,7 @@
             //ready swing
             while (deg > -40) {
                 if (deg < -40) {
+                    //resets arm position if it goes past
                     deg = -39;
                 }
                 deg-=1;
@@ -91,6 +99,7 @@
             //swing
             while (deg < 90) {
                 if (deg > 90) {
+                    //resets arm position if it goes past
                     deg = 88;
                 }
                 deg+=2;
@@ -103,6 +112,7 @@
             //return arm to position
             while (deg > 60) {
                 if (deg < 60) {
+                    //resets arm position if it goes past
                     deg = 59;
                 }
                 deg-=1;
@@ -119,12 +129,11 @@
                 await sleep(5);
             }
             
-            animating = false;
+            animating = false; //no longer animating
             
-            return true;
+            return true; //function has ended
         }
         async function rightMelee() {
-        
             //variables
             var character = document.getElementById("rightCharacter");
             var arm = document.getElementById("rArm");
@@ -133,6 +142,7 @@
             pos = 2;
             deg = 60;
             
+            //waits until no other animations are playing
             while (animating) {
                 await sleep(40);
             }
@@ -148,6 +158,7 @@
             //ready swing
             while (deg > -40) {
                 if (deg < -40) {
+                    //resets arm position if it goes past
                     deg = -39;
                 }
                 deg-=1;
@@ -160,6 +171,7 @@
             //swing
             while (deg < 90) {
                 if (deg > 90) {
+                    //resets arm position if it goes past
                     deg = 88;
                 }
                 deg+=2;
@@ -172,6 +184,7 @@
             //return arm to position
             while (deg > 60) {
                 if (deg < 60) {
+                    //resets arm position if it goes past
                     deg = 59;
                 }
                 deg-=1;
@@ -188,13 +201,12 @@
                 await sleep(5);
             }
             
-            animating = false;
+            animating = false; //no longer animating
             
-            return true;
+            return true; //function ended
         }
         
         async function leftRanged() {
-        
             //variables
             var character = document.getElementById("leftCharacter");
             var arm = document.getElementById("lArm");
@@ -203,6 +215,7 @@
             pos = 2;
             deg = 60;
             
+            //waits until no other animations are playing
             while (animating) {
                 await sleep(40);
             }
@@ -210,6 +223,7 @@
             
             while (deg > 45) {
                 if (deg < 45) {
+                    //resets arm position if it goes past
                     deg = 45;
                 }
                 deg-=1;
@@ -230,12 +244,17 @@
             shield.style.left = '-54.25%';
             await sleep(100);
             weapon.style.left = '-54%';
+            arm.style.left = '-54.1%';
+            shield.style.left = '-54.1%';
+            await sleep(100);
+            weapon.style.left = '-54%';
             arm.style.left = '-54%';
             shield.style.left = '-54%';
             
             //return to position
             while (deg < 60) {
                 if (deg > 60) {
+                    //resets arm position if it goes past
                     deg = 61;
                 }
                 deg+=1;
@@ -245,8 +264,9 @@
                 await sleep(20);
             }
             
-            animating = false;
-            return true;
+            animating = false; //no longer animating
+            
+            return true; //function ended
         }
         async function rightRanged() {
             //variables
@@ -257,6 +277,7 @@
             pos = 2;
             deg = 60;
             
+            //waits until no other animations are playing
             while (animating) {
                 await sleep(40);
             }
@@ -265,6 +286,7 @@
             while (deg > 45) {
                 if (deg < 45) {
                     deg = 45;
+                    //resets arm position if it goes past
                 }
                 deg-=1;
                 arm.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
@@ -284,12 +306,17 @@
             shield.style.left = '-54.25%';
             await sleep(100);
             weapon.style.left = '-54%';
+            arm.style.left = '-54.1%';
+            shield.style.left = '-54.1%';
+            await sleep(100);
+            weapon.style.left = '-54%';
             arm.style.left = '-54%';
             shield.style.left = '-54%';
             
             //return to position
             while (deg < 60) {
                 if (deg > 60) {
+                    //resets arm position if it goes past
                     deg = 61;
                 }
                 deg+=1;
@@ -299,60 +326,102 @@
                 await sleep(20);
             }
             
-            animating = false;
-            return true;
+            animating = false; //no longer animating
+            
+            return true; //function ended
         }
         
         async function leftTakeHealthDamage(dmg) {
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+        
             var bar = document.getElementById("lHealthFill");
-            var current = lhealthleft;
-            lhealthleft -= dmg;
+            var current = lhealthleft; //counter
+            lhealthleft -= dmg; 
+            
             for (var i = current; i>=lhealthleft; i-=0.25) {
+                //reduces the health bar gradually
                 bar.style.width = i + '%';
                 await sleep(1);
             }
-            return true;
+            animating = false; //no longer animating
+            
+            return true; //function ended
         }
         async function leftTakeShieldDamage(dmg) {
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
             var bar = document.getElementById("lShieldFill");
             var bodyshield = document.getElementById("lBodyShield");
             var armshield = document.getElementById("lArmShield");
             var current = lshieldleft;
             lshieldleft -= dmg;
+            
             for (var i = current; i>=lshieldleft; i-=0.25) {
+                //reduces the shield bar and shields opacity gradually
                 bar.style.width = i + '%';
                 bodyshield.style.opacity = (i/100);
                 armshield.style.opacity = (i/100);                
                 await sleep(1);
             }
-            return true;   
+            animating = false; //no longer animating
+            
+            return true; //function ended
         }
         async function rightTakeHealthDamage(dmg) {
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
             var bar = document.getElementById("rHealthFill");
             var current = rhealthleft;
             rhealthleft -= dmg;
+            
             for (var i = current; i>=rhealthleft; i-=0.25) {
+                //reduces the health bar gradually
                 bar.style.width = i + '%';
                 await sleep(1);
             }
-            return true;
+            animating = false; //no longer animating
+            
+            return true; //function ended
         }
         async function rightTakeShieldDamage(dmg) {
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
             var bar = document.getElementById("rShieldFill");
             var bodyshield = document.getElementById("rBodyShield");
             var armshield = document.getElementById("rArmShield");
             var current = rshieldleft;
             rshieldleft -= dmg;
+            
             for (var i = current; i>=rshieldleft; i-=0.25) {
+                //reduces the shield bar and shields opacity gradually
                 bar.style.width = i + '%';
                 bodyshield.style.opacity = (i/100);
                 armshield.style.opacity = (i/100);                
                 await sleep(1);
             }
-            return true;
+            animating = false; //no longer animating
+            
+            return true; //function ended
         }
         
         
+        //assigns sprites to each character based on which class they are and what weapon they are using
         function setup(lClass, leftWeapon, rClass, rightWeapon) {
             //left character variables
             var lBody = document.getElementById("lBody");
@@ -395,19 +464,19 @@
         }
         
         async function battle() {
-            
+            //currently testing the functions
             await leftTakeHealthDamage(30);
             await leftTakeShieldDamage(40);
             await rightTakeHealthDamage(20);
             await rightTakeShieldDamage(100);
             
+            await leftMelee();
+            await rightMelee();
+            await leftRanged();
+            await rightRanged();
             //gets turn order and plays it out
-            //await leftMelee();
-            //await rightMelee();
-            //await leftRanged();
-            //await rightRanged();
         }
-        setup("psionic", "shiv", "soldier", "assaultrifle");
+        setup("psionic", "shiv", "soldier", "assaultrifle"); //test call
     </script>
 </body>
 </html>

@@ -3,6 +3,10 @@ sets up the different sprites
 character is the bounding box, the default position is entirely within it
 */
 
+/*
+arena is the bounding box for the entire animation
+scales based on the width
+*/
 #arena {
     position: relative;
     width: 1600px;
@@ -11,7 +15,10 @@ character is the bounding box, the default position is entirely within it
     contain: strict;
 }
 
-
+/*
+bars is the bounding box for the health & shield bars
+each bar has a bar, serving as the outline of the bar, and a fill, which is the health meter
+*/
 #bars {
     position: relative;
     width: 95%;
@@ -92,7 +99,9 @@ character is the bounding box, the default position is entirely within it
 }
 
 
-
+/*
+leftCharacter is the bounding box for the left character, the arm, armshield and weapon sprites are able to exit it
+*/
 #leftCharacter {
     height: 75%;
     aspect-ratio: 1 / 2;
@@ -160,6 +169,9 @@ character is the bounding box, the default position is entirely within it
 
 
 
+/*
+rightCharacter is the bounding box for the right character, the arm, armshield and weapon sprites are able to exit it
+*/
 #rightCharacter {
     height: 75%;
     aspect-ratio: 1 / 2;
