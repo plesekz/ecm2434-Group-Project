@@ -66,17 +66,21 @@ def createRes(request: HttpRequest) -> HttpResponse:
             image=filepath
         )
 
+    qrc.save()
+
     # if that resource is already on that qr then update else create a new
     # entry
-    if (qrr := QRResource.objects.filter(QRID=qrc, resource=res)).exists():
-        qrr[0].amount = int(json_data['resource1Amount'])
-    else:
-        qrr = QRResource.objects.create(
-            QRID=qrc, resource=res, amount=int(
-                json_data['resource1Amount']))
+    for i in range(int(json_data['resCount'])):
+        res = Resource.objects.get(pk=int(json_data['res' + str(i+1) + 'Type']))
+        if (qrr := QRResource.objects.filter(QRID=qrc, resource=res)).exists():
+            qrr[0].amount = int(json_data['resource1Amount'])
+        else:
+            qrr = QRResource.objects.create(
+                QRID=qrc, resource=res, amount=int(
+                    json_data['resource'+str(i+1)+'Amount']))
 
-    qrc.save()
-    qrr.save()
+        qrr.save()
+
     return HttpResponse(status=200)
 
 
