@@ -432,11 +432,11 @@ def equipItem(request):
         userChamp.primaryWeapon = item
     elif isinstance(item, SpecificItem) and item.type == "armour":
         userChamp.armour = item
-    elif not userChamp.auxItem1:
+    elif not userChamp.auxItem1 == item:
         userChamp.auxItem1 = item
-    elif not userChamp.auxItem2:
+    elif not userChamp.auxItem2 == item:
         userChamp.auxItem2 = item
-    elif not userChamp.auxItem3:
+    elif not userChamp.auxItem3 and not userChamp.auxItem3.name == item.name:
         userChamp.auxItem3 = item
 
     userChamp.save()
