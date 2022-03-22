@@ -428,15 +428,17 @@ def equipItem(request):
     if item.type == "statPack":
         return response
 
-    if isinstance(item, SpecificWeapon):
+    if item == userChamp.primaryWeapon or item == userChamp.armour or item == userChamp.auxItem1 or item == userChamp.auxItem2 or item == userChamp.auxItem3:
+        return response
+    elif isinstance(item, SpecificWeapon):
         userChamp.primaryWeapon = item
     elif isinstance(item, SpecificItem) and item.type == "armour":
         userChamp.armour = item
     elif not userChamp.auxItem1 == item:
         userChamp.auxItem1 = item
-    elif not userChamp.auxItem2 == item:
+    elif not userChamp.auxItem2:
         userChamp.auxItem2 = item
-    elif not userChamp.auxItem3 and not userChamp.auxItem3.name == item.name:
+    elif not userChamp.auxItem3:
         userChamp.auxItem3 = item
 
     userChamp.save()
