@@ -18,6 +18,7 @@
 			document.getElementById('latitude')["value"] = "";
 			document.getElementById('longitude')["value"] = "";
 			document.getElementById('resource1Amount')["value"] = "";
+            document.getElementById('resCounter')["value"] = "1"
 
 		}
         function getCookie(name) {
@@ -120,6 +121,39 @@
             xhttp.send(JSON.stringify(json)); // <- form data goes here
         }
 
+        function addResToForm(){
+            var form = document.getElementById("submit_form");
+
+            var resourceCounter = document.getElementById('resCounter');
+            resourceCounter.value = Number(resourceCounter.value) + 1;
+            var numRes = resourceCounter.value;
+
+            form.innerHTML += 
+            `<div>
+                <!-- structure which adds one set of buttons -->
+                <div>
+                    <label for="resource1Type" class="form-label">
+                        Resource ${numRes} type
+                    </label>
+                    <fieldset>
+                        {% for resource in list_of_resources %}
+                        <div class="form-check">
+                            <input type="radio" name="res${numRes}Type" class="form-check-input" id="resource${numRes}Type{{resource.name}}" placeholder="Resource Type" value="{{resource.pk}}">
+                            <label class="form-check-label" for="resource1Type">{{resource.name}}</label>
+                        </div>
+                        {% endfor %}
+                    </fieldset>
+                </div>
+                <div>
+                    <label for="resource1Type" class="form-label">
+                        Resource ${numRes} amount
+                    </label>
+                    <input type="text" class="form-control" id="resource${numRes}Amount" name="resource${numRes}Amount" placeholder="Resource Amount">
+                </div>
+            </div>`
+        }
+
+
         //event bindings
     </script>
     <main><!-- class="bg-dark text-white"-->
@@ -178,6 +212,8 @@
                 <div class="modal-body">
                     <form id="submit_form">
                         <div>
+                            <input type="hidden" name="resCount" value="1" id="resCounter" />
+
                             <label for="codeID" class="form-label">
                                 ID
                             </label>
@@ -218,6 +254,11 @@
                         <!-- repeat above structure for the number of resources in game -->
                         <!-- add buttons that add and remove resource fields as needed -->
                     </form >
+
+                    <button onclick="addResToForm()">
+                        add another resource
+                    </button>
+
                 </div>
                 <div class="modal-footer" style="justify-content:space-between; align-items:start;">
                     <button id="closeModal" type="button" class="btn btn-danger" data-bs-dismiss="modal">Dismiss</button>
