@@ -9,7 +9,7 @@ scales based on the width
 */
 #arena {
     position: relative;
-    width: 1600px;
+    width: 85%;
     aspect-ratio: 16 / 9;
     border-style: solid;
     contain: strict;
