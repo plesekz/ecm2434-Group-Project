@@ -273,8 +273,16 @@ def addNewBaseItemView(request):
     return HttpResponse(output)
 
 def battleChampion(request):
+    if not request.GET['id']:
+        return "409" # httpResponse 409
+        
     att = getUserFromName(request)
     deff = getChampionFromID(request.GET['id'])
+
+    if not att.primaryWeapon:
+        return "409" # HttpResponse 409
+
+    
 
     context = {
         'attackerClass': att.sprite,
