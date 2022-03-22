@@ -1,0 +1,79 @@
+{% extends 'TheGame/navbarTemplate.html' %}
+
+{% block bodyBlock %}
+<h1 class="text-center">this is the page for adding new bosses to the system</h1>
+
+<div class="row justify-content-center text-center">
+
+    <div class="col-3">
+        <ul>
+            <h2>Current bosses</h2>
+            {% for boss in bosses %}
+            <li>
+                {{ boss.name }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="col-6">
+        <form action="/newBossValidation" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" placeholder="name" name="name" class="form-control" required>
+                <br>
+
+                <input type="number" id="pHealthInput" name="pHealth" class="form-control" placeholder="Base health" required>
+                <br>
+
+                <input type="number" id="pToughnessInput" name="pAthletics" class="form-control" placeholder="Base athletics" required>
+                <br>
+
+                <input type="number" id="pEvasionInput" name="pBrain" class="form-control" placeholder="Base Brains" required>
+                <br>
+
+                <input type="number" id="damageInput" name="pControl" class="form-control" placeholder="Base Control" required>
+                <br>
+
+                <input type="text" id="primaryWeaponInput" name="primaryWeapon" class="form-control" placeholder="Primary Weapon (optional)">
+                <br>
+
+                <input type="text" id="armourInput" name="armour" class="form-control" placeholder="Armour (optional)">
+                <br>
+
+                <input type="text" id="aux1Input" name="auxItem1" class="form-control" placeholder="Aux item 1 (optional)">
+                <br>
+
+                <input type="text" id="aux2Input" name="auxItem2" class="form-control" placeholder="Aux item 3 (optional)">
+                <br>
+
+                <input type="text" id="aux3Input" name="auxItem3" class="form-control" placeholder="Aux item 3 (optional)">
+                <br>
+
+                <button type="submit" class="btn btn-primary">Create Boss</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-3">
+        <ul>
+            <h2>Current Items</h2>
+            {% for item in items %}
+            <li>
+                {{ item.name }} : {{item.type}}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+</div>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %}

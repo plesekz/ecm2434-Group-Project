@@ -1,0 +1,16 @@
+Functions:
+	[ Describe in bulletpoints the functionality of this front-end. ]
+	[ Describe what data will be displayed to the user and in what format. ]
+	[ Describe what actions the user will be able to take. ]
+	● 
+Database Tables:
+	[ Describe which database tables the front-end displays data from. ]
+	● 
+Endpoints:
+	[ Describe which applciation endpoints the front-end will use to achieve functionality outlined. ]
+	● 
+Graphic references:
+	[ Name files that are used as a graphical reference for Frontend's layout and design. ]
+	● 
+Other notes:
+	[Other frontends notes.]
