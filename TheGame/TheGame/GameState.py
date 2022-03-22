@@ -1,4 +1,4 @@
-from turtle import distance
+#from turtle import distance
 
 
 class GameState:

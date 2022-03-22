@@ -6,12 +6,12 @@
 <div class="row justify-content-center text-center">
 
     <div class="col-3">
-        <p>
+        <li style="list-style: none;">
             <h2>Current bosses</h2>
             {% for boss in bosses %}
                 {{ boss.name }}<br>
             {% endfor %}
-        </p>
+        <li>
     </div>
 
     <div class="col-6">
@@ -55,11 +55,11 @@
 
     <div class="col-3">
             <h2>Current Items</h2>
-            <p>
+            <li style="list-style: none;">
             {% for item in items %}
                 {{ item.name }} : {{item.type}}<br>
             {% endfor %}
-            </p>
+            </li>
     </div>
 
 </div>
