@@ -8,6 +8,9 @@ arena is the bounding box for the entire animation
 scales based on the width
 */
 #arena {
+    background: url(/static/TheGame/images/background.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -106,7 +109,7 @@ leftCharacter is the bounding box for the left character, the arm, armshield and
     height: 75%;
     aspect-ratio: 1 / 2;
     position: absolute; 
-    top: 15%;
+    top: 25%;
     left: 2%;
 }
 
@@ -176,7 +179,7 @@ rightCharacter is the bounding box for the right character, the arm, armshield a
     height: 75%;
     aspect-ratio: 1 / 2;
     position: absolute; 
-    top: 15%;
+    top: 25%;
     right: 2%;
 }
 
