@@ -1,0 +1,14 @@
+{
+    "statResPrices" : {
+        "pHealth" : "Circuitry",
+        "pAthletics" : "Machine parts",
+        "pBrain" : "Books",
+        "pControl" : "Machine parts"
+    },
+    "statPrices" : {
+        "pHealth" : 10,
+        "pAthletics" : 10,
+        "pBrain" : 10,
+        "pControl" : 10
+    }
+}
