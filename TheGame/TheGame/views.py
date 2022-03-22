@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render
 
 from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
+from Login.processes import is_game_master
 from TheGame.processes import getAllChampionUnequipedItems
 from TheGame.models import SpecificItem
 from TheGame.processes import getAllBaseItems, getAllBosses, getChampionsItemStatPacks, getChampionsWeaponStatPacks, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
@@ -225,9 +226,11 @@ def createChampionView(request):
 
 
 def addNewBossView(request):
+    if request.COOKIES.get('TheGameSessionID') is None:
+        return redirect('login')
 
-    # if not user.role == "gameMaster":
-    #     return redirect('homePage')
+    if not is_game_master(request.COOKIES.get('TheGameSessionID')):
+        return redirect('/')
 
     template = loader.get_template('TheGame/newBoss.html')
 
@@ -247,6 +250,12 @@ def addNewBossView(request):
 def addNewBaseItemView(request):
     """ returns html for the page for adding new items
     """
+
+    if request.COOKIES.get('TheGameSessionID') is None:
+        return redirect('login')
+
+    if not is_game_master(request.COOKIES.get('TheGameSessionID')):
+        return redirect('/')
 
     template = loader.get_template('TheGame/addNewItemTemplate.html')
 
