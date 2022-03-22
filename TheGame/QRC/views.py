@@ -73,7 +73,8 @@ def createRes(request: HttpRequest) -> HttpResponse:
     for i in range(int(json_data['resCount'])):
         res = Resource.objects.get(pk=int(json_data['res' + str(i+1) + 'Type']))
         if (qrr := QRResource.objects.filter(QRID=qrc, resource=res)).exists():
-            qrr[0].amount = int(json_data['resource1Amount'])
+            qrr = qrr[0]
+            qrr.amount = int(json_data['resource'+str(i+1)+'Amount'])
         else:
             qrr = QRResource.objects.create(
                 QRID=qrc, resource=res, amount=int(
