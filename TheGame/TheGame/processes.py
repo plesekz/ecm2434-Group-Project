@@ -434,7 +434,8 @@ def createNewBaseItem(name: str, type: str,
                       specialAbilities: str,
                       priceRes1: Resource, price1: int,
                       priceRes2: Resource = None, price2: int = None,
-                      priceRes3: Resource = None, price3: int = None) -> BaseItem:
+                      priceRes3: Resource = None, price3: int = None,
+                      sprite: str = None) -> BaseItem:
     """ this function will create a new BaseItem in the database,
     Args:
         name(Str): name of the item
@@ -458,6 +459,7 @@ def createNewBaseItem(name: str, type: str,
 
     baseItem = BaseItem.objects.create(
         name=name,
+        sprite=sprite,
         priceRes1=priceRes1,
         priceRes2=priceRes2,
         priceRes3=priceRes3,
@@ -540,7 +542,8 @@ def createNewBaseWeapon(name: str, type: str,
                         damageNumber: int, damageInstances: int, range: int, association: chr, ap_cost: int,
                         priceRes1: Resource, price1: int,
                         priceRes2: Resource = None, price2: int = None,
-                        priceRes3: Resource = None, price3: int = None) -> BaseWeapon:
+                        priceRes3: Resource = None, price3: int = None,
+                        sprite: str = None) -> BaseWeapon:
     """ this function will create a new BaseWeapon in the database,
     Args:
         name(Str): name of the item
@@ -565,6 +568,8 @@ def createNewBaseWeapon(name: str, type: str,
     bw = BaseWeapon.objects.create(
         name=name,
         type=type,
+        sprite=sprite,
+        
         priceRes1=priceRes1,
         priceRes2=priceRes2,
         priceRes3=priceRes3,

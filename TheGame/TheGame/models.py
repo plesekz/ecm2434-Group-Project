@@ -10,6 +10,7 @@ from Resources.models import Resource
 class Item(PolymorphicModel):
     name = models.CharField(max_length=50)
     type = models.CharField(max_length=50)
+    sprite = models.CharField(max_length=50, null=True)
 
     priceRes1 = models.ForeignKey(Resource, null=False,
          related_name="priceRes1", on_delete=models.CASCADE)
@@ -68,7 +69,7 @@ class SpecificWeapon(BaseWeapon):
 class Champion(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=50, null=True)
-    #sprites = somedata()
+    sprite = models.CharField(max_length=50, default="hacker")
     #items = somedata()
 
     pHealth = models.PositiveIntegerField(default=100)
