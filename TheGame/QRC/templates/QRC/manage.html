@@ -128,6 +128,9 @@
             resourceCounter.value = Number(resourceCounter.value) + 1;
             var numRes = resourceCounter.value;
 
+            var codeIDField = document.getElementById('codeID');
+            var codeValue = Number(codeIDField.value);
+
             form.innerHTML += 
             `<div>
                 <!-- structure which adds one set of buttons -->
@@ -151,6 +154,9 @@
                     <input type="text" class="form-control" id="resource${numRes}Amount" name="resource${numRes}Amount" placeholder="Resource Amount">
                 </div>
             </div>`
+
+            codeIDField = document.getElementById('codeID');
+            codeIDField.value = codeValue;
         }
 
 
@@ -255,7 +261,7 @@
                         <!-- add buttons that add and remove resource fields as needed -->
                     </form >
 
-                    <button onclick="addResToForm()">
+                    <button class="btn btn-primary" onclick="addResToForm()">
                         add another resource
                     </button>
 
