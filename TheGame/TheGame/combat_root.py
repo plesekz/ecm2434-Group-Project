@@ -20,11 +20,11 @@ def battle(attacker: Champion, defender: Champion) -> List:
 
     # resolution
 
-    if(pAtt.attH > 0):
+    if(pAtt.attH >= 0):
         attacker.pHealth = pAtt.attH
     else:
         attacker.pHealth = 1
-    if(pDef.attH > 0):
+    if(pDef.attH >= 0):
         defender.pHealth = pDef.attH
     else:
         defender.pHealth = 1
