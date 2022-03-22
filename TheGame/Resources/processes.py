@@ -3,7 +3,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from Resources.models import PlayerResource, Resource
 from Login.models import Player
 
-def addResourceToUser(user : Player, resource : Resource, amount : int) -> None:
+
+def addResourceToUser(user: Player, resource: Resource, amount: int) -> None:
     '''function to add an amount of a resource to a user
 
     Args:
@@ -21,7 +22,9 @@ def addResourceToUser(user : Player, resource : Resource, amount : int) -> None:
         pr[0].amount += amount
         pr[0].save()
 
-def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> None:
+
+def removeResourceFromUser(
+        user: Player, resource: Resource, amount: int) -> None:
     '''function to remove an amount of a resource to a user
 
     Args:
@@ -45,7 +48,8 @@ def removeResourceFromUser(user : Player, resource : Resource, amount : int) -> 
     playerRes.amount = playerRes.amount - amount
     playerRes.save()
 
-def getAllUserResources(user : Player) -> "list[tuple[Resource, int]]":
+
+def getAllUserResources(user: Player) -> "list[tuple[Resource, int]]":
     """function to return a list of all resources and amounts associated with a user
 
     Args:
@@ -58,13 +62,13 @@ def getAllUserResources(user : Player) -> "list[tuple[Resource, int]]":
     resList = user.playerresource_set.all()
     returnList = []
 
-    for res in resList: 
+    for res in resList:
         returnList.append((res.resource, res.amount))
 
     return returnList
 
 
-def getResourceByName(name : String) -> Resource:
+def getResourceByName(name: String) -> Resource:
     """returns a resource given its name
 
     Args:
@@ -78,6 +82,7 @@ def getResourceByName(name : String) -> Resource:
 
     return res[0]
 
+
 def getAllResources() -> "list[Resource]":
     """function that returns all avaliable resources in the database
 
@@ -87,3 +92,13 @@ def getAllResources() -> "list[Resource]":
     resources = Resource.objects.all()
 
     return resources
+
+def getPlayerResourceAmount(player : Player, resource: Resource) -> int:
+    """ function that returns the amount of a resource that a player has
+    """
+
+    try:
+        pr = PlayerResource.objects.get(player=player, resource=resource)
+        return pr.amount
+    except:
+        return 0

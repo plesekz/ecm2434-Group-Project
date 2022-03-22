@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+import TheGame
 from . import views
 from . import processes
 

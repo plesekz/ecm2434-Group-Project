@@ -1,113 +1,33 @@
 <!DOCTYPE html>
 <html>
 <style>
-/*<!--
-sets up the different sprites
-character is the bounding box, the default position is entirely within it
--->*/
-#arena {
-    position: relative;
-}
-
-#leftCharacter {
-    width: 384px;
-    height: 768px;
-    position: absolute; 
-}
-#lArm {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index:-1;
-    background:url(sprites/hacker/arm.png);
-}
-#lWeapon {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index:-2;
-    background:url(sprites/weapons/sword.png);
-}
-#lBody {
-    width: 384px;
-    height: 768px;
-    position: absolute;
-    z-index:-3;
-    background:url(sprites/hacker/body.png);
-}
-#lBodyShield {
-    width: 384px;
-    height: 768px;
-    position: absolute;
-    z-index:-5;
-    background:url(sprites/hacker/bodyshield.png);
-}
-#lArmShield {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index: -4;
-    background:url(sprites/hacker/armshield.png);
-}
-
-
-#rightCharacter {
-    width: 384px;
-    height: 768px;
-    position: absolute;
-}
-#rArm {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index:-1;
-    background:url(sprites/hacker/arm.png);
-    transform: scaleX(-1);
-}
-#rWeapon {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index:-2;
-    transform: scaleX(-1);
-    background:url(sprites/weapons/sword.png);
-}
-#rBody {
-    width: 384px;
-    height: 768px;
-    position: absolute;
-    z-index:-3;
-    background:url(sprites/hacker/body.png);
-    transform: scaleX(-1);
-}
-#rBodyShield {
-    width: 384px;
-    height: 768px;
-    position: absolute;
-    z-index:-5;
-    background:url(sprites/hacker/bodyshield.png);
-    transform: scaleX(-1);
-}
-#rArmShield {
-    width: 768px;
-    height: 768px;
-    position: absolute;
-    z-index: -4;
-    background:url(sprites/hacker/armshield.png);
-    transform: scaleX(-1);
-}
-
+    @import url("battle_animation.css");
 </style>
 <body>
     <p>
-        <!--buttons, for testing-->
-        <button onclick="setup()">Setup</button> 
-        <button onclick="leftAttack()">leftAttack</button>
-        <button onclick="rightAttack()">rightAttack</button>
+        <!--
+        TODO: REMOVE FOR FULL IMPLEMENTATION
+        buttons, for testing-->
         <button onclick="battle()">battle</button>
     </p>
-    <!-- health bars -->
     <div id="arena">
+        <!--health bars-->
+        <div id="bars">
+            <div id="lHealthBar">
+                <div id="lHealthFill"></div>
+            </div>
+            <div id="lShieldBar">
+                <div id="lShieldFill"></div>
+            </div>
+            <div id="rHealthBar">
+                <div id="rHealthFill"></div>
+            </div>
+            <div id="rShieldBar">
+                <div id="rShieldFill"></div>
+            </div>
+        </div>
+        
+        <!--left character-->
         <div id ="leftCharacter">
             <div id ="lBodyShield"></div>
             <div id ="lBody"></div>
@@ -116,6 +36,7 @@ character is the bounding box, the default position is entirely within it
             <div id ="lArm"></div>
         </div>
     
+        <!--right character-->
         <div id ="rightCharacter">
             <div id ="rBodyShield"></div>
             <div id ="rBody"></div>
@@ -126,91 +47,46 @@ character is the bounding box, the default position is entirely within it
     </div>
     
     <script>
-        var animating = false;
-        var scale = 1;
+        //keeps track of if an animation is playing
+        var animating = false; 
+        
+        //keeps track of health and shield values as a percentage
+        var lhealthleft = 100;
+        var lshieldleft = 100;
+        var rhealthleft = 100;
+        var rshieldleft = 100;
+        
         
         function sleep (time) {
             return new Promise((resolve) => setTimeout(resolve, time));
         }
-
         
-        function setup(scale) {
-            //variables 
-            var battle = document.getElementById("arena");
-            
-            var lcharacter = document.getElementById("leftCharacter");
-            var larm = document.getElementById("lArm"); 
-            var lweapon = document.getElementById("lWeapon");
-            var lbody = document.getElementById("lBody");
-            var lbshield = document.getElementById("lBodyShield");
-            var lashield = document.getElementById("lArmShield");
-            
-            var rcharacter = document.getElementById("rightCharacter");
-            var rarm = document.getElementById("rArm");
-            var rweapon = document.getElementById("rWeapon");
-            var rbody = document.getElementById("rBody");
-            var rbshield = document.getElementById("rBodyShield");
-            var rashield = document.getElementById("rArmShield");
-            
-            
-            battle.style.top = '30px';
-            
-            //TODO: scale each sprite
-            
-            
-            //for each part, it is placed in the default position           
-            lcharacter.style.top = '0px';
-            lcharacter.style.left = '0px';
-            larm.style.top = (-160*scale) + 'px'; 
-            larm.style.left = (-208*scale) + 'px';
-            lashield.style.transform = 'rotate(60deg)';
-            lashield.style.top = (-160*scale) + 'px'; 
-            lashield.style.left = (-208*scale) + 'px';
-            larm.style.transform = 'rotate(60deg)';
-            lweapon.style.top = (-160*scale) + 'px'; 
-            lweapon.style.left = (-208*scale) + 'px';
-            lweapon.style.transform = 'rotate(60deg)';
-            
-            rcharacter.style.top = '0px';
-            rcharacter.style.right = '0px';
-            rarm.style.top = (-160*scale) + 'px'; 
-            rarm.style.left = (-176*scale) + 'px';
-            rarm.style.transform = 'scaleX(-1) rotate(60deg)';
-            rashield.style.top = (-160*scale) + 'px'; 
-            rashield.style.left = (-176*scale) + 'px';
-            rashield.style.transform = 'scaleX(-1) rotate(60deg)';
-            rweapon.style.top = (-160*scale) + 'px'; 
-            rweapon.style.left = (-176*scale) + 'px';
-            rweapon.style.transform = 'scaleX(-1) rotate(60deg)';
-        }
-        
-        
-         
-        async function leftAttack() {
-        
+        async function leftMelee() {
             //variables
             var character = document.getElementById("leftCharacter");
             var arm = document.getElementById("lArm");
             var shield = document.getElementById("lArmShield");
             var weapon = document.getElementById("lWeapon");
-            pos = 0;
+            pos = 2;
             deg = 60;
             
+            //waits until no other animations are playing
             while (animating) {
                 await sleep(100);
             }
             animating = true;
             
             //move forward
-            while (pos < (320*scale)) {
-                pos+=(4*scale);
-                character.style.left = pos + 'px';
+            while (pos < (7)) {
+                pos+=(0.25);
+                character.style.left = pos + '%';
                 await sleep(5);
             }
             
             //ready swing
             while (deg > -40) {
                 if (deg < -40) {
+                    //resets arm position if it goes past
                     deg = -39;
                 }
                 deg-=1;
@@ -223,6 +99,7 @@ character is the bounding box, the default position is entirely within it
             //swing
             while (deg < 90) {
                 if (deg > 90) {
+                    //resets arm position if it goes past
                     deg = 88;
                 }
                 deg+=2;
@@ -235,6 +112,7 @@ character is the bounding box, the default position is entirely within it
             //return arm to position
             while (deg > 60) {
                 if (deg < 60) {
+                    //resets arm position if it goes past
                     deg = 59;
                 }
                 deg-=1;
@@ -245,41 +123,42 @@ character is the bounding box, the default position is entirely within it
             }
             
             //move back
-            while (pos > 0) {
-                pos-=4;
-                character.style.left = pos + 'px';
+            while (pos > 2) {
+                pos-=0.25;
+                character.style.left = pos + '%';
                 await sleep(5);
             }
             
-            animating = false;
+            animating = false; //no longer animating
             
-            return true;
+            return true; //function has ended
         }
-        async function rightAttack() {
-        
+        async function rightMelee() {
             //variables
             var character = document.getElementById("rightCharacter");
             var arm = document.getElementById("rArm");
             var shield = document.getElementById("rArmShield");
             var weapon = document.getElementById("rWeapon");
-            pos = 0;
+            pos = 2;
             deg = 60;
             
+            //waits until no other animations are playing
             while (animating) {
                 await sleep(40);
             }
             animating = true;
             
             //move forward
-            while (pos < 320) {
-                pos+=4;
-                character.style.right = pos + 'px';
+            while (pos < 7) {
+                pos+=0.25;
+                character.style.right = pos + '%';
                 await sleep(5);
             }
             
             //ready swing
             while (deg > -40) {
                 if (deg < -40) {
+                    //resets arm position if it goes past
                     deg = -39;
                 }
                 deg-=1;
@@ -292,6 +171,7 @@ character is the bounding box, the default position is entirely within it
             //swing
             while (deg < 90) {
                 if (deg > 90) {
+                    //resets arm position if it goes past
                     deg = 88;
                 }
                 deg+=2;
@@ -304,6 +184,7 @@ character is the bounding box, the default position is entirely within it
             //return arm to position
             while (deg > 60) {
                 if (deg < 60) {
+                    //resets arm position if it goes past
                     deg = 59;
                 }
                 deg-=1;
@@ -314,26 +195,288 @@ character is the bounding box, the default position is entirely within it
             }
             
             //move back
-            while (pos > 0) {
-                pos-=4;
-                character.style.right = pos + 'px';
+            while (pos > 2) {
+                pos-=0.25;
+                character.style.right = pos + '%';
                 await sleep(5);
             }
             
-            animating = false;
+            animating = false; //no longer animating
             
-            return true;
+            return true; //function ended
+        }
+        
+        async function leftRanged() {
+            //variables
+            var character = document.getElementById("leftCharacter");
+            var arm = document.getElementById("lArm");
+            var shield = document.getElementById("lArmShield");
+            var weapon = document.getElementById("lWeapon");
+            pos = 2;
+            deg = 60;
+            
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
+            while (deg > 45) {
+                if (deg < 45) {
+                    //resets arm position if it goes past
+                    deg = 45;
+                }
+                deg-=1;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                shield.style.transform = 'rotate(' + deg + 'deg)';
+                weapon.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(15);
+            }
+            
+            
+            //recoil
+            weapon.style.left = '-55%';
+            arm.style.left = '-54.5%';
+            shield.style.left = '-54.5%';
+            await sleep(100);
+            weapon.style.left = '-54.5%';
+            arm.style.left = '-54.25%';
+            shield.style.left = '-54.25%';
+            await sleep(100);
+            weapon.style.left = '-54%';
+            arm.style.left = '-54.1%';
+            shield.style.left = '-54.1%';
+            await sleep(100);
+            weapon.style.left = '-54%';
+            arm.style.left = '-54%';
+            shield.style.left = '-54%';
+            
+            //return to position
+            while (deg < 60) {
+                if (deg > 60) {
+                    //resets arm position if it goes past
+                    deg = 61;
+                }
+                deg+=1;
+                arm.style.transform = 'rotate(' + deg + 'deg)';
+                shield.style.transform = 'rotate(' + deg + 'deg)';
+                weapon.style.transform = 'rotate(' + deg + 'deg)';
+                await sleep(20);
+            }
+            
+            animating = false; //no longer animating
+            
+            return true; //function ended
+        }
+        async function rightRanged() {
+            //variables
+            var character = document.getElementById("rightCharacter");
+            var arm = document.getElementById("rArm");
+            var shield = document.getElementById("rArmShield");
+            var weapon = document.getElementById("rWeapon");
+            pos = 2;
+            deg = 60;
+            
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
+            while (deg > 45) {
+                if (deg < 45) {
+                    deg = 45;
+                    //resets arm position if it goes past
+                }
+                deg-=1;
+                arm.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                shield.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                weapon.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                await sleep(15);
+            }
+            
+            
+            //recoil
+            weapon.style.left = '-55%';
+            arm.style.left = '-54.5%';
+            shield.style.left = '-54.5%';
+            await sleep(100);
+            weapon.style.left = '-54.5%';
+            arm.style.left = '-54.25%';
+            shield.style.left = '-54.25%';
+            await sleep(100);
+            weapon.style.left = '-54%';
+            arm.style.left = '-54.1%';
+            shield.style.left = '-54.1%';
+            await sleep(100);
+            weapon.style.left = '-54%';
+            arm.style.left = '-54%';
+            shield.style.left = '-54%';
+            
+            //return to position
+            while (deg < 60) {
+                if (deg > 60) {
+                    //resets arm position if it goes past
+                    deg = 61;
+                }
+                deg+=1;
+                arm.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                shield.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                weapon.style.transform = 'scaleX(-1) rotate(' + deg + 'deg)';
+                await sleep(20);
+            }
+            
+            animating = false; //no longer animating
+            
+            return true; //function ended
+        }
+        
+        async function leftTakeHealthDamage(dmg) {
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+        
+            var bar = document.getElementById("lHealthFill");
+            var current = lhealthleft; //counter
+            lhealthleft -= dmg; 
+            
+            for (var i = current; i>=lhealthleft; i-=0.25) {
+                //reduces the health bar gradually
+                bar.style.width = i + '%';
+                await sleep(1);
+            }
+            animating = false; //no longer animating
+            
+            return true; //function ended
+        }
+        async function leftTakeShieldDamage(dmg) {
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
+            var bar = document.getElementById("lShieldFill");
+            var bodyshield = document.getElementById("lBodyShield");
+            var armshield = document.getElementById("lArmShield");
+            var current = lshieldleft;
+            lshieldleft -= dmg;
+            
+            for (var i = current; i>=lshieldleft; i-=0.25) {
+                //reduces the shield bar and shields opacity gradually
+                bar.style.width = i + '%';
+                bodyshield.style.opacity = (i/100);
+                armshield.style.opacity = (i/100);                
+                await sleep(1);
+            }
+            animating = false; //no longer animating
+            
+            return true; //function ended
+        }
+        async function rightTakeHealthDamage(dmg) {
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
+            var bar = document.getElementById("rHealthFill");
+            var current = rhealthleft;
+            rhealthleft -= dmg;
+            
+            for (var i = current; i>=rhealthleft; i-=0.25) {
+                //reduces the health bar gradually
+                bar.style.width = i + '%';
+                await sleep(1);
+            }
+            animating = false; //no longer animating
+            
+            return true; //function ended
+        }
+        async function rightTakeShieldDamage(dmg) {
+            //waits until no other animations are playing
+            while (animating) {
+                await sleep(40);
+            }
+            animating = true;
+            
+            var bar = document.getElementById("rShieldFill");
+            var bodyshield = document.getElementById("rBodyShield");
+            var armshield = document.getElementById("rArmShield");
+            var current = rshieldleft;
+            rshieldleft -= dmg;
+            
+            for (var i = current; i>=rshieldleft; i-=0.25) {
+                //reduces the shield bar and shields opacity gradually
+                bar.style.width = i + '%';
+                bodyshield.style.opacity = (i/100);
+                armshield.style.opacity = (i/100);                
+                await sleep(1);
+            }
+            animating = false; //no longer animating
+            
+            return true; //function ended
         }
         
         
+        //assigns sprites to each character based on which class they are and what weapon they are using
+        function setup(lClass, leftWeapon, rClass, rightWeapon) {
+            //left character variables
+            var lBody = document.getElementById("lBody");
+            var lbShield = document.getElementById("lBodyShield");
+            var lArm = document.getElementById("lArm");
+            var laShield = document.getElementById("lArmShield");
+            var lWeapon = document.getElementById("lWeapon");
+            
+            //right character variables
+            var rBody = document.getElementById("rBody");
+            var rbShield = document.getElementById("rBodyShield");
+            var rArm = document.getElementById("rArm");
+            var raShield = document.getElementById("rArmShield");
+            var rWeapon = document.getElementById("rWeapon");
+            
+            
+            //sets sprites to the correct sprite and size
+            lBody.style.background = 'url(sprites/' + lClass + '/body.png) no-repeat'; //sets image
+            lBody.style.backgroundSize = '100% 100%';                                  //scales image to the correct size
+            lbShield.style.background = 'url(sprites/' + lClass + '/bodyshield.png)';
+            lbShield.style.backgroundSize = '100% 100%';
+            lArm.style.background = 'url(sprites/' + lClass + '/arm.png)';
+            lArm.style.backgroundSize = '100% 100%';
+            laShield.style.background = 'url(sprites/' + lClass + '/armshield.png)';
+            laShield.style.backgroundSize = '100% 100%';
+            lWeapon.style.background = 'url(sprites/weapons/' + leftWeapon + '.png)';
+            lWeapon.style.backgroundSize = '100% 100%';
+            
+            rBody.style.background = 'url(sprites/' + rClass + '/body.png) no-repeat';
+            rBody.style.backgroundSize = '100% 100%';            
+            rbShield.style.background = 'url(sprites/' + rClass + '/bodyshield.png)';
+            rbShield.style.backgroundSize = '100% 100%';
+            rArm.style.background = 'url(sprites/' + rClass + '/arm.png)';
+            rArm.style.backgroundSize = '100% 100%';
+            raShield.style.background = 'url(sprites/' + rClass + '/armshield.png)';
+            raShield.style.backgroundSize = '100% 100%';
+            rWeapon.style.background = 'url(sprites/weapons/' + rightWeapon + '.png)';
+            rWeapon.style.backgroundSize = '100% 100%';
+               
+        }
         
         async function battle() {
-            //sets up battle
-            await leftAttack();
-            await rightAttack();
+            //currently testing the functions
+            await leftTakeHealthDamage(30);
+            await leftTakeShieldDamage(40);
+            await rightTakeHealthDamage(20);
+            await rightTakeShieldDamage(100);
+            
+            await leftMelee();
+            await rightMelee();
+            await leftRanged();
+            await rightRanged();
+            //gets turn order and plays it out
         }
-        
-        setup(1); //runs setup after the page has loaded, so the character is in default position
+        setup("psionic", "shiv", "soldier", "assaultrifle"); //test call
     </script>
 </body>
 </html>
