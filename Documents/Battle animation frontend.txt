@@ -1,0 +1,19 @@
+Functions:
+	[ Describe in bulletpoints the functionality of this front-end. ]
+	[ Describe what data will be displayed to the user and in what format. ]
+	[ Describe what actions the user will be able to take. ]
+	● Displays the standard header
+	● Diplays the sprites
+	● The target held as field in a form and then passed back again in the request
+	Implemented as its own feature:
+	● Calls battle with an ID of a champion to be battled
+	● Displays the combat log
+Database Tables:
+	● None currently
+Endpoints:
+	● [root]/battle?targetId=[championID]
+		Opens this page
+Graphic references:
+	● basic battle visual spec.png
+Other notes:
+	[Other frontends notes.]
