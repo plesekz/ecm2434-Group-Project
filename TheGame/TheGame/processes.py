@@ -128,6 +128,8 @@ def addBossToSystem(request: HttpRequest):
                 auxItem3 = None
                 raise Exception('aux items cannot be weapons')
 
+        sprite = statInfo['class'];
+
 
 
         Champion.objects.create(
@@ -143,6 +145,7 @@ def addBossToSystem(request: HttpRequest):
             auxItem1 = auxItem1,
             auxItem2 = auxItem2,
             auxItem3 = auxItem3,
+            sprite = sprite
         )
     except Exception as e:
         # if creating the champion fails delete the items so they arent left hanging
