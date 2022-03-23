@@ -128,7 +128,7 @@ def addBossToSystem(request: HttpRequest):
                 auxItem3 = None
                 raise Exception('aux items cannot be weapons')
 
-        sprite = statInfo['class'];
+        sprite = statInfo['class']
 
 
 

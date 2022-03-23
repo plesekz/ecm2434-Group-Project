@@ -280,8 +280,6 @@ def battleChampion(request):
     att = getUserFromName(request)
     deff = getChampionFromID(request.GET['id'])
 
-    #if not att.primaryWeapon:
-    #    return "409" # HttpResponse 409
     if att.primaryWeapon is None:
         att.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", 1, 1, 1, "A", 1, Resource.objects.get(name="Books"), 1), 0, 0)
     
