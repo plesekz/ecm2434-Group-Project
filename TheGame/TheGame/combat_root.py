@@ -1,10 +1,12 @@
+import json
 from typing import List
+from Resources.models import Resource
 from TheGame.models import Champion, SpecificWeapon, SpecificItem
 from TheGame.unit import Unit, Damage
 from TheGame.GameState import GameState
 from random import seed, randint
 from TheGame.action import Action
-from TheGame.processes import getArmour, getGlory, getShields
+from TheGame.processes import getArmour, getGlory, getShields, createNewSpecificItem, createNewBaseWeapon
 
 """The entry function, call this function with two champions to have them battle.
 """
@@ -59,17 +61,24 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
 
+        if (actions[-1].type == "finish"):# and (actions[-2].type == "finish") and (actions[-3].type == "finish"):
+            
+            break
+        print(actions[-1].type)
+        
+
     return actions
 
 """An 'ai' function deciding the champion's next move."""
 def decide(active: Unit, other: Unit, GS: GameState):
-    a = None
+    a = Action("finish", 0)
+
+    if(active.weapon.range <= GS.distance) and (active.weapon.ap_cost<=active.actionPoints):
+        a = Action("attack", active.weapon.ap_cost)
+        a.setWeapon(active.weapon)
+
     if(active.weapon.range > GS.distance):
         a = Action("move_closer", 1)
-        return a
-
-    a = Action("attack", active.weapon.ap_cost)
-
     return a
 
 """Function represting one champion's turn"""
@@ -83,13 +92,13 @@ def turn(active: Unit, other: Unit, GS: GameState) -> List:
         if action.type == "attack":
             active.spendActionPoints(action.cost)
             action = attack(active, action.weapon, other, GS)
-        if action.type == "move_closer":
+        elif action.type == "move_closer":
             active.spendActionPoints(1)
             GS.distance = GS.distance - 1
-        if action.type == "move_away":
+        elif action.type == "move_away":
             active.spendActionPoints(1)
             GS.distance = GS.distance + 1
-        if action.type == "finish":
+        elif action.type == "finish":
             finished = True
         actions.append(action)
     return actions
@@ -126,6 +135,17 @@ def preprocess(character: Champion) -> Unit:
 
     u = Unit(a, b, c, h, shield, armour, glory)
 
-    u.setPrimaryWeapon = character.primaryWeapon
+    configData = json.load(open("config.json"))
+    damage = configData["unarmedWeapon"]['damage']
+    damageInstances = configData["unarmedWeapon"]['damageInstances']
+    range = configData["unarmedWeapon"]['range']
+    association = configData["unarmedWeapon"]['association']
+    apCost = configData["unarmedWeapon"]['apCost']
+
+    if character.primaryWeapon is None:
+        u.setPrimaryWeapon(createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0))
+        return u
+
+    u.setPrimaryWeapon(character.primaryWeapon)
 
     return u

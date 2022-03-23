@@ -128,7 +128,11 @@ def addBossToSystem(request: HttpRequest):
                 auxItem3 = None
                 raise Exception('aux items cannot be weapons')
 
-        sprite = statInfo['class'];
+        sprite = statInfo['class']
+        classes = json.load(open("config.json"))['classes']
+
+        if sprite not in classes:
+            sprite = Champion._meta.get_field('sprite').get_default()
 
 
 
@@ -149,6 +153,7 @@ def addBossToSystem(request: HttpRequest):
         )
     except Exception as e:
         # if creating the champion fails delete the items so they arent left hanging
+        print(e)
         for i in range(itemCount):
             print(i)
             print(newItems[i].name)
@@ -996,33 +1001,85 @@ def applyStatPack(item: Item, statPack: Item):
 
 def getShields(champion : Champion):
     shield = 0
-    shield += getItemFromPK(champion.armour).shieldValue
-    shield += getItemFromPK(champion.auxItem1).shieldValue
-    shield += getItemFromPK(champion.auxItem2).shieldValue
-    shield += getItemFromPK(champion.auxItem3).shieldValue
+
+    it = champion.armour
+    if it:
+        shield += it.shieldValue
+
+    it = champion.auxItem1
+    if it:
+        shield += it.shieldValue
+    
+    it = champion.auxItem2 
+    if it:
+        shield += it.shieldValue
+
+    it = champion.auxItem3
+    if it:
+        shield += it.shieldValue
+
     return shield
 
 def getArmour(champion : Champion):
     armr = 0
-    armr += getItemFromPK(champion.armour).armourValue
-    armr += getItemFromPK(champion.auxItem1).armourValue
-    armr += getItemFromPK(champion.auxItem2).armourValue
-    armr += getItemFromPK(champion.auxItem3).armourValue
+
+    it = champion.armour
+    if it:
+        armr += it.armourValue
+
+    it = champion.auxItem1
+    if it:
+        armr += it.armourValue
+    
+    it = champion.auxItem2 
+    if it:
+        armr += it.armourValue
+
+    it = champion.auxItem3
+    if it:
+        armr += it.armourValue
+
     return armr
 
 def getVitBoost(champion: Champion):
     vit = 0
-    vit += getItemFromPK(champion.armour).vitalityBoost
-    vit += getItemFromPK(champion.auxItem1).vitalityBoost
-    vit += getItemFromPK(champion.auxItem2).vitalityBoost
-    vit += getItemFromPK(champion.auxItem3).vitalityBoost
+
+    it = champion.armour
+    if it:
+        vit += it.vitalityBoost
+
+    it = champion.auxItem1
+    if it:
+        vit += it.vitalityBoost
+    
+    it = champion.auxItem2 
+    if it:
+        vit += it.vitalityBoost
+
+    it = champion.auxItem3
+    if it:
+        vit += it.vitalityBoost
+        
     return vit
 
 def getGlory(champion: Champion):
     glr = 0
-    glr += getItemFromPK(champion.armour).glory
-    glr += getItemFromPK(champion.auxItem1).glory
-    glr += getItemFromPK(champion.auxItem2).glory
-    glr += getItemFromPK(champion.auxItem3).glory
-    glr += getItemFromPK(champion.primaryWeapon).glory
+
+    it = champion.armour
+    if it:
+        glr += it.glory
+
+    it = champion.auxItem1
+    if it:
+        glr += it.glory
+    
+    it = champion.auxItem2 
+    if it:
+        glr += it.glory
+
+    it = champion.auxItem3
+    if it:
+        glr += it.glory
+
+        
     return glr

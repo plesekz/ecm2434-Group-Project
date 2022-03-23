@@ -7,6 +7,7 @@ class Unit:
     attB = None
     attC = None
     attH = None
+    range = None
     shield = None
     armour = None
     vitality = None
@@ -30,8 +31,8 @@ class Unit:
         self.actionPoints = 0
 
     def setPrimaryWeapon(self, weapon: SpecificWeapon):
-        if weapon is not None:
-            self.weapon = weapon
+        self.weapon = weapon
+        self.range = weapon.range
 
     def damage(self, dmg: int) -> Damage:
         dmgToShield = 0
