@@ -1,5 +1,5 @@
 from __future__ import annotations
-from models import SpecificWeapon
+from TheGame.models import SpecificWeapon
 
 
 class Unit:
@@ -30,7 +30,8 @@ class Unit:
         self.actionPoints = 0
 
     def setPrimaryWeapon(self, weapon: SpecificWeapon):
-        self.weapon = weapon
+        if weapon is not None:
+            self.weapon = weapon
 
     def damage(self, dmg: int) -> Damage:
         dmgToShield = 0

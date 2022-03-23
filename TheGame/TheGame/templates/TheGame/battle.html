@@ -1,0 +1,76 @@
+    {% extends 'TheGame/CharacterSettingsTemplate.html' %}
+
+    {% block headBlock %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'TheGame/styles/CharacterPages.css'%}">
+    <link rel="stylesheet" href="{% static 'TheGame/styles/battle_animation.css'%}">
+    {% endblock %}
+
+    {% block bodyBlock %}
+        <div class="container floating" >
+            <div class="row">
+                <div class="col-md-3 col-12 order-first">
+                    <!-- Combat log -->
+                    <div class="overflow-auto" style="height:70vh" id="combat-log">
+                        Lorem ipsum dolor sic amet. This is where the combat log will be.                        
+                    </div>
+                </div>
+                <div class="col-md-9 col-12 order-md-2 order-3 row">
+                    <div class="col-12 order-md-1 order-last">
+                        <!-- Arena -->
+                        <div id="arena">
+                            <!--health bars-->
+                            <div id="bars">
+                                <div id="lHealthBar">
+                                    <div id="lHealthFill"></div>
+                                </div>
+                                <div id="lShieldBar">
+                                    <div id="lShieldFill"></div>
+                                </div>
+                                <div id="rHealthBar">
+                                    <div id="rHealthFill"></div>
+                                </div>
+                                <div id="rShieldBar">
+                                    <div id="rShieldFill"></div>
+                                </div>
+                            </div>
+                            
+                            <!--left character-->
+                            <div id ="leftCharacter">
+                                <div id ="lBodyShield"></div>
+                                <div id ="lBody"></div>
+                                <div id= "lArmShield"></div>
+                                <div id ="lWeapon"></div>
+                                <div id ="lArm"></div>
+                            </div>
+                        
+                            <!--right character-->
+                            <div id ="rightCharacter">
+                                <div id ="rBodyShield"></div>
+                                <div id ="rBody"></div>
+                                <div id ="rArmShield"></div>
+                                <div id ="rWeapon"></div>
+                                <div id ="rArm"></div>
+                            </div>
+                        </div>
+                        Lorem ipsum dolor sic amet. This is where the arena will be.
+                    </div>
+                    <div class="col-12 order-md-2 order-first">
+                        <!-- Controls -->
+                        <div>
+                            <button class="top-bar-button">⏸</button>
+                            <button class="top-bar-button">⏯</button>
+                            <button class="top-bar-button">▶</button>
+                            <button class="top-bar-button">⏭</button>
+                        </div>
+                        Lorem ipsum dolor sic amet. This is where the controls are going to be.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="{% static 'TheGame/javascript/battle_animation.js' %}"></script>
+        <script>
+            setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
+        </script>
+    {% endblock %}
+</html>

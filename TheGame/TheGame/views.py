@@ -1,14 +1,16 @@
 from importlib import resources
 from django.template import loader
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
 
 from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
-from TheGame.processes import getAllChampionUnequipedItems
+from Login.processes import is_game_master
+from TheGame.processes import getAllChampionUnequipedItems, getUserFromName, getChampionFromID
 from TheGame.models import SpecificItem
 from TheGame.processes import getAllBaseItems, getAllBosses, getChampionsItemStatPacks, getChampionsWeaponStatPacks, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
 from Resources.processes import getAllUserResources, getAllResources
+from TheGame.combat_root import battle
 
 
 def homePageView(request: HttpRequest) -> HttpResponse:
@@ -225,9 +227,11 @@ def createChampionView(request):
 
 
 def addNewBossView(request):
+    if request.COOKIES.get('TheGameSessionID') is None:
+        return redirect('login')
 
-    # if not user.role == "gameMaster":
-    #     return redirect('homePage')
+    if not is_game_master(request.COOKIES.get('TheGameSessionID')):
+        return redirect('/')
 
     template = loader.get_template('TheGame/newBoss.html')
 
@@ -248,6 +252,12 @@ def addNewBaseItemView(request):
     """ returns html for the page for adding new items
     """
 
+    if request.COOKIES.get('TheGameSessionID') is None:
+        return redirect('login')
+
+    if not is_game_master(request.COOKIES.get('TheGameSessionID')):
+        return redirect('/')
+
     template = loader.get_template('TheGame/addNewItemTemplate.html')
 
     items = getAllBaseItemsAndWeapons()
@@ -261,3 +271,33 @@ def addNewBaseItemView(request):
     output = template.render(context, request)
 
     return HttpResponse(output)
+
+def battleChampion(request):
+    if not request.GET['id']:
+        return "409" # httpResponse 409
+        
+    att = getUserFromName(request)
+    deff = getChampionFromID(request.GET['id'])
+
+    if not att.primaryWeapon:
+        return "409" # HttpResponse 409
+
+    
+
+    context = {
+        'attackerClass': att.sprite,
+        'defenderClass': deff.sprite,
+        'attWeapon': att.primaryWeapon.sprite,
+        'defWeapon': deff.primaryWeapon.sprite
+    }
+
+    return render(request, 'TheGame/battle.html', context=context)
+
+def runBattle(request):
+    att = getUserFromName(request)
+    deff = getChampionFromID(request.GET['id'])
+
+    result = battle(att, deff)
+
+    return JsonResponse(result)
+    
