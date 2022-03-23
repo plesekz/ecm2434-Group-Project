@@ -60,7 +60,7 @@
                         <div>
                             <button class="top-bar-button">⏸</button>
                             <button class="top-bar-button">⏯</button>
-                            <button class="top-bar-button" onclick="startBattle('{{ bossPK }}')">▶</button>
+                            <button class="top-bar-button">▶</button>
                             <button class="top-bar-button">⏭</button>
                         </div>
                         Lorem ipsum dolor sic amet. This is where the controls are going to be.
@@ -112,7 +112,7 @@
             // the code part
 
             setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
-            startBattle({{id}});
+            startBattle('{{ bossPK }}');
         </script>
     {% endblock %}
 </html>

@@ -997,13 +997,13 @@ def applyStatPack(item: Item, statPack: Item):
 def getShields(champion : Champion):
     shield = 0
     if champion.armour:
-        shield += getItemFromPK(champion.armour).shieldValue
+        shield += champion.armour.shieldValue
     if champion.auxItem1:
-        shield += getItemFromPK(champion.auxItem1).shieldValue
+        shield += champion.auxItem1.shieldValue
     if champion.auxItem2:
-        shield += getItemFromPK(champion.auxItem2).shieldValue
+        shield += champion.auxItem2.shieldValue
     if champion.auxItem3:
-        shield += getItemFromPK(champion.auxItem3).shieldValue
+        shield += champion.auxItem3.shieldValue
     return shield
 
 def getArmour(champion : Champion):

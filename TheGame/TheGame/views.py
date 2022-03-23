@@ -305,7 +305,7 @@ def battleChampion(request):
         'defenderClass': deff.sprite,
         'attWeapon': att.primaryWeapon.sprite,
         'defWeapon': deff.primaryWeapon.sprite,
-        'id': deff.pk
+        'bossPK': bossPK
     }
 
     return render(request, 'TheGame/battle.html', context=context)
