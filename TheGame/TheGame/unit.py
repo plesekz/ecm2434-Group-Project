@@ -72,10 +72,8 @@ class Unit:
 
     def spendActionPoints(self, ap: int):
         if(self.actionPoints - ap < 0):
-            #raise
-            return False
+            raise
         self.actionPoints = self.actionPoints - ap
-        return True
 
     def getActionPoints(self) -> int:
         return self.actionPoints
