@@ -108,6 +108,7 @@ def attack(attacker: Unit, weapon: SpecificWeapon,
            target: Unit, GS: GameState) -> Action:
     hits = 0
     a = Action("attack", weapon.ap_cost)
+    dmgs = None
     if(GS.distance > weapon.range):
 
         return a.attackResolved([Damage(0, 0)])
