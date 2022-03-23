@@ -323,8 +323,6 @@ def runBattle(request):
     att = getUserFromName(request)
     deff = getChampionFromID(bossPK)
 
-    result = battle(att, deff)
-
     configData = json.load(open("config.json"))
     damage = configData["unarmedWeapon"]['damage']
     damageInstances = configData["unarmedWeapon"]['damageInstances']
@@ -337,6 +335,8 @@ def runBattle(request):
     
     if deff.primaryWeapon is None:
         deff.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
+
+    result = battle(att, deff)
 
     context = {
         'attackerClass': att.sprite,
