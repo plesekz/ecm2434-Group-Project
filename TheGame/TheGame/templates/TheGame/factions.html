@@ -14,10 +14,10 @@
 <div class="container" style="color:white;">
     <div class="row">
         <div class="col-sm">
-            <div class="container-floating stat-highlight">
+            <div id="hacker" class="container-floating stat-highlight" onclick='highlight("hacker")'>
                 <h3>Hacker</h3>
             </div>
-            <div id ="hCharacter">
+            <div id ="hCharacter" onclick='highlight("hacker")'>
                 <div id ="hBodyShield"></div>
                 <div id ="hBody"></div>
                 <div id= "hArmShield"></div>
@@ -26,10 +26,10 @@
         </div>
 
         <div class="col-sm">
-            <div class="container-floating stat-highlight">
+            <div id="psionic" class="container-floating stat-highlight" onclick='highlight("psionic")'>
                 <h3>Psionic</h3>
             </div>
-            <div id ="pCharacter">
+            <div id ="pCharacter" onclick='highlight("psionic")'>
                 <div id ="pBodyShield"></div>
                 <div id ="pBody"></div>
                 <div id= "pArmShield"></div>
@@ -39,10 +39,10 @@
         </div>
 
         <div class="col-sm">
-            <div class="container-floating stat-highlight">
+            <div id="soldier" class="container-floating stat-highlight" onclick='highlight("soldier")'>
                 <h3>Soldier</h3>
             </div>
-            <div id ="sCharacter">
+            <div id ="sCharacter" onclick='highlight("soldier")'>
                 <div id ="sBodyShield"></div>
                 <div id ="sBody"></div>
                 <div id= "sArmShield"></div>
@@ -54,7 +54,7 @@
 </div>
 
 <script> 
-
+    var selectedClass = '{{champion.sprite}}';
     function setupCharacters() {
         //hacker character variables
         var hBody = document.getElementById("hBody");
@@ -110,8 +110,41 @@
         sArm.style.backgroundSize = '100% 100%';
         saShield.style.background = 'url(/static/TheGame/sprites/' + Class + '/armshield.png)';
         saShield.style.backgroundSize = '100% 100%';
+        
+        return true;
+        
     }
+    
+    function highlight(selected){
+        var h = document.getElementById("hacker");
+        var p = document.getElementById("psionic");
+        var s = document.getElementById("soldier");
+        
+        switch (selected) {
+            case "hacker":
+                h.style.outline = 'thick solid cyan';
+                p.style.outline = '';
+                s.style.outline = '';
+                selectedClass = "hacker";
+                break;
+            case "psionic":
+                h.style.outline = '';
+                p.style.outline = 'thick solid cyan';
+                s.style.outline = '';
+                selectedClass = "psionic";
+                break;
+            case "soldier":
+                h.style.outline = '';
+                p.style.outline = '';
+                s.style.outline = 'thick solid cyan';
+                selectedClass = "soldier";
+                break;
+        }
+    }
+    
+    
     setupCharacters();
+    highlight(selectedClass);
     
 </script>
 
