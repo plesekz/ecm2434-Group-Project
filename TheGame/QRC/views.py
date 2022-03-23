@@ -228,3 +228,9 @@ def qr_landing(request: HttpRequest) -> HttpResponse:
     template = loader.get_template("QRC/landing.html")
     output = template.render({}, request)
     return HttpResponse(output)
+
+def newScan(request):
+    template = loader.get_template("QRC/scanQR.html")
+    context = {}
+    output = template.render(context, request)
+    return HttpResponse(output)

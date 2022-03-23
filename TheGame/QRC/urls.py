@@ -11,4 +11,5 @@ urlpatterns = [
     path('retrieveRes/', views.retrieveRes, name="retrieveRes"),
     path('qr-landing', views.qr_landing, name="qr-landing"),
     path('manage', views.QR_management, name="manage"),
+    path('newScan/', views.newScan, name="newScan")
 ]
