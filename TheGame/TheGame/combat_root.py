@@ -65,12 +65,10 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
 
 """An 'ai' function deciding the champion's next move."""
 def decide(active: Unit, other: Unit, GS: GameState):
-    a = None
+    a = Action("attack", active.weapon.ap_cost, active.weapon)
     if(active.weapon.range > GS.distance):
         a = Action("move_closer", 1)
         return a
-
-    a = Action("attack", active.weapon.ap_cost, active.weapon)
 
     return a
 
