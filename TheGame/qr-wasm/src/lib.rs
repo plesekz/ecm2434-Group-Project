@@ -14,6 +14,19 @@ pub fn main() -> Result<(), JsValue> {
     manager.set_status_ids("runningStatus", "taskCount", "ScannedCount");
     manager.call_callback();
 
+    if let Some(location) = manager.document.location() {
+        if let Ok(href) = location.href() {
+            if let Ok(qr_id) = parse_qr_id(&href) {
+                let manager = manager.clone();
+                let fut = async move{
+                    let result = manager.retrieve_res(qr_id).await;
+                    manager.handle_res(result);
+                };
+                wasm_bindgen_futures::spawn_local(fut);
+            }
+        }
+    }
+
     /* Set all elements with class loadQR to call manager.load_file_list */
     let elems: web_sys::HtmlCollection = manager.document.get_elements_by_class_name("loadQR");
     /* HtmlCollection doesn't implement Iterator trait, so iterating through items is less natural*/
@@ -65,6 +78,7 @@ impl Default for Callback {
 enum QrError {
     InvalidQrID,
     UnknownQrID,
+    NotLoggedIn,
     UnknownServerError,
     JsError(JsValue),
 }
@@ -112,6 +126,14 @@ impl Default for QRManager {
     fn default() -> Self {
         Self::new()
     }
+}
+
+fn parse_qr_id(data: &str) -> Result<usize, QrError> {
+    let code = data
+        .split_once("/qr/qr-landing?data=")
+        .map(|split| split.1)
+        .unwrap_or(&data);
+    code.parse().map_err(|_| QrError::InvalidQrID)
 }
 
 impl QRManager {
@@ -237,18 +259,12 @@ impl QRManager {
             match load_qr(&mut decoder, img).await {
                 Ok(codes) => {
                     for code in codes {
-                        let code: Result<usize, _> = code
-                            .and_then(|code| Ok(code.parse().map_err(|_| QrError::InvalidQrID)?));
+                        let code: Result<usize, _> = code.and_then(|code| Ok(parse_qr_id(&code)?));
                         match code {
                             Ok(code) => {
                                 let result: Result<Vec<(String, usize)>, QrError> =
-                                    self.retrieve_res(&code).await;
-                                log::info!("result: {:?}", result);
-                                let msg = match result {
-                                    Ok(res) => format!("Result: {:?}", res),
-                                    Err(err) => format!("Error: {:?}", err),
-                                };
-                                self.window.alert_with_message(&msg).unwrap();
+                                    self.retrieve_res(code).await;
+                                self.handle_res(result);
                             }
                             Err(err) => {
                                 let msg = format!("Error: {:?}", err);
@@ -275,8 +291,18 @@ impl QRManager {
         }
         self.call_callback();
     }
+
+    fn handle_res(&self, result: Result<Vec<(String, usize)>, QrError>) {
+        log::info!("result: {:?}", result);
+        let msg = match result {
+            Ok(res) => format!("Result: {:?}", res),
+            Err(err) => format!("Error: {:?}", err),
+        };
+        self.window.alert_with_message(&msg).unwrap();
+    }
+
     /** Sends QR data to backend and returns resources */
-    async fn retrieve_res(&self, data: &usize) -> Result<Vec<(String, usize)>, QrError> {
+    async fn retrieve_res(&self, data: usize) -> Result<Vec<(String, usize)>, QrError> {
         let promise = self
             .window
             .fetch_with_str(&format!("/qr/retrieveRes?data={}", data));
@@ -287,6 +313,7 @@ impl QRManager {
         if !response.ok() {
             return Err(match response.status() {
                 501 => QrError::UnknownQrID,
+                403 => QrError::NotLoggedIn,
                 _ => QrError::UnknownServerError,
             });
         }
@@ -490,8 +517,7 @@ async fn load_qr(
     });
 
     let decoder = bardecoder::default_decoder();
-    let results = decoder
-        .decode(&image::DynamicImage::ImageLuma8(img));
+    let results = decoder.decode(&image::DynamicImage::ImageLuma8(img));
     log::info!("bardecoder found {} codes", results.len());
     let bardecoder_codes = results
         .into_iter()

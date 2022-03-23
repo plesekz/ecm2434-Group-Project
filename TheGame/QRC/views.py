@@ -43,8 +43,8 @@ def createRes(request: HttpRequest) -> HttpResponse:
             box_size=15,
             border=5
         )
-
-        qr.add_data(data)
+        host = request.headers['HOST']
+        qr.add_data(f'http://{host}/qr/qr-landing?data={data}')
         qr.make(fit=True)
 
         qrImage = qr.make_image(fill="black", back_color="white")
@@ -53,6 +53,7 @@ def createRes(request: HttpRequest) -> HttpResponse:
         if not os.path.exists(filedirectorypath):
             os.makedirs(filedirectorypath)
         qrImage.save("QRC/static/" + filepath)
+        qrImage.save("static/" + filepath)
 
         try:
             latitude = '{:06.4f}'.format(float(json_data['longitude']))
@@ -130,7 +131,10 @@ def retrieveRes(request: HttpRequest) -> HttpResponse:
         # A QRResource with the given UID doesn't exist
         return HttpResponse(status=501)
 
-    user = getUserFromCookie(request)
+    try:
+        user = getUserFromCookie(request)
+    except Exception:
+        return HttpResponse(status=403)
     output = []
     try:
         for qrResource in qrResources:
