@@ -1,4 +1,5 @@
 from importlib import resources
+import json
 from django.template import loader
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
@@ -280,11 +281,18 @@ def battleChampion(request):
     att = getUserFromName(request)
     deff = getChampionFromID(request.GET['id'])
 
+    configData = json.load(open("config.json"))
+    damage = configData["unarmedWeapon"]['damage']
+    damageInstances = configData["unarmedWeapon"]['damageInstances']
+    range = configData["unarmedWeapon"]['range']
+    association = configData["unarmedWeapon"]['association']
+    apCost = configData["unarmedWeapon"]['apCost']
+
     if att.primaryWeapon is None:
-        att.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", 1, 1, 1, "A", 1, Resource.objects.get(name="Books"), 1), 0, 0)
+        att.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
     
     if deff.primaryWeapon is None:
-        deff.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", 1, 1, 1, "A", 1, Resource.objects.get(name="Books"), 1), 0, 0)
+        deff.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
 
     context = {
         'attackerClass': att.sprite,
