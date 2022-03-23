@@ -90,16 +90,13 @@ def turn(active: Unit, other: Unit, GS: GameState) -> List:
     while(not(finished)):
         action = decide(active, other, GS)
         if action.type == "attack":
-            if not active.spendActionPoints(action.cost):
-                finished = True
+            active.spendActionPoints(action.cost)
             action = attack(active, action.weapon, other, GS)
         elif action.type == "move_closer":
-            if not active.spendActionPoints(1):
-                finished = True
+            active.spendActionPoints(1)
             GS.distance = GS.distance - 1
         elif action.type == "move_away":
-            if not active.spendActionPoints(1):
-                finished = True
+            active.spendActionPoints(1)
             GS.distance = GS.distance + 1
         elif action.type == "finish":
             finished = True
