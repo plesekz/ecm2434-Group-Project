@@ -428,33 +428,44 @@ async function battle() {
     //gets turn order and plays it out
 }
 
-async function battleOnList(moveList, damageList){
+async function battleOnList(moveList, hdamageList, sdamageList){
     // alternate side and do the action
 
     p1Turn = true;
 
     while(moveList.length !== 0){
-        if (moveList[0] == "finish"){
+        if (moveList[0] == "attack"){
             if (p1Turn){
                 await leftMelee();
-                damageList[0].forEach(element => {
+                await hdamageList[0].forEach(element => {
                     leftTakeHealthDamage(element)
-                    console.log(element)
+                    console.log(element);
+                });
+
+                await sdamageList[0].forEach(element => {
+                    leftTakeShieldDamage(element)
+                    console.log(element);
                 });
                 //await leftTakeShieldDamage(damageList[0]);
             }
             else {
                 await rightMelee();
-                damageList[0].forEach(element => {
+                hdamageList[0].forEach(element => {
                     rightTakeHealthDamage(element)
+                    console.log(element);
+                });
+
+                await sdamageList[0].forEach(element => {
+                    rightTakeShieldDamage(element)
+                    console.log(element);
                 });
                 //await rightTakeShieldDamage(damageList[0]);
             }
         }
         p1Turn = !p1Turn;
-        console.log(damageList[0]);
         moveList.shift();
-        damageList.shift();
+        sdamageList.shift();
+        hdamageList.shift();
     }
 
 }
