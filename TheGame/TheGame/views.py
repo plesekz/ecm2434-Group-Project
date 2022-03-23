@@ -6,10 +6,11 @@ from django.shortcuts import redirect, render
 from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
 from Login.processes import is_game_master
-from TheGame.processes import getAllChampionUnequipedItems, getUserFromName, getChampionFromID
+from TheGame.processes import getAllChampionUnequipedItems, getUserFromName, getChampionFromID, createNewSpecificItem, createNewBaseWeapon
 from TheGame.models import SpecificItem
 from TheGame.processes import getAllBaseItems, getAllBosses, getChampionsItemStatPacks, getChampionsWeaponStatPacks, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
 from Resources.processes import getAllUserResources, getAllResources
+from Resources.models import PlayerResource, Resource
 from TheGame.combat_root import battle
 
 
@@ -279,9 +280,10 @@ def battleChampion(request):
     att = getUserFromName(request)
     deff = getChampionFromID(request.GET['id'])
 
-    if not att.primaryWeapon:
-        return "409" # HttpResponse 409
-
+    #if not att.primaryWeapon:
+    #    return "409" # HttpResponse 409
+    if att.primaryWeapon is None:
+        att.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", 1, 1, 1, "A", 1, Resource.objects.get(name="Books"), 1), 0, 0)
     
 
     context = {

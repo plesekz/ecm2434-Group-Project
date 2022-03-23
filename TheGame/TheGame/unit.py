@@ -30,8 +30,7 @@ class Unit:
         self.actionPoints = 0
 
     def setPrimaryWeapon(self, weapon: SpecificWeapon):
-        if weapon is not None:
-            self.weapon = weapon
+        self.weapon = weapon
 
     def damage(self, dmg: int) -> Damage:
         dmgToShield = 0
