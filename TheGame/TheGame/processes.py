@@ -996,33 +996,50 @@ def applyStatPack(item: Item, statPack: Item):
 
 def getShields(champion : Champion):
     shield = 0
-    shield += getItemFromPK(champion.armour).shieldValue
-    shield += getItemFromPK(champion.auxItem1).shieldValue
-    shield += getItemFromPK(champion.auxItem2).shieldValue
-    shield += getItemFromPK(champion.auxItem3).shieldValue
+    if champion.armour:
+        shield += getItemFromPK(champion.armour).shieldValue
+    if champion.auxItem1:
+        shield += getItemFromPK(champion.auxItem1).shieldValue
+    if champion.auxItem2:
+        shield += getItemFromPK(champion.auxItem2).shieldValue
+    if champion.auxItem3:
+        shield += getItemFromPK(champion.auxItem3).shieldValue
     return shield
 
 def getArmour(champion : Champion):
     armr = 0
-    armr += getItemFromPK(champion.armour).armourValue
-    armr += getItemFromPK(champion.auxItem1).armourValue
-    armr += getItemFromPK(champion.auxItem2).armourValue
-    armr += getItemFromPK(champion.auxItem3).armourValue
+    if champion.armour:
+        armr += getItemFromPK(champion.armour).armourValue
+    if champion.auxItem1:
+        armr += getItemFromPK(champion.auxItem1).armourValue
+    if champion.auxItem2:
+        armr += getItemFromPK(champion.auxItem2).armourValue
+    if champion.auxItem3:
+        armr += getItemFromPK(champion.auxItem3).armourValue
     return armr
 
 def getVitBoost(champion: Champion):
     vit = 0
-    vit += getItemFromPK(champion.armour).vitalityBoost
-    vit += getItemFromPK(champion.auxItem1).vitalityBoost
-    vit += getItemFromPK(champion.auxItem2).vitalityBoost
-    vit += getItemFromPK(champion.auxItem3).vitalityBoost
+    if champion.armour:
+        vit += getItemFromPK(champion.armour).vitalityBoost
+    if champion.auxItem1:
+        vit += getItemFromPK(champion.auxItem1).vitalityBoost
+    if champion.auxItem2:
+        vit += getItemFromPK(champion.auxItem2).vitalityBoost
+    if champion.auxItem3:
+        vit += getItemFromPK(champion.auxItem3).vitalityBoost
     return vit
 
 def getGlory(champion: Champion):
     glr = 0
-    glr += getItemFromPK(champion.armour).glory
-    glr += getItemFromPK(champion.auxItem1).glory
-    glr += getItemFromPK(champion.auxItem2).glory
-    glr += getItemFromPK(champion.auxItem3).glory
-    glr += getItemFromPK(champion.primaryWeapon).glory
+    if champion.armour:
+        glr += getItemFromPK(champion.armour).glory
+    if champion.auxItem1:
+        glr += getItemFromPK(champion.auxItem1).glory
+    if champion.auxItem2:
+        glr += getItemFromPK(champion.auxItem2).glory
+    if champion.auxItem3:
+        glr += getItemFromPK(champion.auxItem3).glory
+    if champion.primaryWeapon:
+        glr += getItemFromPK(champion.primaryWeapon).glory
     return glr

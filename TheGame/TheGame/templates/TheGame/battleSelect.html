@@ -56,8 +56,39 @@
         // it will be passed the primary key of the boss
         // it will redirect to [root]/battle?id=bossPK
 
-        var url = `/battle?id=${bossPK}`;
-        window.location.href = url;
+        var f = document.createElement('form');
+            f.action='/battle/';
+            f.method='POST';
+            var i=document.createElement('input');
+            i.type='hidden';
+            i.name='bossPK';
+            i.value=bossPK;
+            f.appendChild(i);
+
+            var t=document.createElement('input');
+            t.type='hidden';
+            t.name='csrfmiddlewaretoken';
+            t.value=getCookie('csrftoken');;
+            f.appendChild(t);
+
+            document.body.appendChild(f);
+            f.submit();
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 </script>
 

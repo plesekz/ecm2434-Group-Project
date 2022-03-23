@@ -1,10 +1,12 @@
+import json
 from typing import List
+from Resources.models import Resource
 from TheGame.models import Champion, SpecificWeapon, SpecificItem
 from TheGame.unit import Unit, Damage
 from TheGame.GameState import GameState
 from random import seed, randint
 from TheGame.action import Action
-from TheGame.processes import getArmour, getGlory, getShields
+from TheGame.processes import getArmour, getGlory, getShields, createNewSpecificItem, createNewBaseWeapon
 
 """The entry function, call this function with two champions to have them battle.
 """
@@ -126,6 +128,17 @@ def preprocess(character: Champion) -> Unit:
 
     u = Unit(a, b, c, h, shield, armour, glory)
 
-    u.setPrimaryWeapon = character.primaryWeapon
+    configData = json.load(open("config.json"))
+    damage = configData["unarmedWeapon"]['damage']
+    damageInstances = configData["unarmedWeapon"]['damageInstances']
+    range = configData["unarmedWeapon"]['range']
+    association = configData["unarmedWeapon"]['association']
+    apCost = configData["unarmedWeapon"]['apCost']
+
+    if character.primaryWeapon is None:
+        u.setPrimaryWeapon(createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0))
+        return u
+
+    u.setPrimaryWeapon(character.primaryWeapon)
 
     return u
