@@ -46,7 +46,7 @@ def createRes(request: HttpRequest) -> HttpResponse:
             border=5
         )
         host = request.headers['HOST']
-        qr.add_data(f'http://{host}/qr/qr-landing?data={data}')
+        qr.add_data(f'http://{host}/qr/retrieveRes?data={data}')
         qr.make(fit=True)
 
         qrImage = qr.make_image(fill="black", back_color="white")
@@ -158,7 +158,10 @@ def retrieveRes(request: HttpRequest) -> HttpResponse:
     except Exception as e:
         print(e)
         return HttpResponse(status=502)  # Failed to add resource to user
-    return HttpResponse(json.dumps(output), status=200)
+
+    template = loader.get_template("QRC/landing.html")
+    output = template.render({}, request)
+    return HttpResponse(output)
 
 
 def listRes(request: HttpRequest) -> HttpResponse:
