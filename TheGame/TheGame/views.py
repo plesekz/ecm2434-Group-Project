@@ -283,6 +283,8 @@ def battleChampion(request):
     if att.primaryWeapon is None:
         att.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", 1, 1, 1, "A", 1, Resource.objects.get(name="Books"), 1), 0, 0)
     
+    if deff.primaryWeapon is None:
+        deff.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", 1, 1, 1, "A", 1, Resource.objects.get(name="Books"), 1), 0, 0)
 
     context = {
         'attackerClass': att.sprite,
