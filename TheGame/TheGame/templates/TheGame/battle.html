@@ -119,10 +119,16 @@
                 startBattle('{{ bossPK }}');
             {% else %}
                 moveList = [];
+                damageList = [];
                 {% for action in result %}
-                    moveList.push('{{action.type}}')
+                    moveList.push('{{action.type}}');
+                    dmg_list = [];
+                    {% for packet in action.dmg_dealt %}
+                    dmg_list.push('{{action.dmg_dealt.dealtToVit}}');
+                    {% endfor %}
+                    damageList.push(dmg_list);
                 {% endfor %}
-                battleOnList(moveList);
+                battleOnList(moveList, damageList);
             {% endif %}
 
         </script>
