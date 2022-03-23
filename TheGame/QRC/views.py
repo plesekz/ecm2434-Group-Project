@@ -9,6 +9,8 @@ from django.template import loader
 import json
 import qrcode
 import os
+import datetime
+from django.utils import timezone
 
 
 def createRes(request: HttpRequest) -> HttpResponse:
@@ -121,6 +123,20 @@ def retrieveRes(request: HttpRequest) -> HttpResponse:
     UID = request.GET['data']
     # resource = get_object_or_404(Resource.objects.filter(name=UID))[0]
 
+    user = getUserFromCookie(request)
+
+    timeout = json.load(open("config.json"))['resourceTimeout']
+
+    if user.lastResourceTimestamp == None:
+        user.lastResourceTimestamp = timezone.now()
+        user.save()
+
+    elif not (timezone.now() > user.lastResourceTimestamp + datetime.timedelta(minutes=timeout)):
+        return HttpResponse("you must wait longer before claiming this resource")
+
+    user.lastResourceTimestamp = datetime.datetime.now()
+    user.save()
+
     try:
         qrCode = QRC.objects.get(QRID=UID)
     except QRC.DoesNotExist:
@@ -130,7 +146,6 @@ def retrieveRes(request: HttpRequest) -> HttpResponse:
         # A QRResource with the given UID doesn't exist
         return HttpResponse(status=501)
 
-    user = getUserFromCookie(request)
     output = []
     try:
         for qrResource in qrResources:

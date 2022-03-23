@@ -11,6 +11,7 @@
         "pBrain" : 10,
         "pControl" : 10
     },
+    "resourceTimeout" : 1,
     "unarmedWeapon" : 
     {
         "damage" : 1,
