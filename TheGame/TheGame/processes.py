@@ -64,7 +64,7 @@ def spendMultiResource(request, resources: "list[tuple(Resource,int)]"):
 
 def getAllBosses() -> "list[Champion]":
 
-    if not (bosses := Champion.objects.filter(player=None)):
+    if not (bosses := Champion.objects.all()):
         return None
 
     bossList = []

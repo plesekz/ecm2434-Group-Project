@@ -37,22 +37,34 @@
         </div>
 
         <div class="col-sm">
-            <div class="container-floating stat-highlight">
+            <div class="container stat-highlight">
                     <h3>Bosses</h3>
                     {% for boss in bosses %}
-                    <button class="col-sm-12 text-start border border-dark top-bar-button" onclick="fightBoss('{{boss.pk}}')">
+                    <button class="col-sm-12 border border-dark top-bar-button" onclick="fightBoss('{{boss.pk}}')">
+                    <div class="row">
                         <h1>Fight {{boss.name}}</h1>
+                        <div class="col-sm-4">
                         <p>
                             Health: {{boss.pHealth}}<br>
                             Athletics: {{boss.pAthletics}}<br>
                             Control: {{boss.pControl}}<br>
-                            Brains: {{boss.pBrains}}
+                            Brains: {{boss.pBrain}}
                         </p>
+                        </div>
+                        <div class="col-sm-8">
+                        <p>
+                            Weapon: {{boss.primaryWeapon.name}}<br>
+                            Armour: {{boss.armour.name}}<br>
+                            Aux1: {{boss.auxItem1.name}}<br>
+                            Aux2: {{boss.auxItem2.name}}<br>
+                            Aux3: {{boss.auxItem3.name}}
+                        </p>
+                        </div>
+                        </div>
                     </button>
 
                     {% endfor %}
             </div>
-        </div>
     </div>
 </div>
 
