@@ -21,10 +21,7 @@ def loginPage(request):
     current_cookie = request.COOKIES.get('TheGameSessionID')
     if Player.objects.filter(userID=current_cookie).exists():
         messages.success(request, ('Logged in'))
-        if target:= request.GET['redirect']:
-            response = redirect(target)
-        else:
-            response = redirect("homePage")
+        response = redirect("homePage")
 
     context = {}
 
