@@ -7,14 +7,14 @@
     {% endblock %}
 
     {% block bodyBlock %}
-        <div class="container floating" >
+        <div class="container floating" style="color:white;" >
             <div class="row">
                 <div class="col-md-3 col-12 order-first">
                     <!-- Combat log -->
                     <div class="overflow-auto" style="height:70vh" id="combat-log">
-                        {% if result != 1 %}
+                        {% if result %}
                             {% for action in result %}
-                                    {{ action.type }}
+                                    {{ action.type }} <br>
                             {% endfor %}      
                         {% endif %}              
                     </div>
@@ -114,9 +114,17 @@
             // the code part
 
             setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
-            if('{{ result }}' == 1){
+
+            {% if not result %}
                 startBattle('{{ bossPK }}');
-            }
+            {% else %}
+                moveList = [];
+                {% for action in result %}
+                    moveList.push('{{action.type}}')
+                {% endfor %}
+                battleOnList(moveList);
+            {% endif %}
+
         </script>
     {% endblock %}
 </html>

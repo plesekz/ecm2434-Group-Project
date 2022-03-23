@@ -306,7 +306,7 @@ def battleChampion(request):
         'attWeapon': att.primaryWeapon.sprite,
         'defWeapon': deff.primaryWeapon.sprite,
         'bossPK': bossPK,
-        'result' : 1
+        'result' : None
     }
 
     return render(request, 'TheGame/battle.html', context=context)
