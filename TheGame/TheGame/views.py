@@ -347,4 +347,34 @@ def runBattle(request):
         'result' : result
     }
     return render(request, 'TheGame/battle.html', context=context)
-    
+
+
+def selectFaction(request):
+    if request.COOKIES.get('TheGameSessionID') is None:
+        return redirect('login')
+
+    user = getUserFromCookie(request)
+    if not (champion := getChampion(user)):
+        return redirect('createChampion')
+
+    template = loader.get_template('TheGame/factions.html')
+
+    resources = getAllUserResources(user)
+
+    context = {
+        "username": user.username,
+        "champion": champion,
+        # # item stats would replace this when item database is created
+        # "damage": champion.damage,
+        # "accuracy": champion.accuracy,
+        # "attackSpeed": champion.attackSpeed,
+        # # armour stats would replace this when armour database is created
+        # "aHealth": champion.aHealth,
+        # "aToughness": champion.aToughness,
+        # "aEvasion": champion.aEvasion,
+        "resources": resources,
+    }
+
+    output = template.render(context, request)
+
+    return HttpResponse(output)
