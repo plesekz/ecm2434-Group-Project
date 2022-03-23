@@ -3,6 +3,7 @@ import json
 from django.template import loader
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.contrib import messages
 
 from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
@@ -275,11 +276,17 @@ def addNewBaseItemView(request):
     return HttpResponse(output)
 
 def battleChampion(request):
-    if not request.GET['id']:
-        return "409" # httpResponse 409
-        
+    if not request.method == "POST":
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+
+    response = redirect("/battle")
+    bossPK = request.POST.get('bossPK')
+
     att = getUserFromName(request)
-    deff = getChampionFromID(request.GET['id'])
+    deff = getChampionFromID(bossPK)
 
     configData = json.load(open("config.json"))
     damage = configData["unarmedWeapon"]['damage']
@@ -305,8 +312,16 @@ def battleChampion(request):
     return render(request, 'TheGame/battle.html', context=context)
 
 def runBattle(request):
+    if not request.method == "POST":
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+
+    bossPK = request.POST.get('bossPK')
+
     att = getUserFromName(request)
-    deff = getChampionFromID(request.GET['id'])
+    deff = getChampionFromID(bossPK)
 
     result = battle(att, deff)
 
