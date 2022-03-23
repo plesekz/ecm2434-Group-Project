@@ -9,10 +9,12 @@ class Action:
     dmg_dealt = None
     weapon = None
 
-    def __init__(self, type: str, cost: int, weapon: SpecificWeapon) -> None:
+    def __init__(self, type: str, cost: int) -> None:
         pass
         self.type = type
         self.cost = cost
+
+    def setWeapon(self, weapon: SpecificWeapon):
         self.weapon = weapon
 
     def attackResolved(self, dmg_dealt: List[Damage]):
