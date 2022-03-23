@@ -12,7 +12,7 @@
                 <div class="col-md-3 col-12 order-first">
                     <!-- Combat log -->
                     <div class="overflow-auto" style="height:70vh" id="combat-log">
-                                             
+                        Lorem ipsum dolor sic amet. This is where the combat log will be.                        
                     </div>
                 </div>
                 <div class="col-md-9 col-12 order-md-2 order-3 row">
@@ -53,48 +53,63 @@
                                 <div id ="rArm"></div>
                             </div>
                         </div>
-                        <div class="col-12 order-md-2 order-first">
-                            <!-- Controls -->
-                            <div>
-                                <button class="top-bar-button">⏸</button>
-                                <button class="top-bar-button">⏯</button>
-                                <button class="top-bar-button">▶</button>
-                                <button class="top-bar-button">⏭</button>
-                            </div>
+                        Lorem ipsum dolor sic amet. This is where the arena will be.
+                    </div>
+                    <div class="col-12 order-md-2 order-first">
+                        <!-- Controls -->
+                        <div>
+                            <button class="top-bar-button">⏸</button>
+                            <button class="top-bar-button">⏯</button>
+                            <button class="top-bar-button" onclick="startBattle('{{ bossPK }}')">▶</button>
+                            <button class="top-bar-button">⏭</button>
                         </div>
+                        Lorem ipsum dolor sic amet. This is where the controls are going to be.
                     </div>
                 </div>
             </div>
         </div>
         <script src="{% static 'TheGame/javascript/battle_animation.js' %}"></script>
         <script>
-            // functions
-            var reply;
-            function fetchBattleData() {
-                var xmlhttp = new XMLHttpRequest();
+            setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
 
-                xmlhttp.onreadystatechange = function() {
-                    if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
-                        if (xmlhttp.status == 200) {
-                            reply = xmlhttp.responseText;
-                            alert(reply);
-                        }
-                        else if (xmlhttp.status == 400) {
-                            alert('There was an error 400 when requesting battle data.');
+            function startBattle(bossPK){
+                // this function will be called once the user has selected a boss to fight
+                // it will be passed the primary key of the boss
+                
+                var f = document.createElement('form');
+                    f.action='/runbattle/';
+                    f.method='POST';
+                    var i=document.createElement('input');
+                    i.type='hidden';
+                    i.name='bossPK';
+                    i.value=bossPK;
+                    f.appendChild(i);
+
+                    var t=document.createElement('input');
+                    t.type='hidden';
+                    t.name='csrfmiddlewaretoken';
+                    t.value=getCookie('csrftoken');;
+                    f.appendChild(t);
+
+                    document.body.appendChild(f);
+                    f.submit();
+            }
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
                         }
                     }
-                };
-                xmlhttp.open("GET", "/runbattle?id={{id}}", true);
-                xmlhttp.send();
+                }
+                return cookieValue;
             }
-            // actual code
-
-            setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
-            fetchBattleData();
-            // to do next:
-            // call to the "run battle" endpoint to fetch JSON
-            // print the JSON for debug
-            // keep popping from the list and executing the actions as they happen
         </script>
     {% endblock %}
 </html>
