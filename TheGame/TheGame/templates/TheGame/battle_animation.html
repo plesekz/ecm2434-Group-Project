@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<style>
+    @import url("battle_animation.css");
+</style>
+<body>
+    <p>
+        <!--
+        TODO: REMOVE FOR FULL IMPLEMENTATION
+        buttons, for testing-->
+        <button onclick="battle()">battle</button>
+    </p>
+    <div id="arena">
+        <!--health bars-->
+        <div id="bars">
+            <div id="lHealthBar">
+                <div id="lHealthFill"></div>
+            </div>
+            <div id="lShieldBar">
+                <div id="lShieldFill"></div>
+            </div>
+            <div id="rHealthBar">
+                <div id="rHealthFill"></div>
+            </div>
+            <div id="rShieldBar">
+                <div id="rShieldFill"></div>
+            </div>
+        </div>
+        
+        <!--left character-->
+        <div id ="leftCharacter">
+            <div id ="lBodyShield"></div>
+            <div id ="lBody"></div>
+            <div id= "lArmShield"></div>
+            <div id ="lWeapon"></div>
+            <div id ="lArm"></div>
+        </div>
+    
+        <!--right character-->
+        <div id ="rightCharacter">
+            <div id ="rBodyShield"></div>
+            <div id ="rBody"></div>
+            <div id ="rArmShield"></div>
+            <div id ="rWeapon"></div>
+            <div id ="rArm"></div>
+        </div>
+    </div>
+    
+    <script src="battle_animation.js"></script>
+    <script>
+        setup("psionic", "shiv", "soldier", "assaultrifle"); //test call
+    </script>
+</body>
+</html>

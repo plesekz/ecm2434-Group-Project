@@ -1,0 +1,16 @@
+Functions:
+	[ Describe in bulletpoints the functionality of this front-end. ]
+	[ Describe what data will be displayed to the user and in what format. ]
+	[ Describe what actions the user will be able to take. ]
+	● Request the battle to be ran
+Database Tables:
+	● Champions
+		Being referenced by ID and passed to the battle functions
+Endpoints:
+	[ Describe which applciation endpoints the front-end will use to achieve functionality outlined. ]
+	● 
+Graphic references:
+	[ Name files that are used as a graphical reference for Frontend's layout and design. ]
+	● 
+Other notes:
+	[Other frontends notes.]

@@ -10,5 +10,17 @@
         "pAthletics" : 10,
         "pBrain" : 10,
         "pControl" : 10
-    }
+    },
+    "resourceTimeout" : 1,
+    "unarmedWeapon" : 
+    {
+        "damage" : 1,
+        "damageInstances" : 1,
+        "range" : 1,
+        "association" : "A",
+        "apCost" : 1
+    },
+    "classes": [
+        "hacker", "soldier", "psionic"
+    ]
 }

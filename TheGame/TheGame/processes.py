@@ -27,6 +27,12 @@ def getChampion(player: Player) -> Champion:
 
     return champs[0]
 
+def getChampionFromID(pk: int) -> Champion:
+    if not (champs := Champion.objects.filter(pk=pk)).exists():
+        return None
+
+    return champs[0]
+
 
 def spendResource(request, rNeeded, amount):
     """ spends a requested amount of a resource from a user
@@ -84,44 +90,50 @@ def addBossToSystem(request: HttpRequest):
             newItems.append(primaryWeapon)
             if not isinstance(primaryWeapon, SpecificWeapon):
                 messages.add_message(request, messages.ERROR, 'primary weapon must be a weapon')
-                raise Exception('primary weapon must be a weapon')
-        primaryWeapon = None
+                primaryWeapon = None
+                return HttpResponseRedirect('addBosses')
 
         if (armour := createNewSpecificItem(getBaseItemFromName(statInfo['armour']), 0, 0)) != None:
             itemCount += 1
             newItems.append(armour)
             if not (isinstance(armour, SpecificItem) and armour.type == "armour"):
                 messages.add_message(request, messages.ERROR, 'armour must be an armour')
+                armour = None
                 raise Exception('armour must be an armour')
-
-        armour = None
+                
 
         if (auxItem1 := createNewSpecificItem(getBaseItemFromName(statInfo['auxItem1']), 0, 0)) != None:
             itemCount += 1
             newItems.append(auxItem1)
             if not isinstance(auxItem1, SpecificItem):
+                auxItem1 = None
                 messages.add_message(request, messages.ERROR, 'aux items cannot be weapons')
                 raise Exception('aux items cannot be weapons')
 
-        auxItem1 = None
 
         if (auxItem2 := createNewSpecificItem(getBaseItemFromName(statInfo['auxItem2']), 0, 0)) != None:
             itemCount += 1
             newItems.append(auxItem2)
             if not isinstance(auxItem2, SpecificItem):
                 messages.add_message(request, messages.ERROR, 'aux items cannot be weapons')
+                auxItem2 = None
                 raise Exception('aux items cannot be weapons')
 
-        auxItem2 = None
 
         if (auxItem3 := createNewSpecificItem(getBaseItemFromName(statInfo['auxItem3']), 0, 0)) != None:
             itemCount += 1
             newItems.append(auxItem3)
             if isinstance(auxItem3, SpecificItem):
                 messages.add_message(request, messages.ERROR, 'aux items cannot be weapons')
+                auxItem3 = None
                 raise Exception('aux items cannot be weapons')
 
-        auxItem3 = None
+        sprite = statInfo['class']
+        classes = json.load(open("config.json"))['classes']
+
+        if sprite not in classes:
+            sprite = Champion._meta.get_field('sprite').get_default()
+
 
 
         Champion.objects.create(
@@ -137,9 +149,11 @@ def addBossToSystem(request: HttpRequest):
             auxItem1 = auxItem1,
             auxItem2 = auxItem2,
             auxItem3 = auxItem3,
+            sprite = sprite
         )
     except Exception as e:
         # if creating the champion fails delete the items so they arent left hanging
+        print(e)
         for i in range(itemCount):
             print(i)
             print(newItems[i].name)
@@ -987,33 +1001,85 @@ def applyStatPack(item: Item, statPack: Item):
 
 def getShields(champion : Champion):
     shield = 0
-    shield += getItemFromPK(champion.armour).shieldValue
-    shield += getItemFromPK(champion.auxItem1).shieldValue
-    shield += getItemFromPK(champion.auxItem2).shieldValue
-    shield += getItemFromPK(champion.auxItem3).shieldValue
+
+    it = champion.armour
+    if it:
+        shield += it.shieldValue
+
+    it = champion.auxItem1
+    if it:
+        shield += it.shieldValue
+    
+    it = champion.auxItem2 
+    if it:
+        shield += it.shieldValue
+
+    it = champion.auxItem3
+    if it:
+        shield += it.shieldValue
+
     return shield
 
 def getArmour(champion : Champion):
     armr = 0
-    armr += getItemFromPK(champion.armour).armourValue
-    armr += getItemFromPK(champion.auxItem1).armourValue
-    armr += getItemFromPK(champion.auxItem2).armourValue
-    armr += getItemFromPK(champion.auxItem3).armourValue
+
+    it = champion.armour
+    if it:
+        armr += it.armourValue
+
+    it = champion.auxItem1
+    if it:
+        armr += it.armourValue
+    
+    it = champion.auxItem2 
+    if it:
+        armr += it.armourValue
+
+    it = champion.auxItem3
+    if it:
+        armr += it.armourValue
+
     return armr
 
 def getVitBoost(champion: Champion):
     vit = 0
-    vit += getItemFromPK(champion.armour).vitalityBoost
-    vit += getItemFromPK(champion.auxItem1).vitalityBoost
-    vit += getItemFromPK(champion.auxItem2).vitalityBoost
-    vit += getItemFromPK(champion.auxItem3).vitalityBoost
+
+    it = champion.armour
+    if it:
+        vit += it.vitalityBoost
+
+    it = champion.auxItem1
+    if it:
+        vit += it.vitalityBoost
+    
+    it = champion.auxItem2 
+    if it:
+        vit += it.vitalityBoost
+
+    it = champion.auxItem3
+    if it:
+        vit += it.vitalityBoost
+        
     return vit
 
 def getGlory(champion: Champion):
     glr = 0
-    glr += getItemFromPK(champion.armour).glory
-    glr += getItemFromPK(champion.auxItem1).glory
-    glr += getItemFromPK(champion.auxItem2).glory
-    glr += getItemFromPK(champion.auxItem3).glory
-    glr += getItemFromPK(champion.primaryWeapon).glory
+
+    it = champion.armour
+    if it:
+        glr += it.glory
+
+    it = champion.auxItem1
+    if it:
+        glr += it.glory
+    
+    it = champion.auxItem2 
+    if it:
+        glr += it.glory
+
+    it = champion.auxItem3
+    if it:
+        glr += it.glory
+
+        
     return glr

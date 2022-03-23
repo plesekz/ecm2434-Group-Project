@@ -1,0 +1,130 @@
+    {% extends 'TheGame/CharacterSettingsTemplate.html' %}
+
+    {% block headBlock %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'TheGame/styles/CharacterPages.css'%}">
+    <link rel="stylesheet" href="{% static 'TheGame/styles/battle_animation.css'%}">
+    {% endblock %}
+
+    {% block bodyBlock %}
+        <div class="container floating" style="color:white;" >
+            <div class="row">
+                <div class="col-md-3 col-12 order-first">
+                    <!-- Combat log -->
+                    <div class="overflow-auto" style="height:70vh" id="combat-log">
+                        {% if result %}
+                            {% for action in result %}
+                                    {{ action.type }} <br>
+                            {% endfor %}      
+                        {% endif %}              
+                    </div>
+                </div>
+                <div class="col-md-9 col-12 order-md-2 order-3 row">
+                    <div class="col-12 order-md-1 order-last">
+                        <!-- Arena -->
+                        <div id="arena">
+                            <!--health bars-->
+                            <div id="bars">
+                                <div id="lHealthBar">
+                                    <div id="lHealthFill"></div>
+                                </div>
+                                <div id="lShieldBar">
+                                    <div id="lShieldFill"></div>
+                                </div>
+                                <div id="rHealthBar">
+                                    <div id="rHealthFill"></div>
+                                </div>
+                                <div id="rShieldBar">
+                                    <div id="rShieldFill"></div>
+                                </div>
+                            </div>
+                            
+                            <!--left character-->
+                            <div id ="leftCharacter">
+                                <div id ="lBodyShield"></div>
+                                <div id ="lBody"></div>
+                                <div id= "lArmShield"></div>
+                                <div id ="lWeapon"></div>
+                                <div id ="lArm"></div>
+                            </div>
+                        
+                            <!--right character-->
+                            <div id ="rightCharacter">
+                                <div id ="rBodyShield"></div>
+                                <div id ="rBody"></div>
+                                <div id ="rArmShield"></div>
+                                <div id ="rWeapon"></div>
+                                <div id ="rArm"></div>
+                            </div>
+                        </div>
+                        <div class="col-12 order-md-2 order-first">
+                            <!-- Controls -->
+                            <div>
+                                <button class="top-bar-button">⏸</button>
+                                <button class="top-bar-button">⏯</button>
+                                <button class="top-bar-button">▶</button>
+                                <button class="top-bar-button">⏭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="{% static 'TheGame/javascript/battle_animation.js' %}"></script>
+        <script>
+            // functions
+            function startBattle(bossPK){
+                // this function will be called once the user has selected a boss to fight
+                // it will be passed the primary key of the boss
+                var f = document.createElement('form');
+                    f.action='/runbattle/';
+                    f.method='POST';
+                    var i=document.createElement('input');
+                    i.type='hidden';
+                    i.name='bossPK';
+                    i.value=bossPK;
+                    f.appendChild(i);
+
+                    var t=document.createElement('input');
+                    t.type='hidden';
+                    t.name='csrfmiddlewaretoken';
+                    t.value=getCookie('csrftoken');;
+                    f.appendChild(t);
+
+                    document.body.appendChild(f);
+                    f.submit();
+            }
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // the code part
+
+            setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
+
+            {% if not result %}
+                startBattle('{{ bossPK }}');
+            {% else %}
+                moveList = [];
+                {% for action in result %}
+                    moveList.push('{{action.type}}')
+                {% endfor %}
+                battleOnList(moveList);
+            {% endif %}
+
+        </script>
+    {% endblock %}
+</html>

@@ -1,12 +1,15 @@
+import json
 from typing import List
-from models import Champion, SpecificWeapon, SpecificItem
-from unit import Unit, Damage
-from GameState import GameState
+from Resources.models import Resource
+from TheGame.models import Champion, SpecificWeapon, SpecificItem
+from TheGame.unit import Unit, Damage
+from TheGame.GameState import GameState
 from random import seed, randint
-from action import Action
-from processes import getArmour, getGlory, getShields
+from TheGame.action import Action
+from TheGame.processes import getArmour, getGlory, getShields, createNewSpecificItem, createNewBaseWeapon
 
-
+"""The entry function, call this function with two champions to have them battle.
+"""
 def battle(attacker: Champion, defender: Champion) -> List:
     seed()
 
@@ -20,20 +23,22 @@ def battle(attacker: Champion, defender: Champion) -> List:
 
     # resolution
 
-    if(pAtt.attH > 0):
+    if(pAtt.attH >= 0):
         attacker.pHealth = pAtt.attH
     else:
         attacker.pHealth = 1
-    if(pDef.attH > 0):
+    if(pDef.attH >= 0):
         defender.pHealth = pDef.attH
     else:
         defender.pHealth = 1
 
+    attacker.save()
+    defender.save()
     # return
     return actions
 
-
-def fight(pAtt: Unit, pDef: Unit):
+"""Function alternating turns through through the champions until one of them is felled."""
+def fight(pAtt: Unit, pDef: Unit) -> List:
     actions = []
     GS = GameState(10)
 
@@ -56,20 +61,27 @@ def fight(pAtt: Unit, pDef: Unit):
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
 
+        if (actions[-1].type == "finish"):# and (actions[-2].type == "finish") and (actions[-3].type == "finish"):
+            
+            break
+        print(actions[-1].type)
+        
+
     return actions
 
-
+"""An 'ai' function deciding the champion's next move."""
 def decide(active: Unit, other: Unit, GS: GameState):
-    a = None
+    a = Action("finish", 0)
+
+    if(active.weapon.range <= GS.distance) and (active.weapon.ap_cost<=active.actionPoints):
+        a = Action("attack", active.weapon.ap_cost)
+        a.setWeapon(active.weapon)
+
     if(active.weapon.range > GS.distance):
         a = Action("move_closer", 1)
-        return a
-
-    a = Action("attack", active.weapon.ap_cost)
-
     return a
 
-
+"""Function represting one champion's turn"""
 def turn(active: Unit, other: Unit, GS: GameState) -> List:
     finished = False
     actions = []
@@ -77,24 +89,23 @@ def turn(active: Unit, other: Unit, GS: GameState) -> List:
 
     while(not(finished)):
         action = decide(active, other, GS)
-        match(action.type):
-            case "attack":
-                active.spendActionPoints(action.cost)
-                action = attack(active, action.weapon, other, GS)
-            case "move_closer":
-                active.spendActionPoints(1)
-                GS.distance = GS.distance - 1
-            case "move_away":
-                active.spendActionPoints(1)
-                GS.distance = GS.distance + 1
-            case "finish":
-                finished = True
+        if action.type == "attack":
+            active.spendActionPoints(action.cost)
+            action = attack(active, action.weapon, other, GS)
+        elif action.type == "move_closer":
+            active.spendActionPoints(1)
+            GS.distance = GS.distance - 1
+        elif action.type == "move_away":
+            active.spendActionPoints(1)
+            GS.distance = GS.distance + 1
+        elif action.type == "finish":
+            finished = True
         actions.append(action)
     return actions
 
-
+"""Function for handling champion's attack"""
 def attack(attacker: Unit, weapon: SpecificWeapon,
-           target: Unit, GS: GameState):
+           target: Unit, GS: GameState) -> Action:
     hits = 0
     a = Action("attack", weapon.ap_cost)
     if(GS.distance > weapon.range):
@@ -111,7 +122,7 @@ def attack(attacker: Unit, weapon: SpecificWeapon,
             dmgs.append(dmg)
     return a.attackResolved(dmgs)
 
-
+"""Function to preprocess the champions and compile them into a Unit class object."""
 def preprocess(character: Champion) -> Unit:
     a = character.pAthletics
     b = character.pBrain
@@ -124,6 +135,17 @@ def preprocess(character: Champion) -> Unit:
 
     u = Unit(a, b, c, h, shield, armour, glory)
 
-    u.setPrimaryWeapon = character.primaryWeapon
+    configData = json.load(open("config.json"))
+    damage = configData["unarmedWeapon"]['damage']
+    damageInstances = configData["unarmedWeapon"]['damageInstances']
+    range = configData["unarmedWeapon"]['range']
+    association = configData["unarmedWeapon"]['association']
+    apCost = configData["unarmedWeapon"]['apCost']
+
+    if character.primaryWeapon is None:
+        u.setPrimaryWeapon(createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0))
+        return u
+
+    u.setPrimaryWeapon(character.primaryWeapon)
 
     return u

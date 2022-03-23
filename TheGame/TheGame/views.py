@@ -1,15 +1,19 @@
 from importlib import resources
+import json
 from django.template import loader
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect
+from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.shortcuts import redirect, render
+from django.contrib import messages
 
 from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
 from Login.processes import is_game_master
-from TheGame.processes import getAllChampionUnequipedItems
+from TheGame.processes import getAllChampionUnequipedItems, getUserFromName, getChampionFromID, createNewSpecificItem, createNewBaseWeapon
 from TheGame.models import SpecificItem
 from TheGame.processes import getAllBaseItems, getAllBosses, getChampionsItemStatPacks, getChampionsWeaponStatPacks, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
 from Resources.processes import getAllUserResources, getAllResources
+from Resources.models import PlayerResource, Resource
+from TheGame.combat_root import battle
 
 
 def homePageView(request: HttpRequest) -> HttpResponse:
@@ -270,3 +274,77 @@ def addNewBaseItemView(request):
     output = template.render(context, request)
 
     return HttpResponse(output)
+
+def battleChampion(request):
+    if not request.method == "POST":
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+
+    bossPK = request.POST.get('bossPK')
+
+    att = getUserFromName(request)
+    deff = getChampionFromID(bossPK)
+
+    configData = json.load(open("config.json"))
+    damage = configData["unarmedWeapon"]['damage']
+    damageInstances = configData["unarmedWeapon"]['damageInstances']
+    range = configData["unarmedWeapon"]['range']
+    association = configData["unarmedWeapon"]['association']
+    apCost = configData["unarmedWeapon"]['apCost']
+
+    if att.primaryWeapon is None:
+        att.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
+    
+    if deff.primaryWeapon is None:
+        deff.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
+
+    context = {
+        'attackerClass': att.sprite,
+        'defenderClass': deff.sprite,
+        'attWeapon': att.primaryWeapon.sprite,
+        'defWeapon': deff.primaryWeapon.sprite,
+        'bossPK': bossPK,
+        'result' : None
+    }
+
+    return render(request, 'TheGame/battle.html', context=context)
+
+def runBattle(request):
+    if not request.method == "POST":
+        messages.error(
+            request,
+            ('Something went wrong, please try again later'))
+        return "failed to process, please use POST method"
+
+    bossPK = request.POST.get('bossPK')
+
+    att = getUserFromName(request)
+    deff = getChampionFromID(bossPK)
+
+    result = battle(att, deff)
+
+    configData = json.load(open("config.json"))
+    damage = configData["unarmedWeapon"]['damage']
+    damageInstances = configData["unarmedWeapon"]['damageInstances']
+    range = configData["unarmedWeapon"]['range']
+    association = configData["unarmedWeapon"]['association']
+    apCost = configData["unarmedWeapon"]['apCost']
+
+    if att.primaryWeapon is None:
+        att.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
+    
+    if deff.primaryWeapon is None:
+        deff.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
+
+    context = {
+        'attackerClass': att.sprite,
+        'defenderClass': deff.sprite,
+        'attWeapon': att.primaryWeapon.sprite,
+        'defWeapon': deff.primaryWeapon.sprite,
+        'bossPK' : bossPK,
+        'result' : result
+    }
+    return render(request, 'TheGame/battle.html', context=context)
+    
