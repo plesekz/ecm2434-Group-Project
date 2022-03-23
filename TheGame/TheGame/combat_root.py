@@ -61,6 +61,9 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
 
+        if (actions[-1].type == "finish") and (actions[-2].type == "finish") and (actions[-3].type == "finish"):
+            break
+
     return actions
 
 """An 'ai' function deciding the champion's next move."""
@@ -101,7 +104,7 @@ def turn(active: Unit, other: Unit, GS: GameState) -> List:
 def attack(attacker: Unit, weapon: SpecificWeapon,
            target: Unit, GS: GameState) -> Action:
     hits = 0
-    a = Action("attack", weapon.ap_cost, weapon)
+    a = Action("attack", weapon.ap_cost)
     if(GS.distance > weapon.range):
 
         return a.attackResolved([Damage(0, 0)])
