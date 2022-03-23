@@ -19,5 +19,8 @@
         "range" : 1,
         "association" : "A",
         "apCost" : 1
-    }
+    },
+    "classes": [
+        "hacker", "soldier", "psionic"
+    ]
 }

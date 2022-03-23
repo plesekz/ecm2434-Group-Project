@@ -129,6 +129,10 @@ def addBossToSystem(request: HttpRequest):
                 raise Exception('aux items cannot be weapons')
 
         sprite = statInfo['class']
+        classes = json.load(open("config.json"))['classes']
+
+        if sprite not in classes:
+            sprite = Champion._meta.get_field('sprite').get_default()
 
 
 
@@ -149,6 +153,7 @@ def addBossToSystem(request: HttpRequest):
         )
     except Exception as e:
         # if creating the champion fails delete the items so they arent left hanging
+        print(e)
         for i in range(itemCount):
             print(i)
             print(newItems[i].name)
