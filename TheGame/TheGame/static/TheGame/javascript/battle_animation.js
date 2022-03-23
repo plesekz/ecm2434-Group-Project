@@ -427,3 +427,22 @@ async function battle() {
     await rightRanged();
     //gets turn order and plays it out
 }
+
+async function battleOnList(list){
+    // alternate side and do the action
+
+    p1Turn = true;
+
+    while(list.length !== 0){
+        if (p1Turn){
+            await leftMelee();
+        }
+        else {
+            await rightMelee();
+        }
+        p1Turn = !p1Turn;
+        list.shift();
+        console.log(list);
+    }
+
+}
