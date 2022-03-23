@@ -61,8 +61,11 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
 
-        if (actions[-1].type == "finish") and (actions[-2].type == "finish") and (actions[-3].type == "finish"):
+        if (actions[-1].type == "finish"):# and (actions[-2].type == "finish") and (actions[-3].type == "finish"):
+            
             break
+        print(actions[-1].type)
+        
 
     return actions
 
