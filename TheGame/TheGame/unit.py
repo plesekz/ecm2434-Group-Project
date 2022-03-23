@@ -74,7 +74,6 @@ class Unit:
         if(self.actionPoints - ap < 0):
             raise
         self.actionPoints = self.actionPoints - ap
-        return True
 
     def getActionPoints(self) -> int:
         return self.actionPoints
