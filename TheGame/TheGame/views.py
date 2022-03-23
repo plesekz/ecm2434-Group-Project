@@ -282,7 +282,6 @@ def battleChampion(request):
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
 
-    response = redirect("/battle")
     bossPK = request.POST.get('bossPK')
 
     att = getUserFromName(request)
