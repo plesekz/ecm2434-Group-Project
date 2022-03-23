@@ -70,7 +70,7 @@ def decide(active: Unit, other: Unit, GS: GameState):
         a = Action("move_closer", 1)
         return a
 
-    a = Action("attack", active.weapon.ap_cost)
+    a = Action("attack", active.weapon.ap_cost, active.weapon)
 
     return a
 
@@ -100,7 +100,7 @@ def turn(active: Unit, other: Unit, GS: GameState) -> List:
 def attack(attacker: Unit, weapon: SpecificWeapon,
            target: Unit, GS: GameState) -> Action:
     hits = 0
-    a = Action("attack", weapon.ap_cost)
+    a = Action("attack", weapon.ap_cost, weapon)
     if(GS.distance > weapon.range):
 
         return a.attackResolved([Damage(0, 0)])
