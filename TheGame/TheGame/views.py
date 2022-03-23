@@ -364,14 +364,6 @@ def selectFaction(request):
     context = {
         "username": user.username,
         "champion": champion,
-        # # item stats would replace this when item database is created
-        # "damage": champion.damage,
-        # "accuracy": champion.accuracy,
-        # "attackSpeed": champion.attackSpeed,
-        # # armour stats would replace this when armour database is created
-        # "aHealth": champion.aHealth,
-        # "aToughness": champion.aToughness,
-        # "aEvasion": champion.aEvasion,
         "resources": resources,
     }
 

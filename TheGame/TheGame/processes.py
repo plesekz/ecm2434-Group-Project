@@ -64,7 +64,7 @@ def spendMultiResource(request, resources: "list[tuple(Resource,int)]"):
 
 def getAllBosses() -> "list[Champion]":
 
-    if not (bosses := Champion.objects.filter(player=None)):
+    if not (bosses := Champion.objects.all()):
         return None
 
     bossList = []
@@ -427,6 +427,21 @@ def upgradeStatOnItem(request):
     removeItemOrWeapon(pack)
 
 
+    return HttpResponse(status=200)
+
+def selectFactions(request):
+    if not request.method == "POST":
+        return HttpResponse(status=400)
+
+    data = request.body.decode('utf-8')  # decode the body to a string
+    requestJson = json.loads(data)  # load json from string data
+    faction = requestJson['faction']
+    print(faction)
+    user = getUserFromCookie(request)
+    userChamp = getChampion(user)
+    userChamp.sprite = faction
+    userChamp.save()
+        
     return HttpResponse(status=200)
 
 #

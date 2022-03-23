@@ -14,10 +14,12 @@
 <div class="container" style="color:white;">
     <div class="row">
         <div class="col-sm">
-            <div id="hacker" class="container-floating stat-highlight" onclick='highlight("hacker")'>
+
+            <button class="container top-bar-button" type="submit" onclick="chooseFaction('hacker')">
                 <h3>Hacker</h3>
-            </div>
-            <div id ="hCharacter" onclick='highlight("hacker")'>
+            </button>
+            
+            <div id ="hCharacter">
                 <div id ="hBodyShield"></div>
                 <div id ="hBody"></div>
                 <div id= "hArmShield"></div>
@@ -26,10 +28,11 @@
         </div>
 
         <div class="col-sm">
-            <div id="psionic" class="container-floating stat-highlight" onclick='highlight("psionic")'>
+
+            <button class="container top-bar-button" type="submit" onclick="chooseFaction('psionic')">
                 <h3>Psionic</h3>
-            </div>
-            <div id ="pCharacter" onclick='highlight("psionic")'>
+            </button>
+            <div id ="pCharacter">
                 <div id ="pBodyShield"></div>
                 <div id ="pBody"></div>
                 <div id= "pArmShield"></div>
@@ -39,10 +42,10 @@
         </div>
 
         <div class="col-sm">
-            <div id="soldier" class="container-floating stat-highlight" onclick='highlight("soldier")'>
+            <button class="container top-bar-button" type="submit" onclick="chooseFaction('soldier')">
                 <h3>Soldier</h3>
-            </div>
-            <div id ="sCharacter" onclick='highlight("soldier")'>
+            </button>
+            <div id ="sCharacter">
                 <div id ="sBodyShield"></div>
                 <div id ="sBody"></div>
                 <div id= "sArmShield"></div>
@@ -55,6 +58,47 @@
 
 <script> 
     var selectedClass = '{{champion.sprite}}';
+
+    function chooseFaction(faction)
+    {
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() {
+            if (this.readyState == 4){
+                window.location.reload();
+            }
+        }
+
+        xhr.open("POST", '/selectfactions/');
+        xhr.setRequestHeader("Content-type", "application/json");
+        const csrfToken = getCookie('csrftoken');
+        xhr.setRequestHeader("X-CSRFToken", csrfToken);
+        console.log(faction);
+        content = JSON.stringify(
+            {
+                "faction" : faction,
+            }
+        );
+
+        xhr.send(content);
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+  
     function setupCharacters() {
         //hacker character variables
         var hBody = document.getElementById("hBody");
