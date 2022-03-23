@@ -55,7 +55,6 @@ def createRes(request: HttpRequest) -> HttpResponse:
         if not os.path.exists(filedirectorypath):
             os.makedirs(filedirectorypath)
         qrImage.save("QRC/static/" + filepath)
-        qrImage.save("static/" + filepath)
 
         try:
             latitude = '{:06.4f}'.format(float(json_data['longitude']))
