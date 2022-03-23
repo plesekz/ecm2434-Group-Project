@@ -12,10 +12,7 @@
                 <div class="col-md-3 col-12 order-first">
                     <!-- Combat log -->
                     <div class="overflow-auto" style="height:70vh" id="combat-log">
-                        {% if result %}
-                            {% for action in result %}
-                                    {{ action.type }} <br>
-                            {% endfor %}      
+                        {% if result %}     
                         {% endif %}              
                     </div>
                 </div>
@@ -118,11 +115,11 @@
             {% if not result %}
                 startBattle('{{ bossPK }}');
             {% else %}
-                moveList = [];
-                {% for action in result %}
-                    moveList.push('{{action.type}}')
-                {% endfor %}
-                battleOnList(moveList);
+                /*
+                
+                */
+
+                
             {% endif %}
 
         </script>

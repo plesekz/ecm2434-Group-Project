@@ -41,29 +41,36 @@ def battle(attacker: Champion, defender: Champion) -> List:
 def fight(pAtt: Unit, pDef: Unit) -> List:
     actions = []
     GS = GameState(10)
+    
+    actions.append(Action(type="start",cost=0))
 
     if(pDef.glory > pAtt.glory):
+        actions[0].actor = 'def'
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
     else:
         if(pDef.glory == pAtt.glory):
             if(randint(0, 1) > 0):
+                actions[0].actor = 'def'
                 for action in turn(pDef, pAtt, GS):
                     actions.append(action)
-
+    if not actions[0].actor:
+        actions[0].actor = 'att'
     while(True):
         if(pAtt.attH <= 0):
             break
         for action in turn(pAtt, pDef, GS):
             actions.append(action)
+
+        
         if(pDef.attH <= 0):
             break
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
 
-        if (actions[-1].type == "finish"):# and (actions[-2].type == "finish") and (actions[-3].type == "finish"):
-            
+        if (actions[-1].type == "finish") and (actions[-2].type == "finish") and (actions[-3].type == "finish"):
             break
+
         print(actions[-1].type)
         
 
@@ -85,7 +92,7 @@ def decide(active: Unit, other: Unit, GS: GameState):
 def turn(active: Unit, other: Unit, GS: GameState) -> List:
     finished = False
     actions = []
-    active.newTurn()
+    active.newTurn() 
 
     while(not(finished)):
         action = decide(active, other, GS)
