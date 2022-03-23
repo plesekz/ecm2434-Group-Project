@@ -70,8 +70,7 @@
         </div>
         <script src="{% static 'TheGame/javascript/battle_animation.js' %}"></script>
         <script>
-            setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
-
+            // functions
             function startBattle(bossPK){
                 // this function will be called once the user has selected a boss to fight
                 // it will be passed the primary key of the boss
@@ -110,6 +109,11 @@
                 }
                 return cookieValue;
             }
+
+            // the code part
+
+            setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
+            startBattle();
         </script>
     {% endblock %}
 </html>
