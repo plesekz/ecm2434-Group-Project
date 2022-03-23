@@ -120,12 +120,10 @@
             {% else %}
                 moveList = [];
                 {% for action in result %}
-                moveList.push('{{action.type}}')
+                    moveList.push('{{action.type}}')
                 {% endfor %}
                 battleOnList(moveList);
             {% endif %}
-
-
 
         </script>
     {% endblock %}
