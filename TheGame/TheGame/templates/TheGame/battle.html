@@ -12,7 +12,7 @@
                 <div class="col-md-3 col-12 order-first">
                     <!-- Combat log -->
                     <div class="overflow-auto" style="height:70vh" id="combat-log">
-                        Lorem ipsum dolor sic amet. This is where the combat log will be.                        
+                                             
                     </div>
                 </div>
                 <div class="col-md-9 col-12 order-md-2 order-3 row">
@@ -53,24 +53,48 @@
                                 <div id ="rArm"></div>
                             </div>
                         </div>
-                        Lorem ipsum dolor sic amet. This is where the arena will be.
-                    </div>
-                    <div class="col-12 order-md-2 order-first">
-                        <!-- Controls -->
-                        <div>
-                            <button class="top-bar-button">⏸</button>
-                            <button class="top-bar-button">⏯</button>
-                            <button class="top-bar-button">▶</button>
-                            <button class="top-bar-button">⏭</button>
+                        <div class="col-12 order-md-2 order-first">
+                            <!-- Controls -->
+                            <div>
+                                <button class="top-bar-button">⏸</button>
+                                <button class="top-bar-button">⏯</button>
+                                <button class="top-bar-button">▶</button>
+                                <button class="top-bar-button">⏭</button>
+                            </div>
                         </div>
-                        Lorem ipsum dolor sic amet. This is where the controls are going to be.
                     </div>
                 </div>
             </div>
         </div>
         <script src="{% static 'TheGame/javascript/battle_animation.js' %}"></script>
         <script>
+            // functions
+            var reply;
+            function fetchBattleData() {
+                var xmlhttp = new XMLHttpRequest();
+
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                        if (xmlhttp.status == 200) {
+                            reply = xmlhttp.responseText;
+                            alert(reply);
+                        }
+                        else if (xmlhttp.status == 400) {
+                            alert('There was an error 400 when requesting battle data.');
+                        }
+                    }
+                };
+                xmlhttp.open("GET", "/runbattle?id={{id}}", true);
+                xmlhttp.send();
+            }
+            // actual code
+
             setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
+            fetchBattleData();
+            // to do next:
+            // call to the "run battle" endpoint to fetch JSON
+            // print the JSON for debug
+            // keep popping from the list and executing the actions as they happen
         </script>
     {% endblock %}
 </html>

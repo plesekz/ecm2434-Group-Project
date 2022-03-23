@@ -298,7 +298,8 @@ def battleChampion(request):
         'attackerClass': att.sprite,
         'defenderClass': deff.sprite,
         'attWeapon': att.primaryWeapon.sprite,
-        'defWeapon': deff.primaryWeapon.sprite
+        'defWeapon': deff.primaryWeapon.sprite,
+        'id': deff.pk
     }
 
     return render(request, 'TheGame/battle.html', context=context)
