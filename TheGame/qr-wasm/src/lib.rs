@@ -78,6 +78,7 @@ impl Default for Callback {
 enum QrError {
     InvalidQrID,
     UnknownQrID,
+    NotLoggedIn,
     UnknownServerError,
     JsError(JsValue),
 }
@@ -312,6 +313,7 @@ impl QRManager {
         if !response.ok() {
             return Err(match response.status() {
                 501 => QrError::UnknownQrID,
+                403 => QrError::NotLoggedIn,
                 _ => QrError::UnknownServerError,
             });
         }

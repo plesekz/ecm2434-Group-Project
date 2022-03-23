@@ -130,7 +130,10 @@ def retrieveRes(request: HttpRequest) -> HttpResponse:
         # A QRResource with the given UID doesn't exist
         return HttpResponse(status=501)
 
-    user = getUserFromCookie(request)
+    try:
+        user = getUserFromCookie(request)
+    except Exception:
+        return HttpResponse(status=403)
     output = []
     try:
         for qrResource in qrResources:
