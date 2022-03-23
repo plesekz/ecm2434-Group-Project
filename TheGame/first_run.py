@@ -68,7 +68,6 @@ createNewBaseWeapon("Neon bombs", "weapon", 100, 1, 15, "B", 8, plutonium_sticks
 createNewBaseWeapon("Dance battle bomb", "weapon", 0, 0, 15, "dance dance baby!", 10, metal_scraps, 100, plutonium_sticks, 30, anti_matter, 15)
 createNewBaseWeapon("Bigly sized anti matter bomb", "weapon", 1000000, 1, 20, "C", 15, anti_matter, 1000000)
 
-
 #
 # CREATE SOME UPGRADE PACKS FOR THE GAME
 #
