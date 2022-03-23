@@ -52,5 +52,6 @@ urlpatterns = [
         name='validateItem'),
     path('battle/', battleChampion, name="battle champion"),
     path('runbattle/', runBattle, name="run battle"),
-    path('factions/', selectFaction, name="select faction")
+    path('factions/', selectFaction, name="select faction"),
+    path('selectfactions/', processes.selectFactions, name="selectfactions")
 ]
