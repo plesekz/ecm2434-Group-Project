@@ -305,7 +305,8 @@ def battleChampion(request):
         'defenderClass': deff.sprite,
         'attWeapon': att.primaryWeapon.sprite,
         'defWeapon': deff.primaryWeapon.sprite,
-        'bossPK': bossPK
+        'bossPK': bossPK,
+        'result' : 1
     }
 
     return render(request, 'TheGame/battle.html', context=context)
@@ -324,5 +325,26 @@ def runBattle(request):
 
     result = battle(att, deff)
 
-    return JsonResponse(result)
+    configData = json.load(open("config.json"))
+    damage = configData["unarmedWeapon"]['damage']
+    damageInstances = configData["unarmedWeapon"]['damageInstances']
+    range = configData["unarmedWeapon"]['range']
+    association = configData["unarmedWeapon"]['association']
+    apCost = configData["unarmedWeapon"]['apCost']
+
+    if att.primaryWeapon is None:
+        att.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
+    
+    if deff.primaryWeapon is None:
+        deff.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
+
+    context = {
+        'attackerClass': att.sprite,
+        'defenderClass': deff.sprite,
+        'attWeapon': att.primaryWeapon.sprite,
+        'defWeapon': deff.primaryWeapon.sprite,
+        'bossPK' : bossPK,
+        'result' : result
+    }
+    return render(request, 'TheGame/battle.html', context=context)
     

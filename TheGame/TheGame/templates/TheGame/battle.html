@@ -12,7 +12,11 @@
                 <div class="col-md-3 col-12 order-first">
                     <!-- Combat log -->
                     <div class="overflow-auto" style="height:70vh" id="combat-log">
-                        Lorem ipsum dolor sic amet. This is where the combat log will be.                        
+                        {% if result != 1 %}
+                            {% for action in result %}
+                                    {{ action.type }}
+                            {% endfor %}      
+                        {% endif %}              
                     </div>
                 </div>
                 <div class="col-md-9 col-12 order-md-2 order-3 row">
@@ -110,7 +114,9 @@
             // the code part
 
             setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
-            startBattle('{{ bossPK }}');
+            if('{{ result }}' == 1){
+                startBattle('{{ bossPK }}');
+            }
         </script>
     {% endblock %}
 </html>
