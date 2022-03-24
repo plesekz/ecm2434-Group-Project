@@ -46,7 +46,7 @@ def createRes(request: HttpRequest) -> HttpResponse:
             border=5
         )
         host = request.headers['HOST']
-        qr.add_data(f'http://{host}/qr/retrieveRes?data={data}')
+        qr.add_data(f'http://{host}/qr/retrieveRes/?data={data}')
         qr.make(fit=True)
 
         qrImage = qr.make_image(fill="black", back_color="white")
