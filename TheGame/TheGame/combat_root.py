@@ -70,8 +70,6 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
 
         if (actions[-1].type == "finish") and (actions[-2].type == "finish") and (actions[-3].type == "finish"):
             break
-
-        print(actions[-1].type)
         
     json_actions = []
     for action in actions:

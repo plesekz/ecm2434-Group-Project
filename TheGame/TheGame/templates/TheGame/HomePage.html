@@ -64,14 +64,10 @@
                 </p>
             </div>
             <div class="container-floating stat-highlight">
-                <ul style="list-style: none; padding-left: 0">
-                    <h3>Resources:</h3>
-                    {%for r in resources%}
-                    <li>
-                        {{r.0}}: {{r.1}}
-                    </li>
-                    {%endfor%}
-                </ul>
+                <h3>Resources:</h3>
+                {%for r in resources%}
+                    {{r.0}}: {{r.1}}<br>
+                {%endfor%}
             </div>
         </div>
     </div>
