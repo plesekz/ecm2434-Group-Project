@@ -81,11 +81,11 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
 def decide(active: Unit, other: Unit, GS: GameState):
     a = Action("finish", 0)
 
-    if(active.weapon.range <= GS.distance) and (active.weapon.ap_cost<=active.actionPoints):
+    if(active.weapon.range >= GS.distance) and (active.weapon.ap_cost<=active.actionPoints):
         a = Action("attack", active.weapon.ap_cost)
         a.setWeapon(active.weapon)
 
-    if(active.weapon.range > GS.distance) and (active.actionPoints>0):
+    if(active.weapon.range < GS.distance) and (active.actionPoints>0):
         a = Action("move_closer", 1)
     return a
 
