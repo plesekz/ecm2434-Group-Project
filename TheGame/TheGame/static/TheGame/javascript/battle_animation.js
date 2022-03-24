@@ -428,44 +428,75 @@ async function battle() {
     //gets turn order and plays it out
 }
 
-async function battleOnList(moveList, hdamageList, sdamageList){
+async function battleOnList(actionList){
     // alternate side and do the action
 
-    p1Turn = true;
+    // setting up the battlefield
+    let leftTurn = null;
 
-    while(moveList.length !== 0){
-        if (moveList[0] == "attack"){
-            if (p1Turn){
-                await leftMelee();
-                await hdamageList[0].forEach(element => {
-                    leftTakeHealthDamage(element)
-                    console.log(element);
-                });
+    if (actionList[0].actor == 'att'){
+        leftTurn = true;
+    } else {
+        leftTurn = false;
+    }
+    let distance = 10;
+    let attMaxV = actionList[0].attVit;
+    let defMaxV = actionList[0].defVit;
+    let attMaxS = actionList[0].attShi;
+    let defMaxS = actionList[0].defShi;
+    if(attMaxS==0){
+        leftTakeShieldDamage(100);
+    }
+    if(defMaxS==0){
+        rightTakeShieldDamage(100);
+    }
+    actionList.shift();
 
-                await sdamageList[0].forEach(element => {
-                    leftTakeShieldDamage(element)
+    // start alternating
+    while(actionList.length !== 0){
+        if (actionList[0].type == "attack"){
+            if (leftTurn){
+                // play either shoot or melee animation
+                if(distance == 1){
+                    await leftMelee();
+                } else {
+                    await leftRanged();
+                }
+                
+                await actionList[0].dmg_dealt.forEach(element => {
+                    rightTakeHealthDamage(100*element.toVit/defMaxV);
+                    if(defMaxS>0){
+                        rightTakeShieldDamage(100*element.toShi/defMaxS);
+                    }
                     console.log(element);
                 });
-                //await leftTakeShieldDamage(damageList[0]);
-            }
-            else {
-                await rightMelee();
-                hdamageList[0].forEach(element => {
-                    rightTakeHealthDamage(element)
-                    console.log(element);
-                });
+            } else {
+                // play either shoot or melee animation
+                if(distance == 1){
+                    await rightMelee();
+                } else {
+                    await rightRanged();
+                }
 
-                await sdamageList[0].forEach(element => {
-                    rightTakeShieldDamage(element)
+                await actionList[0].dmg_dealt.forEach(element => {
+                    leftTakeHealthDamage(100*element.toVit/attMaxV);
+                    if(defMaxS>0){
+                        leftTakeShieldDamage(100*element.toShi/attMaxS);
+                    }
                     console.log(element);
                 });
-                //await rightTakeShieldDamage(damageList[0]);
             }
         }
-        p1Turn = !p1Turn;
-        moveList.shift();
-        sdamageList.shift();
-        hdamageList.shift();
+        if(actionList[0].type == "move_closer"){
+            distance--;
+        }
+        if(actionList[0].type == "move_away"){
+            distance++;
+        }
+        if(actionList[0].type == "finish"){
+            leftTurn = !leftTurn;
+        }
+        actionList.shift();
     }
 
 }

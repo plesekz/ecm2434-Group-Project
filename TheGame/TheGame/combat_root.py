@@ -41,8 +41,8 @@ def battle(attacker: Champion, defender: Champion) -> List:
 def fight(pAtt: Unit, pDef: Unit) -> List:
     actions = []
     GS = GameState(10)
-    
-    actions.append(Action(type="start",cost=0))
+    actions.append(Action(type="setup",cost=0))
+    actions[0].setup(pAtt.vitality+pAtt.attH, pDef.vitality+pDef.attH, pAtt.shield, pDef.shield)
 
     if(pDef.glory > pAtt.glory):
         actions[0].actor = 'def'
@@ -73,8 +73,11 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
 
         print(actions[-1].type)
         
+    json_actions = []
+    for action in actions:
+        json_actions.append(action.toDict())
 
-    return actions
+    return json_actions
 
 """An 'ai' function deciding the champion's next move."""
 def decide(active: Unit, other: Unit, GS: GameState):
@@ -123,7 +126,7 @@ def attack(attacker: Unit, weapon: SpecificWeapon,
     for _ in range(attacker.getAtt(weapon.associated)):
         if(randint(0, 1) > 0):
             hits += 1
-    if(hits >= target.attA):
+    if(hits >= (target.attA/2)):
         dmgs = []
         for _ in range(weapon.damageInstances):
             dmg = target.damage(weapon.damageNumber)

@@ -6,9 +6,15 @@ import json
 class Action:
     type = None
     cost = None
+    # attack action property
     dmg_dealt = None
     weapon = None
+    # setup action type properties
     actor = None
+    attVit = None
+    defVit = None
+    attShi = None
+    defShi = None
 
     def __init__(self, type: str, cost: int) -> None:
         self.type = type
@@ -22,11 +28,27 @@ class Action:
         self.dmg_dealt = dmg_dealt
         return self
 
-    def toJson(self):
+    def setup(self, attVit: int, defVit: int, attShi: int, defShi: int):
+        pass
+        self.attVit = attVit
+        self.defVit = defVit
+        self.attShi = attShi
+        self.defShi = defShi
+
+    def toDict(self):
         dict = {}
         dict['type'] = self.type
         dict['cost'] = self.cost
-        dict['dmg_dealt'] = self.dmg_dealt
-        dict['actor'] = self.actor
+        if self.dmg_dealt:
+            dmg = []
+            for di in self.dmg_dealt:
+                dmg.append(di.toDict())
+            dict['dmg_dealt'] = dmg
+        if self.type == "setup":
+            dict['actor'] = self.actor
+            dict['attVit'] = self.attVit
+            dict['defVit'] = self.defVit
+            dict['attShi'] = self.attShi
+            dict['defShi'] = self.defShi
 
-        return json.dumps(self, default=lambda o: dict)
+        return dict

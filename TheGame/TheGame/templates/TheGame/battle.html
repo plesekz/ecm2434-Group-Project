@@ -115,10 +115,8 @@
             {% if not result %}
                 startBattle('{{ bossPK }}');
             {% else %}
-                /*
-                
-                */
-
+                const result = JSON.parse('{{result|safe}}');
+                battleOnList(result);
                 
             {% endif %}
 

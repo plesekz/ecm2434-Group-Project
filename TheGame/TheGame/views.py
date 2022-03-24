@@ -344,8 +344,7 @@ def runBattle(request):
         'attWeapon': att.primaryWeapon.sprite,
         'defWeapon': deff.primaryWeapon.sprite,
         'bossPK' : bossPK,
-        'result' : json.dumps(result
-        )
+        'result' : json.dumps(result)
     }
     return render(request, 'TheGame/battle.html', context=context)
 

@@ -41,8 +41,8 @@ class Unit:
             self.shield = self.shield - dmg
             return Damage(0, dmg)
         else:
-            dmgToShield = dmg - self.shield
-            dmg = dmgToShield
+            dmgToShield = self.shield
+            dmg = dmg - self.shield
             self.shield = 0
 
         dmg = dmg - self.armour
@@ -92,3 +92,9 @@ class Damage:
     def __init__(self, dealtToVit: int, dealtToShields: int):
         self.dealtToShields = dealtToShields
         self.dealtToVit = dealtToVit
+
+    def toDict(self):
+        dict = {}
+        dict['toShield'] = self.dealtToShields
+        dict['toVit'] = self.dealtToVit
+        return dict
