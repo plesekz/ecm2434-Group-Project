@@ -477,6 +477,7 @@ async function battleOnList(actionList){
 
     // start alternating
     while(actionList.length !== 0){
+        if(defCurV < 0 || attCurV < 0){break}
         if(paused) {
             sleep(100);
             continue;
@@ -568,5 +569,10 @@ async function battleOnList(actionList){
             singleStep = false;
         }
     }
+
+    parent.appendChild(child);
+    child.style.borderStyle = "dashed";
+    child.classList.add("p-2");
+    child.innerHTML = "Combat Ends<br>Your shields: "+attCurS+"<br>Your health: "+attCurV+"<br>Defender shields: "+defCurS+"<br>Defender health: "+defCurV;
 
 }

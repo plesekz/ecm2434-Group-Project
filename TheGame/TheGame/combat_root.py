@@ -19,18 +19,20 @@ def battle(attacker: Champion, defender: Champion) -> List:
 
     # main cycle
 
+    print("starting battle")
     actions = fight(pAtt, pDef)
+    print("finished battle")
 
     # resolution
 
     if(pAtt.attH >= 0):
-        attacker.pHealth = pAtt.attH
+        attacker.pHealth = pAtt.attH + 5
     else:
-        attacker.pHealth = 1
+        attacker.pHealth = 5
     if(pDef.attH >= 0):
-        defender.pHealth = pDef.attH
+        defender.pHealth = pDef.attH + 5
     else:
-        defender.pHealth = 1
+        defender.pHealth = 5
 
     attacker.save()
     defender.save()
@@ -56,14 +58,21 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
                     actions.append(action)
     if not actions[0].actor:
         actions[0].actor = 'att'
+
+    print("set up complete")
+
     while(True):
+        print(GS.distance)
         if(pAtt.attH <= 0):
+            print("player 1 is dead")
             break
         for action in turn(pAtt, pDef, GS):
+            print(action.type)
             actions.append(action)
 
         
         if(pDef.attH <= 0):
+            print(action.type)
             break
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
@@ -81,12 +90,19 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
 def decide(active: Unit, other: Unit, GS: GameState):
     a = Action("finish", 0)
 
-    if(active.weapon.range <= GS.distance) and (active.weapon.ap_cost<=active.actionPoints):
+    print("remaining action: " + str(active.actionPoints))
+    print("weapon cost:" + str(active.weapon.ap_cost))
+    print("distance:" + str(GS.distance))
+
+    print((active.weapon.range >= GS.distance) and (active.weapon.ap_cost<=active.actionPoints))
+
+    if(active.weapon.range >= GS.distance) and (active.weapon.ap_cost<=active.actionPoints):
         a = Action("attack", active.weapon.ap_cost)
         a.setWeapon(active.weapon)
 
-    if(active.weapon.range > GS.distance):
+    elif(active.actionPoints>0):
         a = Action("move_closer", 1)
+        
     return a
 
 """Function represting one champion's turn"""

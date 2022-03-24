@@ -46,7 +46,7 @@ def createRes(request: HttpRequest) -> HttpResponse:
             border=5
         )
         host = request.headers['HOST']
-        qr.add_data(f'http://{host}/qr/retrieveRes?data={data}')
+        qr.add_data(f'http://{host}/qr/qr-landing?data={data}')
         qr.make(fit=True)
 
         qrImage = qr.make_image(fill="black", back_color="white")
@@ -55,6 +55,7 @@ def createRes(request: HttpRequest) -> HttpResponse:
         if not os.path.exists(filedirectorypath):
             os.makedirs(filedirectorypath)
         qrImage.save("QRC/static/" + filepath)
+        qrImage.save("static/" + filepath)
 
         try:
             latitude = '{:06.4f}'.format(float(json_data['longitude']))
@@ -161,7 +162,15 @@ def retrieveRes(request: HttpRequest) -> HttpResponse:
 
     template = loader.get_template("QRC/landing.html")
     output = template.render({}, request)
-    return HttpResponse(output)
+    output = []
+    try:
+        for qrResource in qrResources:
+            addResourceToUser(user, qrResource.resource, qrResource.amount)
+            output.append([str(qrResource.resource), qrResource.amount])
+    except Exception as e:
+        print(e)
+        return HttpResponse(status=502)  # Failed to add resource to user
+    return HttpResponse(json.dumps(output), status=200)
 
 
 def listRes(request: HttpRequest) -> HttpResponse:
