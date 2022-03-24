@@ -1,5 +1,9 @@
 # ecm2434-Group-Project
 
+![SoE](/Documents/SoElogo4.png)
+
+Scavengers of Exeter is a sci-fi based IRL exploraion game.
+
 ## Dependencies
 ### Required to Run
 - django: Used for the webserver `pip3 install django`
