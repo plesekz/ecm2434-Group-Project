@@ -82,10 +82,10 @@ createNewBaseWeapon("Weapon lightener", "statPack", 0, 2, 0, "", 0, books, 15, p
 Champion.objects.create(
             player=None,
             name="Catt Mollison",
-            pHealth=1,
-            pAthletics=1,
-            pBrain=1,
-            pControl=1,
+            pHealth=15,
+            pAthletics=15,
+            pBrain=15,
+            pControl=15,
 
             primaryWeapon = createNewSpecificItem(laser_gun, 15, 15),
             armour = None,
@@ -98,10 +98,10 @@ Champion.objects.create(
 Champion.objects.create(
             player=None,
             name="Rick Noss",
-            pHealth=1,
-            pAthletics=1,
-            pBrain=1,
-            pControl=1,
+            pHealth=15,
+            pAthletics=15,
+            pBrain=15,
+            pControl=15,
 
             primaryWeapon = createNewSpecificItem(laser_sword, 15, 15),
             armour = None,
