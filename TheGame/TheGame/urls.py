@@ -53,5 +53,6 @@ urlpatterns = [
     path('battle/', battleChampion, name="battle champion"),
     path('runbattle/', runBattle, name="run battle"),
     path('factions/', selectFaction, name="select faction"),
+        path('privacypolicy/', privacyPolicy, name="privacyPolicy"),
     path('selectfactions/', processes.selectFactions, name="selectfactions")
 ]

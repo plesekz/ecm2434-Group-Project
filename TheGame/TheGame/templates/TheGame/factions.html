@@ -42,7 +42,7 @@
         </div>
 
         <div class="col-sm">
-            <button class="container top-bar-button" type="submit" onclick="chooseFaction('soldier')">
+            <button id="soldier" class="container top-bar-button" type="submit" onclick="chooseFaction('soldier')">
                 <h3>Soldier</h3>
             </button>
             <div id ="sCharacter">
@@ -56,7 +56,7 @@
     </div>
 </div>
 
-<script> 
+<script>         
     var selectedClass = '{{champion.sprite}}';
 
     function chooseFaction(faction)
@@ -190,6 +190,35 @@
     setupCharacters();
     highlight(selectedClass);
     
+    function highlight(faction) {
+        var h = document.getElementById("hacker");
+        var p = document.getElementById("psionic");
+        var s = document.getElementById("soldier");
+        
+        //switches the selected class highlight to the correct box
+        switch (faction) {
+            case "hacker":
+                h.style.outline = 'thick solid cyan';
+                p.style.outline = '';
+                s.style.outline = '';
+                selectedClass = "hacker";
+                break;
+            case "psionic":
+                h.style.outline = '';
+                p.style.outline = 'thick solid cyan';
+                s.style.outline = '';
+                selectedClass = "psionic";
+                break;
+            case "soldier":
+                h.style.outline = '';
+                p.style.outline = '';
+                s.style.outline = 'thick solid cyan';
+                selectedClass = "soldier";
+                break;
+        }
+    }
+    setupCharacters();
+    highlight(selectedClass);
 </script>
 
 

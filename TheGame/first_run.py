@@ -82,7 +82,7 @@ createNewBaseWeapon("Weapon lightener", "statPack", 0, 2, 0, "", 0, books, 15, p
 Champion.objects.create(
             player=None,
             name="Catt Mollison",
-            pHealth=15,
+            pHealth=150,
             pAthletics=15,
             pBrain=15,
             pControl=15,
@@ -98,7 +98,7 @@ Champion.objects.create(
 Champion.objects.create(
             player=None,
             name="Rick Noss",
-            pHealth=15,
+            pHealth=150,
             pAthletics=15,
             pBrain=15,
             pControl=15,
