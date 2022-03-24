@@ -130,7 +130,7 @@ impl Default for QRManager {
 
 fn parse_qr_id(data: &str) -> Result<usize, QrError> {
     let code = data
-        .split_once("/qr/qr-landing?data=")
+        .split_once("=")
         .map(|split| split.1)
         .unwrap_or(&data);
     code.parse().map_err(|_| QrError::InvalidQrID)
