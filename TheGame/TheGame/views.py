@@ -370,3 +370,6 @@ def selectFaction(request):
     output = template.render(context, request)
 
     return HttpResponse(output)
+
+def privacyPolicy(request):
+    return render(request, 'TheGame/PrivacyPolicy.html')

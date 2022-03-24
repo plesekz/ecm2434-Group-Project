@@ -115,8 +115,8 @@ def attack(attacker: Unit, weapon: SpecificWeapon,
     for _ in range(attacker.getAtt(weapon.associated)):
         if(randint(0, 1) > 0):
             hits += 1
+    dmgs = []
     if(hits >= target.attA):
-        dmgs = []
         for _ in range(weapon.damageInstances):
             dmg = target.damage(weapon.damageNumber)
             dmgs.append(dmg)

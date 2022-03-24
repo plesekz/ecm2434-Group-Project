@@ -432,11 +432,12 @@ async function battleOnList(moveList, hdamageList, sdamageList){
     // alternate side and do the action
 
     p1Turn = true;
-
+    
     while(moveList.length !== 0){
         if (moveList[0] == "attack"){
             if (p1Turn){
                 await leftMelee();
+                console.log(hdamageList[0])
                 await hdamageList[0].forEach(element => {
                     leftTakeHealthDamage(element)
                     console.log(element);

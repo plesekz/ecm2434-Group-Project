@@ -123,11 +123,14 @@
                 sdamageList = [];
                 {% for action in result %}
                     moveList.push('{{action.type}}');
+                    console.log('{{action.type}}')
                     hdmg_list = [];
                     sdmg_list = [];
                     {% for packet in action.dmg_dealt %}
                     hdmg_list.push('{{packet.dealtToVit}}');
                     sdmg_list.push('{{packet.dealtToShield}}');
+                    console.log('{{result.dealtToVit}}')
+                    console.log('{{packet.dealtToShield}}')
                     {% endfor %}
                     hdamageList.push(hdmg_list);
                     sdamageList.push(sdmg_list);
