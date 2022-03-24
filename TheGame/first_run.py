@@ -44,7 +44,7 @@ plutonium_sticks = Resource.objects.create(
 # CREATE SOME BASE ITEMS FOR THE GAME
 #
 
-createNewBaseItem("Salvaged armour", "armour", 10, 0, 0, "", circuitry, 10)
+salvaged_armour = createNewBaseItem("Salvaged armour", "armour", 10, 0, 0, "", circuitry, 10)
 createNewBaseItem("Sheet metal armour", "armour", 20, 0, 10, "", metal_scraps, 50, bottle_caps, 20)
 createNewBaseItem("Laser armour", "armour", 70, 10, 55, "", neon_light_fluid, 35, circuitry, 25, plutonium_sticks, 30)
 createNewBaseItem("Atomic armour", "armour", 100, 0, 40, "", plutonium_sticks, 45, neon_light_fluid, 35, anti_matter, 50)
@@ -88,7 +88,7 @@ Champion.objects.create(
             pControl=15,
 
             primaryWeapon = createNewSpecificItem(laser_gun, 15, 15),
-            armour = None,
+            armour = createNewSpecificItem(salvaged_armour, 15, 15),
             auxItem1 = None,
             auxItem2 = None,
             auxItem3 = None,
@@ -104,7 +104,7 @@ Champion.objects.create(
             pControl=15,
 
             primaryWeapon = createNewSpecificItem(laser_sword, 15, 15),
-            armour = None,
+            armour = createNewSpecificItem(salvaged_armour, 15, 15),
             auxItem1 = None,
             auxItem2 = None,
             auxItem3 = None,
