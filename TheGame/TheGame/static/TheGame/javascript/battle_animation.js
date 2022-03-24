@@ -506,6 +506,7 @@ async function battleOnList(actionList){
                 child.style.borderStyle = "dashed";
                 child.classList.add("p-2");
                 child.innerHTML = "You attack.<br>"+"Defender shields: "+defCurS+"<br>Defender health: "+defCurV;
+                //parent.scrollTop = parent.scrollHeight;
             } else {
                 // play either shoot or melee animation
                 if(distance == 1){
@@ -529,6 +530,7 @@ async function battleOnList(actionList){
                 child.style.borderStyle = "dashed";
                 child.classList.add("p-2");
                 child.innerHTML = "You are attacked.<br>Your shields: "+attCurS+"<br>Your health: "+attCurV;
+                //parent.scrollTop = parent.scrollHeight;
             }
         }
         if(actionList[0].type == "move_closer"){
@@ -542,14 +544,20 @@ async function battleOnList(actionList){
             } else {
                 child.innerHTML = "Enemy moves closer.<br>Current distance: "+distance;
             }
+            //parent.scrollTop = parent.scrollHeight;
         }
         if(actionList[0].type == "move_away"){
             distance++;
+            let child = document.createElement('div');
+            parent.appendChild(child);
+            child.style.borderStyle = "dashed";
+            child.classList.add("p-2");
             if(leftTurn){
                 child.innerHTML = "You move away.<br>Current distance: "+distance;
             } else {
                 child.innerHTML = "Enemy moves away.<br>Current distance: "+distance;
             }
+            //parent.scrollTop = parent.scrollHeight;
         }
         if(actionList[0].type == "finish"){
             leftTurn = !leftTurn;
