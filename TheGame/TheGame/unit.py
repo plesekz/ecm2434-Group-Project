@@ -50,7 +50,7 @@ class Unit:
             dmg = 1
 
         if(self.vitality - dmg >= 0):
-            vitality = vitality - dmg
+            self.vitality = self.vitality - dmg
             return Damage(dmg, dmgToShield)
         else:
             damageToVit = dmg

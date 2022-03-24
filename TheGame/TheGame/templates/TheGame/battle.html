@@ -11,9 +11,7 @@
             <div class="row">
                 <div class="col-md-3 col-12 order-first">
                     <!-- Combat log -->
-                    <div class="overflow-auto" style="height:70vh" id="combat-log">
-                        {% if result %}     
-                        {% endif %}              
+                    <div class="overflow-auto" style="height:70vh" id="combat-log">             
                     </div>
                 </div>
                 <div class="col-md-9 col-12 order-md-2 order-3 row">
@@ -54,15 +52,17 @@
                                 <div id ="rArm"></div>
                             </div>
                         </div>
+                        <!--
                         <div class="col-12 order-md-2 order-first">
-                            <!-- Controls -->
+                            Controls 
                             <div>
-                                <button class="top-bar-button">⏸</button>
+                                <button class="top-bar-button"onclick="paused = true;">⏸</button>
                                 <button class="top-bar-button">⏯</button>
-                                <button class="top-bar-button">▶</button>
+                                <button class="top-bar-button" onclick="paused = false;">▶</button>
                                 <button class="top-bar-button">⏭</button>
                             </div>
                         </div>
+                        -->
                     </div>
                 </div>
             </div>
