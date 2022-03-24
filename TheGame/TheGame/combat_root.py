@@ -41,33 +41,41 @@ def battle(attacker: Champion, defender: Champion) -> List:
 def fight(pAtt: Unit, pDef: Unit) -> List:
     actions = []
     GS = GameState(10)
+    actions.append(Action(type="setup",cost=0))
+    actions[0].setup(pAtt.vitality+pAtt.attH, pDef.vitality+pDef.attH, pAtt.shield, pDef.shield)
 
     if(pDef.glory > pAtt.glory):
+        actions[0].actor = 'def'
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
     else:
         if(pDef.glory == pAtt.glory):
             if(randint(0, 1) > 0):
+                actions[0].actor = 'def'
                 for action in turn(pDef, pAtt, GS):
                     actions.append(action)
-
+    if not actions[0].actor:
+        actions[0].actor = 'att'
     while(True):
         if(pAtt.attH <= 0):
             break
         for action in turn(pAtt, pDef, GS):
             actions.append(action)
+
+        
         if(pDef.attH <= 0):
             break
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
 
-        if (actions[-1].type == "finish"):# and [-2].type == "finish") and (actions[-3].type == "finish"):
-            
+        if (actions[-1].type == "finish") and (actions[-2].type == "finish") and (actions[-3].type == "finish"):
             break
-        print(actions[-1].type)
         
+    json_actions = []
+    for action in actions:
+        json_actions.append(action.toDict())
 
-    return actions
+    return json_actions
 
 """An 'ai' function deciding the champion's next move."""
 def decide(active: Unit, other: Unit, GS: GameState):
@@ -85,7 +93,7 @@ def decide(active: Unit, other: Unit, GS: GameState):
 def turn(active: Unit, other: Unit, GS: GameState) -> List:
     finished = False
     actions = []
-    active.newTurn()
+    active.newTurn() 
 
     while(not(finished)):
         action = decide(active, other, GS)
@@ -108,6 +116,7 @@ def attack(attacker: Unit, weapon: SpecificWeapon,
            target: Unit, GS: GameState) -> Action:
     hits = 0
     a = Action("attack", weapon.ap_cost)
+    dmgs = []
     if(GS.distance > weapon.range):
 
         return a.attackResolved([Damage(0, 0)])
@@ -116,7 +125,7 @@ def attack(attacker: Unit, weapon: SpecificWeapon,
         if(randint(0, 1) > 0):
             hits += 1
     dmgs = []
-    if(hits >= target.attA):
+    if(hits >= target.attA/2):
         for _ in range(weapon.damageInstances):
             dmg = target.damage(weapon.damageNumber)
             dmgs.append(dmg)

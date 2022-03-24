@@ -14,7 +14,8 @@
 <div class="container" style="color:white;">
     <div class="row">
         <div class="col-sm">
-            <button id="hacker" class="container top-bar-button" type="submit" onclick="chooseFaction('hacker')">
+
+            <button class="container top-bar-button" type="submit" onclick="chooseFaction('hacker')">
                 <h3>Hacker</h3>
             </button>
             
@@ -27,7 +28,8 @@
         </div>
 
         <div class="col-sm">
-            <button id="psionic" class="container top-bar-button" type="submit" onclick="chooseFaction('psionic')">
+
+            <button class="container top-bar-button" type="submit" onclick="chooseFaction('psionic')">
                 <h3>Psionic</h3>
             </button>
             <div id ="pCharacter">
@@ -54,11 +56,12 @@
     </div>
 </div>
 
-<script> 
-    selectedClass = '{{champion.sprite}}';
-    function chooseFaction(faction) {
+<script>         
+    var selectedClass = '{{champion.sprite}}';
+
+    function chooseFaction(faction)
+    {
         highlight(faction);
-    
         var xhr = new XMLHttpRequest();
 
         xhr.onreadystatechange = function() {
@@ -96,7 +99,7 @@
         }
         return cookieValue;
     }
-
+  
     function setupCharacters() {
         //hacker character variables
         var hBody = document.getElementById("hBody");
@@ -152,7 +155,41 @@
         sArm.style.backgroundSize = '100% 100%';
         saShield.style.background = 'url(/static/TheGame/sprites/' + Class + '/armshield.png)';
         saShield.style.backgroundSize = '100% 100%';
+        
+        return true;
+        
     }
+    
+    function highlight(selected){
+        var h = document.getElementById("hacker");
+        var p = document.getElementById("psionic");
+        var s = document.getElementById("soldier");
+        
+        switch (selected) {
+            case "hacker":
+                h.style.outline = 'thick solid cyan';
+                p.style.outline = '';
+                s.style.outline = '';
+                selectedClass = "hacker";
+                break;
+            case "psionic":
+                h.style.outline = '';
+                p.style.outline = 'thick solid cyan';
+                s.style.outline = '';
+                selectedClass = "psionic";
+                break;
+            case "soldier":
+                h.style.outline = '';
+                p.style.outline = '';
+                s.style.outline = 'thick solid cyan';
+                selectedClass = "soldier";
+                break;
+        }
+    }
+    
+    
+    setupCharacters();
+    highlight(selectedClass);
     
     function highlight(faction) {
         var h = document.getElementById("hacker");

@@ -38,25 +38,25 @@ class Unit:
         dmgToShield = 0
 
         if(self.shield - dmg >= 0):
-            shield = shield - dmg
+            self.shield = self.shield - dmg
             return Damage(0, dmg)
         else:
-            dmgToShield = dmg - shield
-            dmg = dmgToShield
-            shield = 0
+            dmgToShield = self.shield
+            dmg = dmg - self.shield
+            self.shield = 0
 
         dmg = dmg - self.armour
         if(dmg < 1):
             dmg = 1
 
-        if(vitality - dmg >= 0):
-            vitality = vitality - dmg
+        if(self.vitality - dmg >= 0):
+            self.vitality = self.vitality - dmg
             return Damage(dmg, dmgToShield)
         else:
             damageToVit = dmg
-            dmg = dmg - vitality
-            vitality = 0
-            attH = attH - dmg
+            dmg = dmg - self.vitality
+            self.vitality = 0
+            self.attH = self.attH - dmg
             return Damage(damageToVit, dmgToShield)
 
     def newTurn(self):
@@ -92,3 +92,9 @@ class Damage:
     def __init__(self, dealtToVit: int, dealtToShields: int):
         self.dealtToShields = dealtToShields
         self.dealtToVit = dealtToVit
+
+    def toDict(self):
+        dict = {}
+        dict['toShield'] = self.dealtToShields
+        dict['toVit'] = self.dealtToVit
+        return dict

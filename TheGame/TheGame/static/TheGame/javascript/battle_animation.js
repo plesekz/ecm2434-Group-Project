@@ -428,45 +428,145 @@ async function battle() {
     //gets turn order and plays it out
 }
 
-async function battleOnList(moveList, hdamageList, sdamageList){
+var defCurV;
+var attCurV;
+var defCurS;
+var attCurS;
+var paused;
+var singleStep = false;
+
+async function battleOnList(actionList){
     // alternate side and do the action
 
-    p1Turn = true;
-    
-    while(moveList.length !== 0){
-        if (moveList[0] == "attack"){
-            if (p1Turn){
-                await leftMelee();
-                console.log(hdamageList[0])
-                await hdamageList[0].forEach(element => {
-                    leftTakeHealthDamage(element)
-                    console.log(element);
-                });
+    // setting up the battlefield
+    let leftTurn = null;
+    paused = false;
 
-                await sdamageList[0].forEach(element => {
-                    leftTakeShieldDamage(element)
-                    console.log(element);
-                });
-                //await leftTakeShieldDamage(damageList[0]);
-            }
-            else {
-                await rightMelee();
-                hdamageList[0].forEach(element => {
-                    rightTakeHealthDamage(element)
-                    console.log(element);
-                });
+    if (actionList[0].actor == 'att'){
+        leftTurn = true;
+    } else {
+        leftTurn = false;
+    }
+    let distance = 10;
+    let attMaxV = actionList[0].attVit;
+    let defMaxV = actionList[0].defVit;
+    let attMaxS = actionList[0].attShi;
+    let defMaxS = actionList[0].defShi;
 
-                await sdamageList[0].forEach(element => {
-                    rightTakeShieldDamage(element)
-                    console.log(element);
-                });
-                //await rightTakeShieldDamage(damageList[0]);
+    defCurS = defMaxS;
+    defCurV = defMaxV;
+    attCurS = attMaxS;
+    attCurV = attMaxV;
+
+    // visualise
+    if(attMaxS==0){
+        leftTakeShieldDamage(100);
+    }
+    if(defMaxS==0){
+        rightTakeShieldDamage(100);
+    }
+    actionList.shift();
+    // set up reporting
+    const parent = document.getElementById("combat-log");
+    // report on current state of things
+    let child = document.createElement('div');
+    parent.appendChild(child);
+    child.style.borderStyle = "dashed";
+    child.classList.add("p-2");
+    child.innerHTML = "Combat begins<br>Your shields: "+attMaxS+"<br>Your health: "+attMaxV+"<br>Defender shields: "+defMaxS+"<br>Defender health: "+defMaxV;
+
+    // start alternating
+    while(actionList.length !== 0){
+        if(paused) {
+            sleep(100);
+            continue;
+        };
+        if (actionList[0].type == "attack"){
+            if (leftTurn){
+                // play either shoot or melee animation
+                if(distance == 1){
+                    await leftMelee();
+                } else {
+                    await leftRanged();
+                }
+                if(actionList[0].dmg_dealt){
+                    await actionList[0].dmg_dealt.forEach(element => {
+                        rightTakeHealthDamage(100*element.toVit/defMaxV);
+                        defCurV-=element.toVit;
+                        
+                        if(defMaxS>0){
+                            rightTakeShieldDamage(100*element.toShi/defMaxS);
+                            defCurS-=element.toShi;
+                        }
+                        console.log(element);
+                    });
+                }
+                let child = document.createElement('div');
+                parent.appendChild(child);
+                child.style.borderStyle = "dashed";
+                child.classList.add("p-2");
+                child.innerHTML = "You attack.<br>"+"Defender shields: "+defCurS+"<br>Defender health: "+defCurV;
+                //parent.scrollTop = parent.scrollHeight;
+            } else {
+                // play either shoot or melee animation
+                if(distance == 1){
+                    await rightMelee();
+                } else {
+                    await rightRanged();
+                }
+                if(actionList[0].dmg_dealt){
+                    await actionList[0].dmg_dealt.forEach(element => {
+                        leftTakeHealthDamage(100*element.toVit/attMaxV);
+                        attCurV-=element.toVit;
+                        if(defMaxS>0){
+                            leftTakeShieldDamage(100*element.toShi/attMaxS);
+                            attCurS-=element.toShi;
+                        }
+                        console.log(element);
+                    });
+                }
+                let child = document.createElement('div');
+                parent.appendChild(child);
+                child.style.borderStyle = "dashed";
+                child.classList.add("p-2");
+                child.innerHTML = "You are attacked.<br>Your shields: "+attCurS+"<br>Your health: "+attCurV;
+                //parent.scrollTop = parent.scrollHeight;
             }
         }
-        p1Turn = !p1Turn;
-        moveList.shift();
-        sdamageList.shift();
-        hdamageList.shift();
+        if(actionList[0].type == "move_closer"){
+            distance--;
+            let child = document.createElement('div');
+            parent.appendChild(child);
+            child.style.borderStyle = "dashed";
+            child.classList.add("p-2");
+            if(leftTurn){
+                child.innerHTML = "You move closer.<br>Current distance: "+distance;
+            } else {
+                child.innerHTML = "Enemy moves closer.<br>Current distance: "+distance;
+            }
+            //parent.scrollTop = parent.scrollHeight;
+        }
+        if(actionList[0].type == "move_away"){
+            distance++;
+            let child = document.createElement('div');
+            parent.appendChild(child);
+            child.style.borderStyle = "dashed";
+            child.classList.add("p-2");
+            if(leftTurn){
+                child.innerHTML = "You move away.<br>Current distance: "+distance;
+            } else {
+                child.innerHTML = "Enemy moves away.<br>Current distance: "+distance;
+            }
+            //parent.scrollTop = parent.scrollHeight;
+        }
+        if(actionList[0].type == "finish"){
+            leftTurn = !leftTurn;
+        }
+        actionList.shift();
+        if(singleStep){
+            paused = true;
+            singleStep = false;
+        }
     }
 
 }

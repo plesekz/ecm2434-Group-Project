@@ -12,7 +12,7 @@
 {% block bodyBlock%}
 
 <div class="container-floating" style="color:white">
-    <div class="row" style="width:98%;">
+    <div class="row" style="width:98%">
         {% load static %}
         <div class="col-6 col-md-3 order-3 order-md-1">
             <ul style="list-style-type: none;">
@@ -64,14 +64,10 @@
                 </p>
             </div>
             <div class="container-floating stat-highlight">
-                    <h3>Resources:</h3>
-                <ul>
-                    {%for r in resources%}
-                    <li>
-                        {{r.0}}: {{r.1}}
-                    </li>
-                    {%endfor%}
-                </ul>
+                <h3>Resources:</h3>
+                {%for r in resources%}
+                    {{r.0}}: {{r.1}}<br>
+                {%endfor%}
             </div>
             <a href="/privacypolicy">Privacy Policy</a>
         </div>
