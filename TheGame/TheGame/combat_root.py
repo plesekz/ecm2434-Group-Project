@@ -19,7 +19,9 @@ def battle(attacker: Champion, defender: Champion) -> List:
 
     # main cycle
 
+    print("starting battle")
     actions = fight(pAtt, pDef)
+    print("finished battle")
 
     # resolution
 
@@ -56,14 +58,21 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
                     actions.append(action)
     if not actions[0].actor:
         actions[0].actor = 'att'
+
+    print("set up complete")
+
     while(True):
+        print(GS.distance)
         if(pAtt.attH <= 0):
+            print("player 1 is dead")
             break
         for action in turn(pAtt, pDef, GS):
+            print(action.type)
             actions.append(action)
 
         
         if(pDef.attH <= 0):
+            print(action.type)
             break
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
@@ -81,12 +90,19 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
 def decide(active: Unit, other: Unit, GS: GameState):
     a = Action("finish", 0)
 
+    print("remaining action: " + str(active.actionPoints))
+    print("weapon cost:" + str(active.weapon.ap_cost))
+    print("distance:" + str(GS.distance))
+
+    print((active.weapon.range >= GS.distance) and (active.weapon.ap_cost<=active.actionPoints))
+
     if(active.weapon.range >= GS.distance) and (active.weapon.ap_cost<=active.actionPoints):
         a = Action("attack", active.weapon.ap_cost)
         a.setWeapon(active.weapon)
 
-    if(active.weapon.range < GS.distance) and (active.actionPoints>0):
+    elif(active.actionPoints>0):
         a = Action("move_closer", 1)
+        
     return a
 
 """Function represting one champion's turn"""
