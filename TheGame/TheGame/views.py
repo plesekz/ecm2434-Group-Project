@@ -8,7 +8,7 @@ from django.contrib import messages
 from Login.processes import getUserFromCookie
 from QRC.models import QRResource, QRC
 from Login.processes import is_game_master
-from TheGame.processes import getAllChampionUnequipedItems, getUserFromName, getChampionFromID, createNewSpecificItem, createNewBaseWeapon
+from TheGame.processes import *
 from TheGame.models import SpecificItem
 from TheGame.processes import getAllBaseItems, getAllBosses, getChampionsItemStatPacks, getChampionsWeaponStatPacks, getUserFromName, getChampion, getChampionsItemsAndWeapons, addItemToChampion, getAllBaseItemsAndWeapons, getItemFromPK
 from Resources.processes import getAllUserResources, getAllResources
@@ -332,13 +332,23 @@ def runBattle(request):
     association = configData["unarmedWeapon"]['association']
     apCost = configData["unarmedWeapon"]['apCost']
 
+    deffUnarmed = False
+    attUnarmed = False
+
     if att.primaryWeapon is None:
+        attUnarmed = True
         att.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
     
     if deff.primaryWeapon is None:
+        deffUnarmed = True
         deff.primaryWeapon = createNewSpecificItem(createNewBaseWeapon("Unarmed", "weapon", damage, damageInstances, range, association, apCost, Resource.objects.get(name="Books"), 1), 0, 0)
 
     result = battle(att, deff)
+
+    if attUnarmed:
+        removeItemFromChampion(att, att.primaryWeapon)
+    if deffUnarmed:
+        removeItemFromChampion(deff, deff.primaryWeapon)
 
     return HttpResponse(json.dumps(result))
 
