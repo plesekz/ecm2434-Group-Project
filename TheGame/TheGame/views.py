@@ -318,9 +318,11 @@ def runBattle(request):
             ('Something went wrong, please try again later'))
         return "failed to process, please use POST method"
 
-    bossPK = request.POST.get('bossPK')
+    data = json.loads(request.body.decode('utf-8'))
 
-    att = getUserFromName(request)
+    bossPK = data['bossPK']
+
+    att = getChampion(getUserFromCookie(request))
     deff = getChampionFromID(bossPK)
 
     configData = json.load(open("config.json"))
@@ -338,16 +340,7 @@ def runBattle(request):
 
     result = battle(att, deff)
 
-    context = {
-        'attackerClass': att.sprite,
-        'defenderClass': deff.sprite,
-        'attWeapon': att.primaryWeapon.sprite,
-        'defWeapon': deff.primaryWeapon.sprite,
-        'bossPK' : bossPK,
-        'result' : json.dumps(result)
-    }
-    return render(request, 'TheGame/battle.html', context=context)
-
+    return HttpResponse(json.dumps(result))
 
 def selectFaction(request):
     if request.COOKIES.get('TheGameSessionID') is None:

@@ -37,18 +37,18 @@ class Action:
 
     def toDict(self):
         dict = {}
-        dict['type'] = self.type
-        dict['cost'] = self.cost
+        dict["type"] = self.type
+        dict["cost"] = self.cost
         if self.dmg_dealt:
             dmg = []
             for di in self.dmg_dealt:
                 dmg.append(di.toDict())
             dict['dmg_dealt'] = dmg
         if self.type == "setup":
-            dict['actor'] = self.actor
-            dict['attVit'] = self.attVit
-            dict['defVit'] = self.defVit
-            dict['attShi'] = self.attShi
-            dict['defShi'] = self.defShi
+            dict["actor"] = self.actor
+            dict["attVit"] = self.attVit
+            dict["defVit"] = self.defVit
+            dict["attShi"] = self.attShi
+            dict["defShi"] = self.defShi
 
         return dict

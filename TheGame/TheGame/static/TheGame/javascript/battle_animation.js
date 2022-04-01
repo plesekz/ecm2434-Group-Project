@@ -576,3 +576,7 @@ async function battleOnList(actionList){
     child.innerHTML = "Combat Ends<br>Your shields: "+attCurS+"<br>Your health: "+attCurV+"<br>Defender shields: "+defCurS+"<br>Defender health: "+defCurV;
 
 }
+
+function battleOnJSON(){
+
+}

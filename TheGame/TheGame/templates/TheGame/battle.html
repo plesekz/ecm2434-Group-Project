@@ -70,27 +70,27 @@
         <script src="{% static 'TheGame/javascript/battle_animation.js' %}"></script>
         <script>
             // functions
-            function startBattle(bossPK){
-                // this function will be called once the user has selected a boss to fight
-                // it will be passed the primary key of the boss
-                var f = document.createElement('form');
-                    f.action='/runbattle/';
-                    f.method='POST';
-                    var i=document.createElement('input');
-                    i.type='hidden';
-                    i.name='bossPK';
-                    i.value=bossPK;
-                    f.appendChild(i);
+            // function startBattle(bossPK){
+            //     // this function will be called once the user has selected a boss to fight
+            //     // it will be passed the primary key of the boss
+            //     var f = document.createElement('form');
+            //         f.action='/runbattle/';
+            //         f.method='POST';
+            //         var i=document.createElement('input');
+            //         i.type='hidden';
+            //         i.name='bossPK';
+            //         i.value=bossPK;
+            //         f.appendChild(i);
 
-                    var t=document.createElement('input');
-                    t.type='hidden';
-                    t.name='csrfmiddlewaretoken';
-                    t.value=getCookie('csrftoken');;
-                    f.appendChild(t);
+            //         var t=document.createElement('input');
+            //         t.type='hidden';
+            //         t.name='csrfmiddlewaretoken';
+            //         t.value=getCookie('csrftoken');;
+            //         f.appendChild(t);
 
-                    document.body.appendChild(f);
-                    f.submit();
-            }
+            //         document.body.appendChild(f);
+            //         f.submit();
+            // }
 
             function getCookie(name) {
                 let cookieValue = null;
@@ -108,16 +108,31 @@
                 return cookieValue;
             }
 
-            // the code part
+            function runBattle(bossPK){
+                let url = "/runbattle/"
+                const csrftoken = getCookie('csrftoken');
 
-            setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", url);
 
-            {% if not result %}
-                startBattle('{{ bossPK }}');
-            {% else %}
-                const result = JSON.parse('{{result|safe}}');
-                battleOnList(result);
-            {% endif %}
+                xhr.setRequestHeader("Accept", "application/json");
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+
+                xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    console.log(xhr.responseText);
+                    setup('{{attackerClass}}', '{{attWeapon}}', '{{defenderClass}}', '{{defWeapon}}');
+                    battleJson = JSON.parse(xhr.responseText);
+                    battleOnList(battleJson);
+                }};
+                xhr.send(JSON.stringify({"bossPK": bossPK}));
+
+                console.log(bossPK);
+            }
+
+            runBattle('{{bossPK}}');
+
 
         </script>
     {% endblock %}

@@ -19,9 +19,9 @@ def battle(attacker: Champion, defender: Champion) -> List:
 
     # main cycle
 
-    print("starting battle")
+    #print("starting battle")
     actions = fight(pAtt, pDef)
-    print("finished battle")
+    #print("finished battle")
 
     # resolution
 
@@ -37,6 +37,8 @@ def battle(attacker: Champion, defender: Champion) -> List:
     attacker.save()
     defender.save()
     # return
+    #
+    # retusn json object with all the actions inside it
     return actions
 
 """Function alternating turns through through the champions until one of them is felled."""
@@ -59,20 +61,20 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
     if not actions[0].actor:
         actions[0].actor = 'att'
 
-    print("set up complete")
+    #print("set up complete")
 
     while(True):
-        print(GS.distance)
+        #print(GS.distance)
         if(pAtt.attH <= 0):
-            print("player 1 is dead")
+            #print("player 1 is dead")
             break
         for action in turn(pAtt, pDef, GS):
-            print(action.type)
+            #print(action.type)
             actions.append(action)
 
         
         if(pDef.attH <= 0):
-            print(action.type)
+            #print(action.type)
             break
         for action in turn(pDef, pAtt, GS):
             actions.append(action)
@@ -90,11 +92,11 @@ def fight(pAtt: Unit, pDef: Unit) -> List:
 def decide(active: Unit, other: Unit, GS: GameState):
     a = Action("finish", 0)
 
-    print("remaining action: " + str(active.actionPoints))
-    print("weapon cost:" + str(active.weapon.ap_cost))
-    print("distance:" + str(GS.distance))
+    #print("remaining action: " + str(active.actionPoints))
+    #print("weapon cost:" + str(active.weapon.ap_cost))
+    #print("distance:" + str(GS.distance))
 
-    print((active.weapon.range >= GS.distance) and (active.weapon.ap_cost<=active.actionPoints))
+    #print((active.weapon.range >= GS.distance) and (active.weapon.ap_cost<=active.actionPoints))
 
     if(active.weapon.range >= GS.distance) and (active.weapon.ap_cost<=active.actionPoints):
         a = Action("attack", active.weapon.ap_cost)
