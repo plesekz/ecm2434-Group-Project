@@ -2,6 +2,7 @@ from Resources.models import Resource
 from Resources.processes import addResourceToUser
 from Login.processes import getUserFromCookie,is_game_master
 from Login.models import *
+from TheGame.settings import STATIC_ROOT, STATIC_URL
 from QRC.models import QRResource, QRC
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
@@ -51,17 +52,17 @@ def createRes(request: HttpRequest) -> HttpResponse:
 
         qrImage = qr.make_image(fill="black", back_color="white")
         filepath = f"QRC/qrImages/{json_data['codeID']}.png"
-        filedirectorypath = "QRC/static/QRC/qrImages/"
+        filedirectorypath = STATIC_ROOT + "QRC/qrImages/"
         if not os.path.exists(filedirectorypath):
             os.makedirs(filedirectorypath)
         qrImage.save("QRC/static/" + filepath)
-        qrImage.save("static/" + filepath)
 
         try:
             latitude = '{:06.4f}'.format(float(json_data['longitude']))
             longitude = '{:06.4f}'.format(float(json_data['longitude']))
         except ValueError:
-            print("bru")
+            print("invalid latitude or longitude")
+            return HttpResponse(status=501)
 
         qrc = QRC.objects.create(
             QRID=int(json_data['codeID']),
@@ -223,7 +224,6 @@ def QR_management(request: HttpRequest) -> HttpResponse:
                 'lon': QRCode.longitude,
                 'resources': QRResource.objects.filter(QRID=QRCode),
                 'imagePath': QRCode.image,
-                'staticPath': "QRC/qrImages/"
             }
         )
     list_of_resources = Resource.objects.all()
